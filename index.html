@@ -14,13 +14,13 @@
         body {
             font-family: 'Courier New', monospace;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
-            color: #00ff00;
+            color: #ff0000;
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         
@@ -35,7 +35,7 @@
         
         .menu {
             background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #00ff00;
+            border: 2px solid #ff0000;
             border-radius: 10px;
             padding: 30px;
             margin-bottom: 20px;
@@ -54,9 +54,9 @@
         }
         
         .menu-btn {
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            color: #ff0000;
             padding: 15px;
             cursor: pointer;
             border-radius: 5px;
@@ -67,17 +67,19 @@
         }
         
         .menu-btn:hover {
-            background: rgba(0, 255, 0, 0.2);
+            background: rgba(255, 0, 0, 0.2);
             transform: translateX(5px);
         }
         
         .result-box {
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #00ff00;
+            border: 2px solid #ff0000;
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
             display: none;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .result-box.active {
@@ -85,11 +87,11 @@
         }
         
         .result-title {
-            color: #00ff00;
+            color: #ff0000;
             text-align: center;
             margin-bottom: 20px;
             font-size: 18px;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid #ff0000;
             padding-bottom: 10px;
         }
         
@@ -107,15 +109,15 @@
             width: 100%;
             padding: 12px;
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            border: 1px solid #ff0000;
+            color: #ff0000;
             border-radius: 5px;
             font-family: 'Courier New', monospace;
             font-size: 14px;
         }
         
         .submit-btn {
-            background: #00ff00;
+            background: #ff0000;
             color: #000;
             border: none;
             padding: 12px 30px;
@@ -128,7 +130,7 @@
         }
         
         .submit-btn:hover {
-            background: #00cc00;
+            background: #cc0000;
             transform: scale(1.05);
         }
         
@@ -150,24 +152,37 @@
             margin-top: 15px;
         }
         
+        .section-title {
+            color: #ff3333;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ff3333;
+        }
+        
         .result-line {
             padding: 5px 0;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
         }
         
         .result-label {
             color: #ffffff;
             display: inline-block;
-            min-width: 200px;
+            min-width: 220px;
         }
         
         .result-value {
-            color: #00ff00;
+            color: #ff0000;
+        }
+        
+        .result-value a {
+            color: #ff0000;
+            text-decoration: underline;
         }
         
         .loading {
             text-align: center;
-            color: #00ff00;
+            color: #ff0000;
             padding: 20px;
             display: none;
         }
@@ -183,6 +198,52 @@
             border: 1px solid #ff3333;
             border-radius: 5px;
             margin-top: 10px;
+        }
+
+        .warning {
+            color: #ffaa00;
+            padding: 10px;
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid #ffaa00;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .info {
+            color: #00aaff;
+            padding: 10px;
+            background: rgba(0, 170, 255, 0.1);
+            border: 1px solid #00aaff;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .security-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+
+        .badge-safe {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border: 1px solid #ff0000;
+        }
+
+        .badge-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+
+        .badge-danger {
+            background: rgba(255, 51, 51, 0.2);
+            color: #ff3333;
+            border: 1px solid #ff3333;
         }
     </style>
 </head>
@@ -201,21 +262,24 @@
         <div id="mainMenu" class="menu">
             <div class="menu-title">★ S T A R T R A C K - S Y S T E M ★</div>
             <div class="menu-options">
-                <button class="menu-btn" onclick="showTracker('ip')">[ 1 ] IP Tracker</button>
+                <button class="menu-btn" onclick="showTracker('ip')">[ 1 ] IP Tracker (Extended Info + Address)</button>
                 <button class="menu-btn" onclick="showTracker('myip')">[ 2 ] Show Your IP</button>
                 <button class="menu-btn" onclick="showTracker('username')">[ 3 ] Username Tracker</button>
+                <button class="menu-btn" onclick="showTracker('phone')">[ 4 ] Phone Number Tracker + IP</button>
+                <button class="menu-btn" onclick="showTracker('email')">[ 5 ] Email Tracker + IP Validator</button>
+                <button class="menu-btn" onclick="showTracker('discord')">[ 6 ] Discord User ID → Profile Info</button>
             </div>
         </div>
         
         <div id="ipTracker" class="result-box">
-            <div class="result-title">========== IP TRACKER ==========</div>
+            <div class="result-title">========== EXTENDED IP TRACKER ==========</div>
             <div class="input-group">
                 <label>Enter IP Address:</label>
                 <input type="text" id="ipInput" placeholder="z.B. 8.8.8.8">
             </div>
             <button class="submit-btn" onclick="trackIP()">Track IP</button>
             <button class="back-btn" onclick="backToMenu()">Zurück</button>
-            <div class="loading" id="ipLoading">Loading...</div>
+            <div class="loading" id="ipLoading">Collecting extended information and address data...</div>
             <div id="ipResult"></div>
         </div>
         
@@ -237,6 +301,42 @@
             <div class="loading" id="usernameLoading">Loading...</div>
             <div id="usernameResult"></div>
         </div>
+        
+        <div id="phoneTracker" class="result-box">
+            <div class="result-title">========== PHONE NUMBER TRACKER ==========</div>
+            <div class="input-group">
+                <label>Enter Phone Number (with country code):</label>
+                <input type="text" id="phoneInput" placeholder="z.B. +491234567890 oder +1234567890">
+            </div>
+            <button class="submit-btn" onclick="trackPhone()">Track Phone</button>
+            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <div class="loading" id="phoneLoading">Analyzing phone number and searching for IP data...</div>
+            <div id="phoneResult"></div>
+        </div>
+        
+        <div id="emailTracker" class="result-box">
+            <div class="result-title">========== EMAIL TRACKER & VALIDATOR ==========</div>
+            <div class="input-group">
+                <label>Enter Email Address:</label>
+                <input type="text" id="emailInput" placeholder="z.B. example@domain.com">
+            </div>
+            <button class="submit-btn" onclick="trackEmail()">Analyze Email</button>
+            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <div class="loading" id="emailLoading">Validating email and resolving domain IP...</div>
+            <div id="emailResult"></div>
+        </div>
+        
+        <div id="discordTracker" class="result-box">
+            <div class="result-title">========== DISCORD USER ID LOOKUP ==========</div>
+            <div class="input-group">
+                <label>Enter Discord User ID:</label>
+                <input type="text" id="discordInput" placeholder="z.B. 1167475880260550820">
+            </div>
+            <button class="submit-btn" onclick="trackDiscord()">Lookup User</button>
+            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <div class="loading" id="discordLoading">Fetching Discord user data...</div>
+            <div id="discordResult"></div>
+        </div>
     </div>
 
     <script>
@@ -250,6 +350,12 @@
                 getMyIP();
             } else if (type === 'username') {
                 document.getElementById('usernameTracker').classList.add('active');
+            } else if (type === 'phone') {
+                document.getElementById('phoneTracker').classList.add('active');
+            } else if (type === 'email') {
+                document.getElementById('emailTracker').classList.add('active');
+            } else if (type === 'discord') {
+                document.getElementById('discordTracker').classList.add('active');
             }
         }
         
@@ -259,6 +365,25 @@
                 box.classList.remove('active');
                 box.querySelector('[id$="Result"]').innerHTML = '';
             });
+        }
+        
+        // Hilfsfunktion: Decimal zu DMS (Degrees Minutes Seconds) Konvertierung
+        function decimalToDMS(lat, lon) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lonDir = lon >= 0 ? 'E' : 'W';
+            
+            lat = Math.abs(lat);
+            lon = Math.abs(lon);
+            
+            const latDeg = Math.floor(lat);
+            const latMin = Math.floor((lat - latDeg) * 60);
+            const latSec = ((lat - latDeg - latMin / 60) * 3600).toFixed(2);
+            
+            const lonDeg = Math.floor(lon);
+            const lonMin = Math.floor((lon - lonDeg) * 60);
+            const lonSec = ((lon - lonDeg - lonMin / 60) * 3600).toFixed(2);
+            
+            return `${latDeg}°${latMin}'${latSec}"${latDir}, ${lonDeg}°${lonMin}'${lonSec}"${lonDir}`;
         }
         
         async function trackIP() {
@@ -275,44 +400,191 @@
             resultDiv.innerHTML = '';
             
             try {
-                const response = await fetch(`https://ipwho.is/${ip}`);
-                const data = await response.json();
+                // Mehrere APIs parallel abfragen
+                const [ipwhoData, ipApiData, ipInfoData, geoData] = await Promise.allSettled([
+                    fetch(`https://ipwho.is/${ip}`).then(r => r.json()),
+                    fetch(`http://ip-api.com/json/${ip}?fields=66846719`).then(r => r.json()),
+                    fetch(`https://ipapi.co/${ip}/json/`).then(r => r.json()),
+                    fetch(`https://get.geojs.io/v1/ip/geo/${ip}.json`).then(r => r.json())
+                ]);
                 
-                loading.classList.remove('active');
+                const data1 = ipwhoData.status === 'fulfilled' ? ipwhoData.value : null;
+                const data2 = ipApiData.status === 'fulfilled' ? ipApiData.value : null;
+                const data3 = ipInfoData.status === 'fulfilled' ? ipInfoData.value : null;
+                const data4 = geoData.status === 'fulfilled' ? geoData.value : null;
                 
-                if (data.success === false) {
+                if (data1 && data1.success === false) {
+                    loading.classList.remove('active');
                     resultDiv.innerHTML = '<div class="error">Ungültige IP-Adresse!</div>';
                     return;
                 }
                 
-                const lat = Math.round(data.latitude);
-                const lon = Math.round(data.longitude);
+                const lat = data1?.latitude || data2?.lat || data3?.latitude || 0;
+                const lon = data1?.longitude || data2?.lon || data3?.longitude || 0;
                 
-                resultDiv.innerHTML = `
-                    <div class="result-data">
-                        <div class="result-line"><span class="result-label">IP Target:</span> <span class="result-value">${ip}</span></div>
-                        <div class="result-line"><span class="result-label">Type:</span> <span class="result-value">${data.type}</span></div>
-                        <div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${data.country}</span></div>
-                        <div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">${data.country_code}</span></div>
-                        <div class="result-line"><span class="result-label">City:</span> <span class="result-value">${data.city}</span></div>
-                        <div class="result-line"><span class="result-label">Continent:</span> <span class="result-value">${data.continent}</span></div>
-                        <div class="result-line"><span class="result-label">Region:</span> <span class="result-value">${data.region}</span></div>
-                        <div class="result-line"><span class="result-label">Latitude:</span> <span class="result-value">${data.latitude}</span></div>
-                        <div class="result-line"><span class="result-label">Longitude:</span> <span class="result-value">${data.longitude}</span></div>
-                        <div class="result-line"><span class="result-label">Maps:</span> <span class="result-value"><a href="https://www.google.com/maps/@${lat},${lon},8z" target="_blank" style="color: #00ff00;">Open in Google Maps</a></span></div>
-                        <div class="result-line"><span class="result-label">Postal:</span> <span class="result-value">${data.postal || 'N/A'}</span></div>
-                        <div class="result-line"><span class="result-label">Calling Code:</span> <span class="result-value">${data.calling_code}</span></div>
-                        <div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data.capital}</span></div>
-                        <div class="result-line"><span class="result-label">Flag:</span> <span class="result-value">${data.flag.emoji}</span></div>
-                        <div class="result-line"><span class="result-label">ISP:</span> <span class="result-value">${data.connection.isp}</span></div>
-                        <div class="result-line"><span class="result-label">ORG:</span> <span class="result-value">${data.connection.org}</span></div>
-                        <div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${data.timezone.id}</span></div>
-                        <div class="result-line"><span class="result-label">Current Time:</span> <span class="result-value">${data.timezone.current_time}</span></div>
-                    </div>
-                `;
+                // REVERSE GEOCODING für Adressdetails - Multiple APIs für maximale Genauigkeit
+                let addressData = null;
+                let addressData2 = null;
+                if (lat && lon) {
+                    try {
+                        const [osm, bigdata] = await Promise.allSettled([
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
+                                headers: {'User-Agent': 'StarTrack-System/1.0'}
+                            }).then(r => r.json()),
+                            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`).then(r => r.json())
+                        ]);
+                        
+                        addressData = osm.status === 'fulfilled' ? osm.value : null;
+                        addressData2 = bigdata.status === 'fulfilled' ? bigdata.value : null;
+                    } catch (e) {
+                        console.log('Reverse geocoding failed:', e);
+                    }
+                }
+                
+                loading.classList.remove('active');
+                
+                const isVPN = data2?.proxy || false;
+                const isMobile = data2?.mobile || false;
+                const isHosting = data2?.hosting || false;
+                
+                let securityBadge = '';
+                if (isVPN) {
+                    securityBadge = '<span class="security-badge badge-warning">VPN/PROXY</span>';
+                } else if (isHosting) {
+                    securityBadge = '<span class="security-badge badge-warning">HOSTING</span>';
+                } else {
+                    securityBadge = '<span class="security-badge badge-safe">RESIDENTIAL</span>';
+                }
+                
+                if (isMobile) {
+                    securityBadge += '<span class="security-badge badge-safe">MOBILE</span>';
+                }
+                
+                let html = '<div class="result-data">';
+                
+                // BASIC INFO
+                html += '<div class="section-title">📍 BASIC INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">IP Address:</span> <span class="result-value">${ip} ${securityBadge}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">IP Type:</span> <span class="result-value">${data1?.type || data3?.version || 'N/A'}</span></div>`;
+                
+                // DETAILED ADDRESS SECTION (NEU!)
+                if (addressData && addressData.address) {
+                    html += '<div class="section-title">🏠 COMPLETE ADDRESS INFORMATION (GPS Reverse Geocoding)</div>';
+                    const addr = addressData.address;
+                    const addr2 = addressData2;
+                    
+                    // Vollständige Adresse formatiert
+                    let fullAddr = '';
+                    if (addr.road || addr.pedestrian || addr.path) {
+                        fullAddr += (addr.road || addr.pedestrian || addr.path);
+                        if (addr.house_number) fullAddr += ' ' + addr.house_number;
+                        fullAddr += ', ';
+                    }
+                    if (addr.postcode) fullAddr += addr.postcode + ' ';
+                    if (addr.city || addr.town || addr.village) fullAddr += (addr.city || addr.town || addr.village) + ', ';
+                    if (addr.state) fullAddr += addr.state + ', ';
+                    if (addr.country) fullAddr += addr.country;
+                    
+                    html += `<div class="result-line"><span class="result-label">📍 Complete Address:</span> <span class="result-value" style="font-weight:bold;">${fullAddr || addressData.display_name}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🛣️ Street Name:</span> <span class="result-value">${addr.road || addr.pedestrian || addr.path || addr.footway || addr.cycleway || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🏠 House Number:</span> <span class="result-value">${addr.house_number || 'Not available'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🏘️ Neighborhood:</span> <span class="result-value">${addr.suburb || addr.quarter || addr.neighbourhood || addr.residential || addr2?.locality || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🏙️ City/Town:</span> <span class="result-value">${addr.city || addr.town || addr.village || addr.hamlet || addr.municipality || addr2?.city || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">📮 Postcode/ZIP:</span> <span class="result-value">${addr.postcode || addr2?.postcode || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🏛️ County/District:</span> <span class="result-value">${addr.county || addr.state_district || addr2?.countryName || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🗺️ State/Province:</span> <span class="result-value">${addr.state || addr.region || addr2?.principalSubdivision || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🌍 Country:</span> <span class="result-value">${addr.country || addr2?.countryName || 'N/A'} (${addr.country_code?.toUpperCase() || 'N/A'})</span></div>`;
+                    
+                    // Zusätzliche Details wenn verfügbar
+                    if (addr.amenity || addr.building || addr.shop || addr.office || addr.tourism) {
+                        html += '<div class="section-title">🏢 LOCATION DETAILS (Point of Interest)</div>';
+                        if (addr.amenity) html += `<div class="result-line"><span class="result-label">🎯 Amenity:</span> <span class="result-value">${addr.amenity}</span></div>`;
+                        if (addr.building) html += `<div class="result-line"><span class="result-label">🏗️ Building Type:</span> <span class="result-value">${addr.building}</span></div>`;
+                        if (addr.shop) html += `<div class="result-line"><span class="result-label">🛒 Shop Type:</span> <span class="result-value">${addr.shop}</span></div>`;
+                        if (addr.office) html += `<div class="result-line"><span class="result-label">💼 Office Type:</span> <span class="result-value">${addr.office}</span></div>`;
+                        if (addr.tourism) html += `<div class="result-line"><span class="result-label">🗼 Tourism:</span> <span class="result-value">${addr.tourism}</span></div>`;
+                    }
+                    
+                    // BigDataCloud zusätzliche Infos
+                    if (addr2) {
+                        html += '<div class="section-title">📊 ADDITIONAL LOCATION DATA</div>';
+                        html += `<div class="result-line"><span class="result-label">🌐 Locality:</span> <span class="result-value">${addr2.locality || 'N/A'}</span></div>`;
+                        html += `<div class="result-line"><span class="result-label">📍 Local Name:</span> <span class="result-value">${addr2.localityInfo?.administrative?.[0]?.name || 'N/A'}</span></div>`;
+                        html += `<div class="result-line"><span class="result-label">🗺️ Plus Code:</span> <span class="result-value">${addr2.plusCode || 'N/A'}</span></div>`;
+                    }
+                }
+                
+                // GEOLOCATION
+                html += '<div class="section-title">🌍 GPS COORDINATES & MAP LINKS</div>';
+                html += `<div class="result-line"><span class="result-label">📍 Latitude:</span> <span class="result-value">${lat}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📍 Longitude:</span> <span class="result-value">${lon}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🎯 Coordinates (DMS):</span> <span class="result-value">${decimalToDMS(lat, lon)}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📏 Accuracy Radius:</span> <span class="result-value">${data3?.accuracy || 'Unknown'} km</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🗺️ Google Maps (Satellite):</span> <span class="result-value"><a href="https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3" target="_blank">🛰️ Ultra Zoom Satellite View</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🚶 Google Street View:</span> <span class="result-value"><a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}&heading=0&pitch=0&fov=90" target="_blank">👁️ Street Level View</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🌐 Google Earth:</span> <span class="result-value"><a href="https://earth.google.com/web/@${lat},${lon},0a,1000d,35y,0h,0t,0r" target="_blank">🌍 Open in Google Earth</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">📱 Apple Maps:</span> <span class="result-value"><a href="http://maps.apple.com/?ll=${lat},${lon}&z=18" target="_blank">🍎 Open in Apple Maps</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🗺️ OpenStreetMap:</span> <span class="result-value"><a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=18" target="_blank">🗺️ OSM Detailed View</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🌍 Bing Maps:</span> <span class="result-value"><a href="https://www.bing.com/maps?cp=${lat}~${lon}&lvl=18&style=a" target="_blank">🔍 Bing Aerial View</a></span></div>`;
+                
+                html += '<div class="section-title">🌎 LOCATION INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${data1?.country || data2?.country || data3?.country_name || 'N/A'} ${data1?.flag?.emoji || ''}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">${data1?.country_code || data2?.countryCode || data3?.country_code || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Region:</span> <span class="result-value">${data1?.region || data2?.regionName || data3?.region || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Region Code:</span> <span class="result-value">${data1?.region_code || data2?.region || data3?.region_code || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${data1?.city || data2?.city || data3?.city || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">District:</span> <span class="result-value">${data2?.district || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">ZIP/Postal:</span> <span class="result-value">${data1?.postal || data2?.zip || data3?.postal || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Continent:</span> <span class="result-value">${data1?.continent || data3?.continent_code || 'N/A'}</span></div>`;
+                
+                // NETWORK INFO
+                html += '<div class="section-title">🌐 NETWORK INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">ISP:</span> <span class="result-value">${data1?.connection?.isp || data2?.isp || data3?.org || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Organization:</span> <span class="result-value">${data1?.connection?.org || data2?.org || data3?.org || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">AS Number:</span> <span class="result-value">${data1?.connection?.asn || data2?.as || data3?.asn || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">AS Name:</span> <span class="result-value">${data3?.asn || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Domain:</span> <span class="result-value">${data1?.connection?.domain || data2?.reverse || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Network:</span> <span class="result-value">${data3?.network || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Area Code:</span> <span class="result-value">${data4?.area_code || 'N/A'}</span></div>`;
+                
+                // SECURITY & TYPE
+                html += '<div class="section-title">🔒 SECURITY & CONNECTION TYPE</div>';
+                html += `<div class="result-line"><span class="result-label">Mobile Connection:</span> <span class="result-value">${isMobile ? '✓ Yes' : '✗ No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Proxy/VPN:</span> <span class="result-value">${isVPN ? '⚠️ Detected' : '✓ No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Hosting/Datacenter:</span> <span class="result-value">${isHosting ? '⚠️ Yes' : '✓ No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Connection Type:</span> <span class="result-value">${data3?.connection_type || 'N/A'}</span></div>`;
+                
+                // TIMEZONE
+                html += '<div class="section-title">🕐 TIMEZONE INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${data1?.timezone?.id || data2?.timezone || data3?.timezone || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">UTC Offset:</span> <span class="result-value">${data1?.timezone?.offset || data3?.utc_offset || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Abbreviation:</span> <span class="result-value">${data1?.timezone?.abbr || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Current Time:</span> <span class="result-value">${data1?.timezone?.current_time || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Is DST:</span> <span class="result-value">${data1?.timezone?.is_dst ? 'Yes' : 'No'}</span></div>`;
+                
+                // COUNTRY DETAILS
+                html += '<div class="section-title">🏛️ COUNTRY DETAILS</div>';
+                html += `<div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data1?.capital || data3?.capital || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Calling Code:</span> <span class="result-value">+${data1?.calling_code || data3?.country_calling_code || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Currency:</span> <span class="result-value">${data3?.currency_name || 'N/A'} (${data3?.currency || 'N/A'})</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Languages:</span> <span class="result-value">${data3?.languages || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Is EU:</span> <span class="result-value">${data1?.is_eu || data3?.in_eu ? 'Yes' : 'No'}</span></div>`;
+                
+                html += '</div>';
+                
+                // Warnings
+                if (isVPN) {
+                    html += '<div class="warning">⚠️ VPN/PROXY DETECTED - Location data may be inaccurate or completely wrong!</div>';
+                }
+                
+                html += '<div class="info">ℹ️ ACCURACY INFO: Street addresses are based on GPS coordinates from the ISP server location. IP addresses typically point to the provider\'s infrastructure, not the exact user location. Accuracy varies from 50m to 50km depending on ISP and location.</div>';
+                
+                resultDiv.innerHTML = html;
+                
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der Daten!</div>';
+                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der Daten! Bitte versuchen Sie es erneut.</div>';
+                console.error(error);
             }
         }
         
@@ -331,6 +603,11 @@
                 resultDiv.innerHTML = `
                     <div class="result-data">
                         <div class="result-line"><span class="result-label">Your IP Address:</span> <span class="result-value">${data.ip}</span></div>
+                        <div style="margin-top: 15px;">
+                            <button class="submit-btn" onclick="document.getElementById('ipInput').value='${data.ip}'; backToMenu(); showTracker('ip'); trackIP();">
+                                Show Extended Info + Address
+                            </button>
+                        </div>
                     </div>
                 `;
             } catch (error) {
@@ -369,13 +646,572 @@
             
             let html = '<div class="result-data">';
             platforms.forEach(platform => {
-                html += `<div class="result-line"><span class="result-label">${platform.name}:</span> <span class="result-value"><a href="${platform.url}" target="_blank" style="color: #00ff00;">${platform.url}</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">${platform.name}:</span> <span class="result-value"><a href="${platform.url}" target="_blank">${platform.url}</a></span></div>`;
             });
             html += '</div>';
             
             loading.classList.remove('active');
             resultDiv.innerHTML = html;
         }
+        
+        async function trackPhone() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            const loading = document.getElementById('phoneLoading');
+            const resultDiv = document.getElementById('phoneResult');
+            
+            if (!phone) {
+                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine Telefonnummer ein!</div>';
+                return;
+            }
+            
+            loading.classList.add('active');
+            resultDiv.innerHTML = '';
+            
+            try {
+                const phoneClean = phone.replace(/[^0-9+]/g, '');
+                
+                // Erweiterte Country Code Erkennung
+                let countryCode = '';
+                let localNumber = phoneClean;
+                
+                if (phoneClean.startsWith('+')) {
+                    const match = phoneClean.match(/^\+(\d{1,4})/);
+                    if (match) countryCode = match[1];
+                    localNumber = phoneClean.substring(countryCode.length + 1);
+                } else if (phoneClean.startsWith('00')) {
+                    const match = phoneClean.match(/^00(\d{1,4})/);
+                    if (match) countryCode = match[1];
+                    localNumber = phoneClean.substring(countryCode.length + 2);
+                }
+                
+                // Umfassendes Country Mapping
+                const countryData = {
+                    '1': { country: 'USA/Canada', iso: 'US/CA', carrier_examples: ['Verizon', 'AT&T', 'T-Mobile', 'Rogers', 'Bell'], timezone: 'UTC-5 to UTC-8', flag: '🇺🇸/🇨🇦' },
+                    '44': { country: 'United Kingdom', iso: 'GB', carrier_examples: ['EE', 'Vodafone', 'O2', 'Three'], timezone: 'UTC+0', flag: '🇬🇧' },
+                    '49': { country: 'Germany', iso: 'DE', carrier_examples: ['Telekom', 'Vodafone', 'O2', '1&1'], timezone: 'UTC+1', flag: '🇩🇪' },
+                    '33': { country: 'France', iso: 'FR', carrier_examples: ['Orange', 'SFR', 'Bouygues', 'Free'], timezone: 'UTC+1', flag: '🇫🇷' },
+                    '39': { country: 'Italy', iso: 'IT', carrier_examples: ['TIM', 'Vodafone', 'Wind Tre'], timezone: 'UTC+1', flag: '🇮🇹' },
+                    '34': { country: 'Spain', iso: 'ES', carrier_examples: ['Movistar', 'Orange', 'Vodafone'], timezone: 'UTC+1', flag: '🇪🇸' },
+                    '7': { country: 'Russia/Kazakhstan', iso: 'RU/KZ', carrier_examples: ['MTS', 'Beeline', 'MegaFon'], timezone: 'UTC+3 to UTC+12', flag: '🇷🇺' },
+                    '81': { country: 'Japan', iso: 'JP', carrier_examples: ['NTT Docomo', 'SoftBank', 'au'], timezone: 'UTC+9', flag: '🇯🇵' },
+                    '86': { country: 'China', iso: 'CN', carrier_examples: ['China Mobile', 'China Unicom', 'China Telecom'], timezone: 'UTC+8', flag: '🇨🇳' },
+                    '91': { country: 'India', iso: 'IN', carrier_examples: ['Airtel', 'Jio', 'Vodafone Idea'], timezone: 'UTC+5:30', flag: '🇮🇳' },
+                    '43': { country: 'Austria', iso: 'AT', carrier_examples: ['A1', 'Magenta', 'Drei'], timezone: 'UTC+1', flag: '🇦🇹' },
+                    '41': { country: 'Switzerland', iso: 'CH', carrier_examples: ['Swisscom', 'Sunrise', 'Salt'], timezone: 'UTC+1', flag: '🇨🇭' },
+                    '31': { country: 'Netherlands', iso: 'NL', carrier_examples: ['KPN', 'Vodafone', 'T-Mobile'], timezone: 'UTC+1', flag: '🇳🇱' },
+                    '32': { country: 'Belgium', iso: 'BE', carrier_examples: ['Proximus', 'Orange', 'Base'], timezone: 'UTC+1', flag: '🇧🇪' },
+                    '48': { country: 'Poland', iso: 'PL', carrier_examples: ['Orange', 'Play', 'Plus', 'T-Mobile'], timezone: 'UTC+1', flag: '🇵🇱' },
+                    '61': { country: 'Australia', iso: 'AU', carrier_examples: ['Telstra', 'Optus', 'Vodafone'], timezone: 'UTC+8 to UTC+11', flag: '🇦🇺' }
+                };
+                
+                const countryInfo = countryData[countryCode] || { country: 'Unknown', iso: 'N/A', carrier_examples: [], timezone: 'Unknown', flag: '🌍' };
+                
+                // Line Type Detection basierend auf Prefix
+                let lineType = 'Unknown';
+                let lineTypeIcon = '📞';
+                
+                if (countryCode === '49') {
+                    if (localNumber.startsWith('15') || localNumber.startsWith('16') || localNumber.startsWith('17')) {
+                        lineType = 'Mobile';
+                        lineTypeIcon = '📱';
+                    } else if (localNumber.startsWith('30') || localNumber.startsWith('40')) {
+                        lineType = 'Landline';
+                        lineTypeIcon = '☎️';
+                    }
+                } else if (countryCode === '1') {
+                    const areaCode = localNumber.substring(0, 3);
+                    if (['201', '202', '212', '213', '305', '310', '312', '404', '415', '510', '617', '702', '713', '818', '917'].includes(areaCode)) {
+                        lineType = 'Mobile/Landline (Area-based)';
+                        lineTypeIcon = '📱☎️';
+                    }
+                } else if (countryCode === '44') {
+                    if (localNumber.startsWith('7')) {
+                        lineType = 'Mobile';
+                        lineTypeIcon = '📱';
+                    } else {
+                        lineType = 'Landline';
+                        lineTypeIcon = '☎️';
+                    }
+                }
+                
+                // Carrier Detection
+                let detectedCarrier = 'Unknown';
+                const carrierPrefixes = {
+                    '49': {
+                        '151': 'T-Mobile', '152': 'Vodafone', '155': 'Vodafone', '157': 'E-Plus/O2',
+                        '159': 'O2', '160': 'T-Mobile', '162': 'Vodafone', '163': 'E-Plus/O2',
+                        '170': 'T-Mobile', '171': 'T-Mobile', '172': 'Vodafone', '173': 'Vodafone',
+                        '174': 'Vodafone', '175': 'T-Mobile', '176': 'O2', '177': 'E-Plus/O2',
+                        '178': 'E-Plus/O2', '179': 'O2'
+                    },
+                    '1': {
+                        // US Carriers - schwieriger zu erkennen ohne Datenbank
+                    }
+                };
+                
+                if (carrierPrefixes[countryCode]) {
+                    const prefix = localNumber.substring(0, 3);
+                    detectedCarrier = carrierPrefixes[countryCode][prefix] || 'Unknown';
+                }
+                
+                // Number Analysis
+                const numberLength = localNumber.length;
+                let numberValid = false;
+                
+                if (countryCode === '49') numberValid = numberLength >= 10 && numberLength <= 11;
+                else if (countryCode === '1') numberValid = numberLength === 10;
+                else if (countryCode === '44') numberValid = numberLength >= 9 && numberLength <= 10;
+                else numberValid = numberLength >= 7 && numberLength <= 15;
+                
+                loading.classList.remove('active');
+                
+                let html = '<div class="result-data">';
+                
+                html += '<div class="section-title">📱 PHONE NUMBER ANALYSIS</div>';
+                html += `<div class="result-line"><span class="result-label">📞 Original Input:</span> <span class="result-value">${phone}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔢 Cleaned Number:</span> <span class="result-value">${phoneClean}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🌍 International Format:</span> <span class="result-value">+${countryCode} ${localNumber}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📏 Number Length:</span> <span class="result-value">${numberLength} digits</span></div>`;
+                html += `<div class="result-line"><span class="result-label">✅ Format Valid:</span> <span class="result-value">${numberValid ? '✓ Likely Valid' : '⚠️ Invalid Length'}</span></div>`;
+                
+                html += '<div class="section-title">🌍 LOCATION INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">🚩 Country:</span> <span class="result-value">${countryInfo.flag} ${countryInfo.country}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔤 Country Code:</span> <span class="result-value">+${countryCode}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🆔 ISO Code:</span> <span class="result-value">${countryInfo.iso}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🕐 Timezone:</span> <span class="result-value">${countryInfo.timezone}</span></div>`;
+                
+                html += '<div class="section-title">📡 CARRIER & TYPE INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">📱 Line Type:</span> <span class="result-value">${lineTypeIcon} ${lineType}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🏢 Detected Carrier:</span> <span class="result-value">${detectedCarrier}</span></div>`;
+                
+                if (countryInfo.carrier_examples.length > 0) {
+                    html += `<div class="result-line"><span class="result-label">🌐 Common Carriers:</span> <span class="result-value">${countryInfo.carrier_examples.join(', ')}</span></div>`;
+                }
+                
+                // Carrier IP Lookup
+                const mainCarriers = {
+                    'T-Mobile': 't-mobile.de',
+                    'Vodafone': 'vodafone.com',
+                    'O2': 'o2online.de',
+                    'AT&T': 'att.com',
+                    'Verizon': 'verizon.com',
+                    'Orange': 'orange.com',
+                    'Telekom': 'telekom.de',
+                    'Deutsche Telekom': 'telekom.de'
+                };
+                
+                let carrierIP = null;
+                let carrierDomain = null;
+                
+                for (const [name, domain] of Object.entries(mainCarriers)) {
+                    if (detectedCarrier.includes(name)) {
+                        carrierDomain = domain;
+                        break;
+                    }
+                }
+                
+                if (carrierDomain) {
+                    try {
+                        const dnsResponse = await fetch(`https://dns.google/resolve?name=${carrierDomain}&type=A`);
+                        const dnsData = await dnsResponse.json();
+                        
+                        if (dnsData.Answer && dnsData.Answer.length > 0) {
+                            carrierIP = dnsData.Answer[0].data;
+                        }
+                    } catch (e) {
+                        console.log('DNS failed:', e);
+                    }
+                }
+                
+                html += '<div class="section-title">🌐 NETWORK & IP INFORMATION</div>';
+                if (carrierIP) {
+                    html += `<div class="result-line"><span class="result-label">🌍 Carrier Domain:</span> <span class="result-value">${carrierDomain}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">📍 Carrier Server IP:</span> <span class="result-value">${carrierIP}</span></div>`;
+                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${carrierIP}'; backToMenu(); showTracker('ip'); trackIP();">🔍 Track Carrier IP Location</button></div>`;
+                } else {
+                    html += `<div class="result-line"><span class="result-label">📍 Carrier IP:</span> <span class="result-value">Unable to resolve (Carrier: ${detectedCarrier})</span></div>`;
+                }
+                
+                html += '<div class="section-title">🔍 OSINT & LOOKUP TOOLS</div>';
+                html += `<div class="result-line"><span class="result-label">🔎 Truecaller:</span> <span class="result-value"><a href="https://www.truecaller.com/search/${countryInfo.iso.split('/')[0]}/${encodeURIComponent(phoneClean)}" target="_blank">Search Name & Spam</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">⚠️ Spam Database:</span> <span class="result-value"><a href="https://www.shouldianswer.com/phone-number/${phoneClean}" target="_blank">Check Spam Reports</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">💬 WhatsApp:</span> <span class="result-value"><a href="https://wa.me/${phoneClean}" target="_blank">Open in WhatsApp</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">📞 Telegram:</span> <span class="result-value"><a href="https://t.me/${phoneClean}" target="_blank">Search on Telegram</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔍 Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=${encodeURIComponent(phone)}" target="_blank">Google This Number</a></span></div>`;
+                
+                html += '</div>';
+                
+                html += '<div class="info">ℹ️ ACCURACY: Carrier detection works best for German numbers. For other countries, common carriers are listed. IP shows carrier infrastructure location, not user location.</div>';
+                
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                loading.classList.remove('active');
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse!</div>';
+                console.error(error);
+            }
+        }
+        
+        async function trackEmail() {
+            const email = document.getElementById('emailInput').value.trim();
+            const loading = document.getElementById('emailLoading');
+            const resultDiv = document.getElementById('emailResult');
+            
+            if (!email) {
+                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine E-Mail-Adresse ein!</div>';
+                return;
+            }
+            
+            loading.classList.add('active');
+            resultDiv.innerHTML = '';
+            
+            try {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValidFormat = emailRegex.test(email);
+                
+                if (!isValidFormat) {
+                    loading.classList.remove('active');
+                    resultDiv.innerHTML = '<div class="error">Ungültiges E-Mail-Format!</div>';
+                    return;
+                }
+                
+                const [username, domain] = email.split('@');
+                
+                // DNS Lookups (parallel)
+                const [mxResponse, aResponse, txtResponse, nsResponse] = await Promise.allSettled([
+                    fetch(`https://dns.google/resolve?name=${domain}&type=MX`).then(r => r.json()),
+                    fetch(`https://dns.google/resolve?name=${domain}&type=A`).then(r => r.json()),
+                    fetch(`https://dns.google/resolve?name=${domain}&type=TXT`).then(r => r.json()),
+                    fetch(`https://dns.google/resolve?name=${domain}&type=NS`).then(r => r.json())
+                ]);
+                
+                const mxData = mxResponse.status === 'fulfilled' ? mxResponse.value : null;
+                const aData = aResponse.status === 'fulfilled' ? aResponse.value : null;
+                const txtData = txtResponse.status === 'fulfilled' ? txtResponse.value : null;
+                const nsData = nsResponse.status === 'fulfilled' ? nsResponse.value : null;
+                
+                let mxRecords = [];
+                let domainIP = null;
+                let txtRecords = [];
+                let nameservers = [];
+                
+                if (mxData?.Answer) {
+                    mxRecords = mxData.Answer.map(record => {
+                        const parts = record.data.split(' ');
+                        return { priority: parts[0], server: parts[1] };
+                    });
+                }
+                
+                if (aData?.Answer && aData.Answer.length > 0) {
+                    domainIP = aData.Answer[0].data;
+                }
+                
+                if (txtData?.Answer) {
+                    txtRecords = txtData.Answer.map(r => r.data);
+                }
+                
+                if (nsData?.Answer) {
+                    nameservers = nsData.Answer.map(r => r.data);
+                }
+                
+                // Enhanced Disposable Detection
+                const disposableDomains = [
+                    'tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email',
+                    'mailinator.com', 'trashmail.com', 'temp-mail.org', 'fakeinbox.com',
+                    'sharklasers.com', 'getnada.com', 'yopmail.com', 'maildrop.cc',
+                    'dispostable.com', 'mintemail.com', 'mytemp.email'
+                ];
+                const isDisposable = disposableDomains.some(d => domain.toLowerCase().includes(d));
+                
+                // Enhanced Provider Detection
+                const providers = {
+                    'gmail.com': { name: 'Google Gmail', icon: '📧', type: 'Free', company: 'Google LLC', security: 'High' },
+                    'googlemail.com': { name: 'Google Gmail', icon: '📧', type: 'Free', company: 'Google LLC', security: 'High' },
+                    'outlook.com': { name: 'Microsoft Outlook', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
+                    'hotmail.com': { name: 'Microsoft Hotmail', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
+                    'live.com': { name: 'Microsoft Live', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
+                    'yahoo.com': { name: 'Yahoo Mail', icon: '📬', type: 'Free', company: 'Yahoo', security: 'Medium' },
+                    'icloud.com': { name: 'Apple iCloud', icon: '🍎', type: 'Free', company: 'Apple Inc.', security: 'High' },
+                    'me.com': { name: 'Apple iCloud', icon: '🍎', type: 'Free', company: 'Apple Inc.', security: 'High' },
+                    'protonmail.com': { name: 'ProtonMail', icon: '🔒', type: 'Secure', company: 'Proton AG', security: 'Very High' },
+                    'proton.me': { name: 'ProtonMail', icon: '🔒', type: 'Secure', company: 'Proton AG', security: 'Very High' },
+                    'tutanota.com': { name: 'Tutanota', icon: '🔐', type: 'Secure', company: 'Tutanota GmbH', security: 'Very High' },
+                    'tuta.io': { name: 'Tutanota', icon: '🔐', type: 'Secure', company: 'Tutanota GmbH', security: 'Very High' },
+                    'mailfence.com': { name: 'Mailfence', icon: '🔐', type: 'Secure', company: 'ContactOffice Group', security: 'High' },
+                    'aol.com': { name: 'AOL Mail', icon: '📮', type: 'Free', company: 'Yahoo', security: 'Medium' },
+                    'gmx.com': { name: 'GMX Mail', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
+                    'gmx.de': { name: 'GMX Mail', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
+                    'web.de': { name: 'WEB.DE', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' }
+                };
+                
+                const provider = providers[domain.toLowerCase()] || { name: 'Custom/Business', icon: '🏢', type: 'Custom', company: 'Unknown', security: 'Unknown' };
+                
+                // SPF/DKIM/DMARC Detection
+                let hasSPF = false;
+                let hasDKIM = false;
+                let hasDMARC = false;
+                
+                txtRecords.forEach(record => {
+                    if (record.includes('v=spf1')) hasSPF = true;
+                    if (record.includes('v=DKIM1')) hasDKIM = true;
+                    if (record.includes('v=DMARC1')) hasDMARC = true;
+                });
+                
+                loading.classList.remove('active');
+                
+                let html = '<div class="result-data">';
+                
+                html += '<div class="section-title">📧 EMAIL ADDRESS ANALYSIS</div>';
+                html += `<div class="result-line"><span class="result-label">📬 Full Email:</span> <span class="result-value">${email}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">👤 Username:</span> <span class="result-value">${username}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🌐 Domain:</span> <span class="result-value">${domain}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">✅ Format Valid:</span> <span class="result-value">${isValidFormat ? '✓ Yes' : '✗ No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🏢 Provider:</span> <span class="result-value">${provider.icon} ${provider.name}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🏭 Company:</span> <span class="result-value">${provider.company}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📑 Type:</span> <span class="result-value">${provider.type}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔒 Security Level:</span> <span class="result-value">${provider.security}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🗑️ Disposable:</span> <span class="result-value">${isDisposable ? '⚠️ Yes (Temporary)' : '✓ No'}</span></div>`;
+                
+                if (mxRecords.length > 0) {
+                    html += '<div class="section-title">📬 MX RECORDS (Mail Servers)</div>';
+                    mxRecords.forEach((mx, index) => {
+                        html += `<div class="result-line"><span class="result-label">MX ${index + 1} (Priority ${mx.priority}):</span> <span class="result-value">${mx.server}</span></div>`;
+                    });
+                    html += `<div class="result-line"><span class="result-label">✅ MX Status:</span> <span class="result-value">✓ Valid (${mxRecords.length} server${mxRecords.length > 1 ? 's' : ''})</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">📨 Can Receive:</span> <span class="result-value">✓ Yes</span></div>`;
+                } else {
+                    html += '<div class="section-title">📬 MX RECORDS</div>';
+                    html += `<div class="result-line"><span class="result-label">❌ MX Status:</span> <span class="result-value">⚠️ No MX records - Cannot receive email!</span></div>`;
+                }
+                
+                html += '<div class="section-title">🔒 EMAIL SECURITY (SPF/DKIM/DMARC)</div>';
+                html += `<div class="result-line"><span class="result-label">🛡️ SPF Record:</span> <span class="result-value">${hasSPF ? '✓ Configured' : '✗ Not Found'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔐 DKIM:</span> <span class="result-value">${hasDKIM ? '✓ Configured' : '✗ Not Found'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📋 DMARC:</span> <span class="result-value">${hasDMARC ? '✓ Configured' : '✗ Not Found'}</span></div>`;
+                const securityScore = (hasSPF ? 1 : 0) + (hasDKIM ? 1 : 0) + (hasDMARC ? 1 : 0);
+                html += `<div class="result-line"><span class="result-label">🎯 Security Score:</span> <span class="result-value">${securityScore}/3 ${securityScore === 3 ? '✓ Excellent' : securityScore === 2 ? '⚠️ Good' : '❌ Poor'}</span></div>`;
+                
+                if (nameservers.length > 0) {
+                    html += '<div class="section-title">🌐 NAMESERVERS</div>';
+                    nameservers.forEach((ns, index) => {
+                        html += `<div class="result-line"><span class="result-label">NS ${index + 1}:</span> <span class="result-value">${ns}</span></div>`;
+                    });
+                }
+                
+                if (domainIP) {
+                    html += '<div class="section-title">📍 MAIL SERVER IP & LOCATION</div>';
+                    html += `<div class="result-line"><span class="result-label">🌍 Domain IP:</span> <span class="result-value">${domainIP}</span></div>`;
+                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${domainIP}'; backToMenu(); showTracker('ip'); trackIP();">🔍 Track Mail Server Location</button></div>`;
+                } else {
+                    html += '<div class="section-title">📍 MAIL SERVER IP</div>';
+                    html += `<div class="result-line"><span class="result-label">Domain IP:</span> <span class="result-value">Unable to resolve</span></div>`;
+                }
+                
+                html += '<div class="section-title">🔍 SECURITY & BREACH CHECK</div>';
+                html += `<div class="result-line"><span class="result-label">🔓 Data Breaches:</span> <span class="result-value"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank">Check HaveIBeenPwned</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">📊 Email Reputation:</span> <span class="result-value"><a href="https://emailrep.io/${encodeURIComponent(email)}" target="_blank">Check EmailRep.io</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🕵️ Email OSINT:</span> <span class="result-value"><a href="https://epieos.com/?q=${encodeURIComponent(email)}" target="_blank">Epieos Lookup</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔍 Hunter.io:</span> <span class="result-value"><a href="https://hunter.io/email-verifier/${encodeURIComponent(email)}" target="_blank">Verify Email</a></span></div>`;
+                
+                html += '<div class="section-title">🌐 DOMAIN INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">📋 WHOIS:</span> <span class="result-value"><a href="https://who.is/whois/${domain}" target="_blank">Domain Owner Info</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔧 DNS Tools:</span> <span class="result-value"><a href="https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}" target="_blank">MXToolbox Analysis</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🌍 Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=%22${encodeURIComponent(email)}%22" target="_blank">Search Email Online</a></span></div>`;
+                
+                html += '</div>';
+                
+                if (isDisposable) {
+                    html += '<div class="warning">⚠️ DISPOSABLE EMAIL - This is a temporary/throwaway email service!</div>';
+                }
+                
+                if (securityScore === 0) {
+                    html += '<div class="warning">⚠️ NO EMAIL SECURITY - Domain has no SPF/DKIM/DMARC protection. High spam risk!</div>';
+                }
+                
+                html += '<div class="info">ℹ️ INFO: The IP address shown belongs to the email provider\'s mail servers, not the email sender\'s device. For providers like Gmail/Outlook, this will show Google/Microsoft datacenter IPs.</div>';
+                
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                loading.classList.remove('active');
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse!</div>';
+                console.error(error);
+            }
+        }
+        
+        async function trackDiscord() {
+            const userId = document.getElementById('discordInput').value.trim();
+            const loading = document.getElementById('discordLoading');
+            const resultDiv = document.getElementById('discordResult');
+            
+            if (!userId) {
+                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine Discord User ID ein!</div>';
+                return;
+            }
+            
+            // Validierung: User ID muss nur aus Zahlen bestehen
+            if (!/^\d+$/.test(userId)) {
+                resultDiv.innerHTML = '<div class="error">Ungültige User ID! Discord User IDs bestehen nur aus Zahlen.</div>';
+                return;
+            }
+            
+            loading.classList.add('active');
+            resultDiv.innerHTML = '';
+            
+            try {
+                // Account Creation Date aus Snowflake ID berechnen
+                const creationTimestamp = (BigInt(userId) >> 22n) + 1420070400000n;
+                const accountCreated = new Date(Number(creationTimestamp));
+                const accountAge = Math.floor((Date.now() - accountCreated.getTime()) / (1000 * 60 * 60 * 24));
+                const years = Math.floor(accountAge / 365);
+                const months = Math.floor((accountAge % 365) / 30);
+                const days = accountAge % 30;
+                
+                // Versuche User-Daten über Discord API zu holen (public endpoint ohne Auth)
+                let userData = null;
+                
+                try {
+                    const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`);
+                    if (userResponse.ok) {
+                        userData = await userResponse.json();
+                    }
+                } catch (e) {
+                    console.log('Discord API unavailable');
+                }
+                
+                loading.classList.remove('active');
+                
+                let html = '<div class="result-data">';
+                
+                html += '<div class="section-title">🆔 DISCORD USER ID INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">👤 User ID:</span> <span class="result-value">${userId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📅 Account Created:</span> <span class="result-value">${accountCreated.toLocaleString('de-DE')}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">⏰ Account Age:</span> <span class="result-value">${years} years, ${months} months, ${days} days (${accountAge} total days)</span></div>`;
+                
+                // Snowflake Breakdown
+                const snowflakeTimestamp = Number(BigInt(userId) >> 22n);
+                const workerId = Number((BigInt(userId) & 0x3E0000n) >> 17n);
+                const processId = Number((BigInt(userId) & 0x1F000n) >> 12n);
+                const increment = Number(BigInt(userId) & 0xFFFn);
+                
+                html += '<div class="section-title">❄️ SNOWFLAKE ID BREAKDOWN</div>';
+                html += `<div class="result-line"><span class="result-label">⏱️ Timestamp:</span> <span class="result-value">${snowflakeTimestamp}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🖥️ Worker ID:</span> <span class="result-value">${workerId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">⚙️ Process ID:</span> <span class="result-value">${processId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔢 Increment:</span> <span class="result-value">${increment}</span></div>`;
+                
+                if (userData) {
+                    html += '<div class="section-title">👤 PUBLIC PROFILE DATA</div>';
+                    html += `<div class="result-line"><span class="result-label">👤 Username:</span> <span class="result-value">${userData.username}${userData.discriminator && userData.discriminator !== '0' ? '#' + userData.discriminator : ''}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🎨 Display Name:</span> <span class="result-value">${userData.global_name || userData.username}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🤖 Account Type:</span> <span class="result-value">${userData.bot ? '🤖 Bot Account' : '👤 User Account'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">🔒 System Account:</span> <span class="result-value">${userData.system ? '✓ Yes' : '✗ No'}</span></div>`;
+                    
+                    if (userData.avatar) {
+                        const isAnimated = userData.avatar.startsWith('a_');
+                        const avatarExt = isAnimated ? 'gif' : 'png';
+                        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${userData.avatar}.${avatarExt}?size=512`;
+                        html += `<div class="result-line"><span class="result-label">🖼️ Avatar:</span> <span class="result-value"><a href="${avatarUrl}" target="_blank">View ${isAnimated ? 'Animated ' : ''}Avatar</a></span></div>`;
+                        html += `<div class="result-line"><span class="result-label">🎭 Avatar Hash:</span> <span class="result-value">${userData.avatar}</span></div>`;
+                    } else {
+                        const defaultAvatar = (parseInt(userId) >> 22) % 6;
+                        html += `<div class="result-line"><span class="result-label">🖼️ Avatar:</span> <span class="result-value">Default Avatar #${defaultAvatar}</span></div>`;
+                        const defaultUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatar}.png`;
+                        html += `<div class="result-line"><span class="result-label">🔗 Default Avatar URL:</span> <span class="result-value"><a href="${defaultUrl}" target="_blank">View Default</a></span></div>`;
+                    }
+                    
+                    if (userData.banner) {
+                        const isAnimated = userData.banner.startsWith('a_');
+                        const bannerExt = isAnimated ? 'gif' : 'png';
+                        const bannerUrl = `https://cdn.discordapp.com/banners/${userId}/${userData.banner}.${bannerExt}?size=600`;
+                        html += `<div class="result-line"><span class="result-label">🎨 Banner:</span> <span class="result-value"><a href="${bannerUrl}" target="_blank">View ${isAnimated ? 'Animated ' : ''}Banner</a></span></div>`;
+                    } else {
+                        html += `<div class="result-line"><span class="result-label">🎨 Banner:</span> <span class="result-value">None</span></div>`;
+                    }
+                    
+                    if (userData.avatar_decoration_data) {
+                        html += `<div class="result-line"><span class="result-label">✨ Avatar Decoration:</span> <span class="result-value">Yes (SKU: ${userData.avatar_decoration_data.sku_id || 'N/A'})</span></div>`;
+                    }
+                    
+                    if (userData.accent_color) {
+                        const accentColor = '#' + userData.accent_color.toString(16).padStart(6, '0');
+                        html += `<div class="result-line"><span class="result-label">🎨 Accent Color:</span> <span class="result-value"><span style="display:inline-block; width:20px; height:20px; background:${accentColor}; border:1px solid #fff; vertical-align:middle; margin-right:5px;"></span>${accentColor}</span></div>`;
+                    }
+                    
+                    if (userData.public_flags !== undefined) {
+                        const flags = parseDiscordFlags(userData.public_flags);
+                        if (flags.length > 0) {
+                            html += `<div class="result-line"><span class="result-label">🏅 Badges & Flags:</span> <span class="result-value">${flags.join(', ')}</span></div>`;
+                        } else {
+                            html += `<div class="result-line"><span class="result-label">🏅 Badges:</span> <span class="result-value">None</span></div>`;
+                        }
+                    }
+                    
+                    if (userData.premium_type !== undefined && userData.premium_type !== 0) {
+                        const nitroTypes = {
+                            1: '💎 Nitro Classic',
+                            2: '💎 Nitro',
+                            3: '💎 Nitro Basic'
+                        };
+                        html += `<div class="result-line"><span class="result-label">💎 Nitro:</span> <span class="result-value">${nitroTypes[userData.premium_type] || 'Unknown Type'}</span></div>`;
+                    } else {
+                        html += `<div class="result-line"><span class="result-label">💎 Nitro:</span> <span class="result-value">No Active Subscription</span></div>`;
+                    }
+                } else {
+                    html += '<div class="section-title">⚠️ PUBLIC PROFILE NOT AVAILABLE</div>';
+                    html += `<div class="result-line"><span class="result-label">Status:</span> <span class="result-value">User profile is private or API access is restricted</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Info:</span> <span class="result-value">Basic information can still be derived from User ID</span></div>`;
+                }
+                
+                html += '<div class="section-title">🔍 DISCORD OSINT & LOOKUP TOOLS</div>';
+                html += `<div class="result-line"><span class="result-label">👤 Discord.id:</span> <span class="result-value"><a href="https://discord.id/?prefill=${userId}" target="_blank">Complete User Lookup</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔎 DiscordLookup:</span> <span class="result-value"><a href="https://discordlookup.com/user/${userId}" target="_blank">Extended Profile Info</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🕵️ Open in Discord:</span> <span class="result-value"><a href="https://discord.com/users/${userId}" target="_blank">View Profile (requires Discord)</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">📊 Lookup.guru:</span> <span class="result-value"><a href="https://lookup.guru/${userId}" target="_blank">Detailed Analysis</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">🔗 Discord Profile Link:</span> <span class="result-value">discord://-/users/${userId}</span></div>`;
+                
+                html += '<div class="section-title">📊 ADDITIONAL INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">🔗 User Mention Format:</span> <span class="result-value">&lt;@${userId}&gt;</span></div>`;
+                html += `<div class="result-line"><span class="result-label">📋 ID Copy:</span> <span class="result-value"><code style="background:rgba(0,0,0,0.3); padding:3px 8px; border-radius:3px;">${userId}</code></span></div>`;
+                
+                html += '</div>';
+                
+                html += '<div class="info">ℹ️ INFO: User IDs are public information. Email addresses and phone numbers are private and cannot be accessed. Account creation date is calculated from the Snowflake ID structure. Profile data depends on user privacy settings.</div>';
+                
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                loading.classList.remove('active');
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse! Bitte überprüfen Sie die User ID.</div>';
+                console.error(error);
+            }
+        }
+        
+        function parseDiscordFlags(flags) {
+            const flagNames = {
+                1: '👨‍💼 Discord Staff',
+                2: '👥 Partnered Server Owner',
+                4: '🎪 HypeSquad Events',
+                8: '🐛 Bug Hunter Level 1',
+                64: '⚡ HypeSquad Bravery',
+                128: '💚 HypeSquad Brilliance',
+                256: '💜 HypeSquad Balance',
+                512: '🎗️ Early Supporter',
+                16384: '🐛 Bug Hunter Level 2',
+                65536: '🏠 Verified Bot',
+                131072: '🤖 Verified Bot Developer',
+                262144: '🎓 Certified Moderator',
+                524288: '🔨 Active Developer'
+            };
+            
+            const userFlags = [];
+            for (const [bit, name] of Object.entries(flagNames)) {
+                if (flags & parseInt(bit)) {
+                    userFlags.push(name);
+                }
+            }
+            return userFlags;
+        }
     </script>
 </body>
-  </html>
+</html>
