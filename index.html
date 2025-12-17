@@ -13,39 +13,83 @@
         
         body {
             font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
-            color: #ff0000;
+            background: linear-gradient(135deg, #0a0014 0%, #1a0028 50%, #14000a 100%);
+            color: #ff3366;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 0, 100, 0.15) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 5%) scale(1.1); }
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         
         .banner {
             text-align: center;
             margin-bottom: 30px;
-            color: #ff3333;
+            color: #ff3366;
             font-size: 14px;
             line-height: 1.4;
             white-space: pre;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8),
+                         0 0 20px rgba(138, 43, 226, 0.6),
+                         0 0 30px rgba(255, 0, 100, 0.4);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 10px rgba(255, 51, 102, 0.8),
+                            0 0 20px rgba(138, 43, 226, 0.6),
+                            0 0 30px rgba(255, 0, 100, 0.4); 
+            }
+            to { 
+                text-shadow: 0 0 20px rgba(255, 51, 102, 1),
+                            0 0 30px rgba(138, 43, 226, 0.8),
+                            0 0 40px rgba(255, 0, 100, 0.6); 
+            }
         }
         
         .menu {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ff0000;
-            border-radius: 10px;
+            background: rgba(20, 0, 40, 0.8);
+            border: 2px solid #8a2be2;
+            border-radius: 15px;
             padding: 30px;
             margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5),
+                        inset 0 0 30px rgba(255, 0, 100, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         .menu-title {
             text-align: center;
-            color: #ff3333;
-            margin-bottom: 20px;
-            font-size: 18px;
+            color: #ff3366;
+            margin-bottom: 25px;
+            font-size: 20px;
+            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
         }
         
         .menu-options {
@@ -54,45 +98,97 @@
         }
         
         .menu-btn {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid #ff0000;
-            color: #ff0000;
-            padding: 15px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(255, 0, 100, 0.2) 100%);
+            border: 1px solid #8a2be2;
+            color: #ff3366;
+            padding: 18px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
             font-size: 16px;
             transition: all 0.3s;
             text-align: left;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .menu-btn:hover::before {
+            left: 100%;
         }
         
         .menu-btn:hover {
-            background: rgba(255, 0, 0, 0.2);
-            transform: translateX(5px);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(255, 0, 100, 0.4) 100%);
+            transform: translateX(8px);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.6),
+                        0 0 35px rgba(255, 0, 100, 0.4);
+            border-color: #ff3366;
         }
         
         .result-box {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ff0000;
-            border-radius: 10px;
-            padding: 20px;
+            background: rgba(20, 0, 40, 0.95);
+            border: 2px solid #8a2be2;
+            border-radius: 15px;
+            padding: 25px;
             margin-top: 20px;
             display: none;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6),
+                        inset 0 0 20px rgba(255, 0, 100, 0.1);
+            backdrop-filter: blur(15px);
+        }
+        
+        .result-box::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        .result-box::-webkit-scrollbar-track {
+            background: rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+        }
+        
+        .result-box::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #8a2be2, #ff0064);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
         
         .result-box.active {
             display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .result-title {
-            color: #ff0000;
+            color: #ff3366;
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 18px;
-            border-bottom: 1px solid #ff0000;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 20px;
+            border-bottom: 2px solid #8a2be2;
+            padding-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
         }
         
         .input-group {
@@ -101,68 +197,90 @@
         
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #ffffff;
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
         
         .input-group input {
             width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #ff0000;
-            color: #ff0000;
-            border-radius: 5px;
+            padding: 14px;
+            background: rgba(10, 0, 20, 0.7);
+            border: 2px solid #8a2be2;
+            color: #ff3366;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.2);
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff3366;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6),
+                        inset 0 0 15px rgba(255, 0, 100, 0.2);
         }
         
         .submit-btn {
-            background: #ff0000;
-            color: #000;
+            background: linear-gradient(135deg, #8a2be2 0%, #ff0064 100%);
+            color: #fff;
             border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
+            padding: 14px 35px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
             font-size: 16px;
             font-weight: bold;
             transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .submit-btn:hover {
-            background: #cc0000;
+            background: linear-gradient(135deg, #9d3ef0 0%, #ff1a7a 100%);
             transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.8),
+                        0 0 40px rgba(255, 0, 100, 0.6);
         }
         
         .back-btn {
-            background: #ff3333;
+            background: rgba(138, 43, 226, 0.3);
             color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border: 1px solid #8a2be2;
+            padding: 12px 25px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
             margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
         }
         
         .result-data {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 5px;
+            background: rgba(10, 0, 20, 0.6);
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
         
         .section-title {
-            color: #ff3333;
-            font-size: 16px;
-            margin: 20px 0 10px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ff3333;
+            color: #ff3366;
+            font-size: 17px;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #8a2be2;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.6);
         }
         
         .result-line {
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
         }
         
         .result-label {
@@ -172,78 +290,128 @@
         }
         
         .result-value {
-            color: #ff0000;
+            color: #ff3366;
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.3);
         }
         
         .result-value a {
-            color: #ff0000;
+            color: #8a2be2;
             text-decoration: underline;
+            transition: all 0.3s;
+        }
+        
+        .result-value a:hover {
+            color: #ff3366;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
         }
         
         .loading {
             text-align: center;
-            color: #ff0000;
-            padding: 20px;
+            color: #ff3366;
+            padding: 25px;
             display: none;
+            font-size: 16px;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
         }
         
         .loading.active {
             display: block;
+            animation: loadingPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
         
         .error {
-            color: #ff3333;
-            padding: 10px;
-            background: rgba(255, 51, 51, 0.1);
-            border: 1px solid #ff3333;
-            border-radius: 5px;
-            margin-top: 10px;
+            color: #ff3366;
+            padding: 15px;
+            background: rgba(255, 51, 51, 0.2);
+            border: 2px solid #ff3366;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
         }
 
         .warning {
             color: #ffaa00;
-            padding: 10px;
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid #ffaa00;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 12px;
+            padding: 15px;
+            background: rgba(255, 170, 0, 0.2);
+            border: 2px solid #ffaa00;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
         }
 
         .info {
-            color: #00aaff;
-            padding: 10px;
-            background: rgba(0, 170, 255, 0.1);
-            border: 1px solid #00aaff;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 12px;
+            color: #00d4ff;
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
 
         .security-badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
+            padding: 4px 10px;
+            border-radius: 5px;
             font-size: 11px;
             margin-left: 10px;
+            font-weight: bold;
         }
 
         .badge-safe {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff0000;
-            border: 1px solid #ff0000;
+            background: rgba(138, 43, 226, 0.3);
+            color: #8a2be2;
+            border: 1px solid #8a2be2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
 
         .badge-warning {
-            background: rgba(255, 170, 0, 0.2);
+            background: rgba(255, 170, 0, 0.3);
             color: #ffaa00;
             border: 1px solid #ffaa00;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
         }
 
         .badge-danger {
-            background: rgba(255, 51, 51, 0.2);
+            background: rgba(255, 51, 51, 0.3);
             color: #ff3333;
             border: 1px solid #ff3333;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            background: rgba(10, 0, 20, 0.5);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #ffffff;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: #ff3366;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.6);
         }
     </style>
 </head>
@@ -256,84 +424,84 @@
      ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,<   
     /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  
 
-         [ + ]  P O W E R E D  B Y  S T A R N E T  [ + ]
+         [ + ]  E N H A N C E D  E D I T I O N  [ + ]
         </div>
         
         <div id="mainMenu" class="menu">
-            <div class="menu-title">★ S T A R T R A C K - S Y S T E M ★</div>
+            <div class="menu-title">STARTRACK SYSTEM</div>
             <div class="menu-options">
-                <button class="menu-btn" onclick="showTracker('ip')">[ 1 ] IP Tracker (Extended Info + Address)</button>
-                <button class="menu-btn" onclick="showTracker('myip')">[ 2 ] Show Your IP</button>
-                <button class="menu-btn" onclick="showTracker('username')">[ 3 ] Username Tracker</button>
-                <button class="menu-btn" onclick="showTracker('phone')">[ 4 ] Phone Number Tracker + IP</button>
-                <button class="menu-btn" onclick="showTracker('email')">[ 5 ] Email Tracker + IP Validator</button>
-                <button class="menu-btn" onclick="showTracker('discord')">[ 6 ] Discord User ID → Profile Info</button>
+                <button class="menu-btn" onclick="showTracker('ip')">[ 1 ] IP Tracker - Extended Info + Address + Maps</button>
+                <button class="menu-btn" onclick="showTracker('myip')">[ 2 ] Show Your IP + Complete Analysis</button>
+                <button class="menu-btn" onclick="showTracker('username')">[ 3 ] Username Tracker - 50+ Platforms</button>
+                <button class="menu-btn" onclick="showTracker('phone')">[ 4 ] Phone Number Tracker + Carrier + Validation</button>
+                <button class="menu-btn" onclick="showTracker('email')">[ 5 ] Email Tracker + OSINT + Security Analysis</button>
+                <button class="menu-btn" onclick="showTracker('discord')">[ 6 ] Discord User ID - Profile + Badges + Nitro</button>
             </div>
         </div>
         
         <div id="ipTracker" class="result-box">
-            <div class="result-title">========== EXTENDED IP TRACKER ==========</div>
+            <div class="result-title">IP TRACKER</div>
             <div class="input-group">
                 <label>Enter IP Address:</label>
                 <input type="text" id="ipInput" placeholder="z.B. 8.8.8.8">
             </div>
             <button class="submit-btn" onclick="trackIP()">Track IP</button>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
             <div class="loading" id="ipLoading">Collecting extended information and address data...</div>
             <div id="ipResult"></div>
         </div>
         
         <div id="myipTracker" class="result-box">
-            <div class="result-title">========== YOUR IP ADDRESS ==========</div>
+            <div class="result-title">YOUR IP ADDRESS</div>
             <div class="loading" id="myipLoading">Loading...</div>
             <div id="myipResult"></div>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
         </div>
         
         <div id="usernameTracker" class="result-box">
-            <div class="result-title">========== USERNAME TRACKER ==========</div>
+            <div class="result-title">USERNAME TRACKER</div>
             <div class="input-group">
                 <label>Enter Username:</label>
                 <input type="text" id="usernameInput" placeholder="z.B. username123">
             </div>
             <button class="submit-btn" onclick="trackUsername()">Track Username</button>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
-            <div class="loading" id="usernameLoading">Loading...</div>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
+            <div class="loading" id="usernameLoading">Searching across 50+ platforms...</div>
             <div id="usernameResult"></div>
         </div>
         
         <div id="phoneTracker" class="result-box">
-            <div class="result-title">========== PHONE NUMBER TRACKER ==========</div>
+            <div class="result-title">PHONE NUMBER TRACKER</div>
             <div class="input-group">
                 <label>Enter Phone Number (with country code):</label>
-                <input type="text" id="phoneInput" placeholder="z.B. +491234567890 oder +1234567890">
+                <input type="text" id="phoneInput" placeholder="z.B. +491234567890">
             </div>
             <button class="submit-btn" onclick="trackPhone()">Track Phone</button>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
             <div class="loading" id="phoneLoading">Analyzing phone number and searching for IP data...</div>
             <div id="phoneResult"></div>
         </div>
         
         <div id="emailTracker" class="result-box">
-            <div class="result-title">========== EMAIL TRACKER & VALIDATOR ==========</div>
+            <div class="result-title">EMAIL TRACKER & VALIDATOR</div>
             <div class="input-group">
                 <label>Enter Email Address:</label>
                 <input type="text" id="emailInput" placeholder="z.B. example@domain.com">
             </div>
             <button class="submit-btn" onclick="trackEmail()">Analyze Email</button>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
             <div class="loading" id="emailLoading">Validating email and resolving domain IP...</div>
             <div id="emailResult"></div>
         </div>
         
         <div id="discordTracker" class="result-box">
-            <div class="result-title">========== DISCORD USER ID LOOKUP ==========</div>
+            <div class="result-title">DISCORD USER ID LOOKUP</div>
             <div class="input-group">
                 <label>Enter Discord User ID:</label>
                 <input type="text" id="discordInput" placeholder="z.B. 1167475880260550820">
             </div>
             <button class="submit-btn" onclick="trackDiscord()">Lookup User</button>
-            <button class="back-btn" onclick="backToMenu()">Zurück</button>
+            <button class="back-btn" onclick="backToMenu()">Back</button>
             <div class="loading" id="discordLoading">Fetching Discord user data...</div>
             <div id="discordResult"></div>
         </div>
@@ -342,47 +510,34 @@
     <script>
         function showTracker(type) {
             document.getElementById('mainMenu').style.display = 'none';
-            
-            if (type === 'ip') {
-                document.getElementById('ipTracker').classList.add('active');
-            } else if (type === 'myip') {
-                document.getElementById('myipTracker').classList.add('active');
-                getMyIP();
-            } else if (type === 'username') {
-                document.getElementById('usernameTracker').classList.add('active');
-            } else if (type === 'phone') {
-                document.getElementById('phoneTracker').classList.add('active');
-            } else if (type === 'email') {
-                document.getElementById('emailTracker').classList.add('active');
-            } else if (type === 'discord') {
-                document.getElementById('discordTracker').classList.add('active');
-            }
+            document.getElementById(type === 'ip' ? 'ipTracker' : 
+                                   type === 'myip' ? 'myipTracker' :
+                                   type === 'username' ? 'usernameTracker' :
+                                   type === 'phone' ? 'phoneTracker' :
+                                   type === 'email' ? 'emailTracker' : 'discordTracker').classList.add('active');
+            if (type === 'myip') getMyIP();
         }
         
         function backToMenu() {
             document.getElementById('mainMenu').style.display = 'block';
             document.querySelectorAll('.result-box').forEach(box => {
                 box.classList.remove('active');
-                box.querySelector('[id$="Result"]').innerHTML = '';
+                const resultDiv = box.querySelector('[id$="Result"]');
+                if (resultDiv) resultDiv.innerHTML = '';
             });
         }
         
-        // Hilfsfunktion: Decimal zu DMS (Degrees Minutes Seconds) Konvertierung
         function decimalToDMS(lat, lon) {
             const latDir = lat >= 0 ? 'N' : 'S';
             const lonDir = lon >= 0 ? 'E' : 'W';
-            
             lat = Math.abs(lat);
             lon = Math.abs(lon);
-            
             const latDeg = Math.floor(lat);
             const latMin = Math.floor((lat - latDeg) * 60);
             const latSec = ((lat - latDeg - latMin / 60) * 3600).toFixed(2);
-            
             const lonDeg = Math.floor(lon);
             const lonMin = Math.floor((lon - lonDeg) * 60);
             const lonSec = ((lon - lonDeg - lonMin / 60) * 3600).toFixed(2);
-            
             return `${latDeg}°${latMin}'${latSec}"${latDir}, ${lonDeg}°${lonMin}'${lonSec}"${lonDir}`;
         }
         
@@ -400,7 +555,6 @@
             resultDiv.innerHTML = '';
             
             try {
-                // Mehrere APIs parallel abfragen
                 const [ipwhoData, ipApiData, ipInfoData, geoData] = await Promise.allSettled([
                     fetch(`https://ipwho.is/${ip}`).then(r => r.json()),
                     fetch(`http://ip-api.com/json/${ip}?fields=66846719`).then(r => r.json()),
@@ -415,29 +569,27 @@
                 
                 if (data1 && data1.success === false) {
                     loading.classList.remove('active');
-                    resultDiv.innerHTML = '<div class="error">Ungültige IP-Adresse!</div>';
+                    resultDiv.innerHTML = '<div class="error">Ungueltige IP-Adresse!</div>';
                     return;
                 }
                 
                 const lat = data1?.latitude || data2?.lat || data3?.latitude || 0;
                 const lon = data1?.longitude || data2?.lon || data3?.longitude || 0;
                 
-                // REVERSE GEOCODING für Adressdetails - Multiple APIs für maximale Genauigkeit
                 let addressData = null;
                 let addressData2 = null;
                 if (lat && lon) {
                     try {
                         const [osm, bigdata] = await Promise.allSettled([
                             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
-                                headers: {'User-Agent': 'StarTrack-System/1.0'}
+                                headers: {'User-Agent': 'StarTrack-System/2.0'}
                             }).then(r => r.json()),
                             fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`).then(r => r.json())
                         ]);
-                        
                         addressData = osm.status === 'fulfilled' ? osm.value : null;
                         addressData2 = bigdata.status === 'fulfilled' ? bigdata.value : null;
                     } catch (e) {
-                        console.log('Reverse geocoding failed:', e);
+                        console.log('Geocoding failed');
                     }
                 }
                 
@@ -448,142 +600,106 @@
                 const isHosting = data2?.hosting || false;
                 
                 let securityBadge = '';
-                if (isVPN) {
-                    securityBadge = '<span class="security-badge badge-warning">VPN/PROXY</span>';
-                } else if (isHosting) {
-                    securityBadge = '<span class="security-badge badge-warning">HOSTING</span>';
-                } else {
-                    securityBadge = '<span class="security-badge badge-safe">RESIDENTIAL</span>';
-                }
+                if (isVPN) securityBadge = '<span class="security-badge badge-warning">VPN/PROXY</span>';
+                else if (isHosting) securityBadge = '<span class="security-badge badge-warning">HOSTING</span>';
+                else securityBadge = '<span class="security-badge badge-safe">RESIDENTIAL</span>';
+                if (isMobile) securityBadge += '<span class="security-badge badge-safe">MOBILE</span>';
                 
-                if (isMobile) {
-                    securityBadge += '<span class="security-badge badge-safe">MOBILE</span>';
-                }
+                let html = '<div class="stat-grid">';
+                html += `<div class="stat-item"><div class="stat-label">IP Type</div><div class="stat-value">${data1?.type || 'IPv4'}</div></div>`;
+                html += `<div class="stat-item"><div class="stat-label">Connection</div><div class="stat-value">${isMobile ? 'Mobile' : 'Fixed'}</div></div>`;
+                html += `<div class="stat-item"><div class="stat-label">Security</div><div class="stat-value">${isVPN ? 'VPN' : 'Clean'}</div></div>`;
+                html += `<div class="stat-item"><div class="stat-label">Accuracy</div><div class="stat-value">${data3?.accuracy || data4?.accuracy || 'Unknown'} km</div></div>`;
+                html += '</div><div class="result-data">';
                 
-                let html = '<div class="result-data">';
-                
-                // BASIC INFO
-                html += '<div class="section-title">📍 BASIC INFORMATION</div>';
+                html += '<div class="section-title">BASIC INFORMATION</div>';
                 html += `<div class="result-line"><span class="result-label">IP Address:</span> <span class="result-value">${ip} ${securityBadge}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">IP Type:</span> <span class="result-value">${data1?.type || data3?.version || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">IP Type:</span> <span class="result-value">${data1?.type || data3?.version || 'IPv4'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Reverse DNS:</span> <span class="result-value">${data1?.connection?.domain || data2?.reverse || 'N/A'}</span></div>`;
                 
-                // DETAILED ADDRESS SECTION (NEU!)
-                if (addressData && addressData.address) {
-                    html += '<div class="section-title">🏠 COMPLETE ADDRESS INFORMATION (GPS Reverse Geocoding)</div>';
+                if (addressData?.address) {
                     const addr = addressData.address;
-                    const addr2 = addressData2;
+                    html += '<div class="section-title">COMPLETE ADDRESS INFORMATION</div>';
                     
-                    // Vollständige Adresse formatiert
                     let fullAddr = '';
-                    if (addr.road || addr.pedestrian || addr.path) {
-                        fullAddr += (addr.road || addr.pedestrian || addr.path);
-                        if (addr.house_number) fullAddr += ' ' + addr.house_number;
-                        fullAddr += ', ';
-                    }
+                    if (addr.road || addr.pedestrian) fullAddr += (addr.road || addr.pedestrian);
+                    if (addr.house_number) fullAddr += ' ' + addr.house_number;
+                    if (fullAddr) fullAddr += ', ';
                     if (addr.postcode) fullAddr += addr.postcode + ' ';
-                    if (addr.city || addr.town || addr.village) fullAddr += (addr.city || addr.town || addr.village) + ', ';
+                    if (addr.city || addr.town) fullAddr += (addr.city || addr.town) + ', ';
                     if (addr.state) fullAddr += addr.state + ', ';
                     if (addr.country) fullAddr += addr.country;
                     
-                    html += `<div class="result-line"><span class="result-label">📍 Complete Address:</span> <span class="result-value" style="font-weight:bold;">${fullAddr || addressData.display_name}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🛣️ Street Name:</span> <span class="result-value">${addr.road || addr.pedestrian || addr.path || addr.footway || addr.cycleway || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🏠 House Number:</span> <span class="result-value">${addr.house_number || 'Not available'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🏘️ Neighborhood:</span> <span class="result-value">${addr.suburb || addr.quarter || addr.neighbourhood || addr.residential || addr2?.locality || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🏙️ City/Town:</span> <span class="result-value">${addr.city || addr.town || addr.village || addr.hamlet || addr.municipality || addr2?.city || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">📮 Postcode/ZIP:</span> <span class="result-value">${addr.postcode || addr2?.postcode || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🏛️ County/District:</span> <span class="result-value">${addr.county || addr.state_district || addr2?.countryName || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🗺️ State/Province:</span> <span class="result-value">${addr.state || addr.region || addr2?.principalSubdivision || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🌍 Country:</span> <span class="result-value">${addr.country || addr2?.countryName || 'N/A'} (${addr.country_code?.toUpperCase() || 'N/A'})</span></div>`;
-                    
-                    // Zusätzliche Details wenn verfügbar
-                    if (addr.amenity || addr.building || addr.shop || addr.office || addr.tourism) {
-                        html += '<div class="section-title">🏢 LOCATION DETAILS (Point of Interest)</div>';
-                        if (addr.amenity) html += `<div class="result-line"><span class="result-label">🎯 Amenity:</span> <span class="result-value">${addr.amenity}</span></div>`;
-                        if (addr.building) html += `<div class="result-line"><span class="result-label">🏗️ Building Type:</span> <span class="result-value">${addr.building}</span></div>`;
-                        if (addr.shop) html += `<div class="result-line"><span class="result-label">🛒 Shop Type:</span> <span class="result-value">${addr.shop}</span></div>`;
-                        if (addr.office) html += `<div class="result-line"><span class="result-label">💼 Office Type:</span> <span class="result-value">${addr.office}</span></div>`;
-                        if (addr.tourism) html += `<div class="result-line"><span class="result-label">🗼 Tourism:</span> <span class="result-value">${addr.tourism}</span></div>`;
+                    if (fullAddr) {
+                        html += `<div class="result-line"><span class="result-label">Full Address:</span> <span class="result-value" style="font-weight:bold;">${fullAddr}</span></div>`;
                     }
                     
-                    // BigDataCloud zusätzliche Infos
-                    if (addr2) {
-                        html += '<div class="section-title">📊 ADDITIONAL LOCATION DATA</div>';
-                        html += `<div class="result-line"><span class="result-label">🌐 Locality:</span> <span class="result-value">${addr2.locality || 'N/A'}</span></div>`;
-                        html += `<div class="result-line"><span class="result-label">📍 Local Name:</span> <span class="result-value">${addr2.localityInfo?.administrative?.[0]?.name || 'N/A'}</span></div>`;
-                        html += `<div class="result-line"><span class="result-label">🗺️ Plus Code:</span> <span class="result-value">${addr2.plusCode || 'N/A'}</span></div>`;
-                    }
+                    html += `<div class="result-line"><span class="result-label">Street:</span> <span class="result-value">${addr.road || addr.pedestrian || addr.path || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">House Number:</span> <span class="result-value">${addr.house_number || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Neighborhood:</span> <span class="result-value">${addr.suburb || addr.neighbourhood || addressData2?.locality || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${addr.city || addr.town || addr.village || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Postcode:</span> <span class="result-value">${addr.postcode || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">County:</span> <span class="result-value">${addr.county || addr.state_district || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">State:</span> <span class="result-value">${addr.state || 'N/A'}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${addr.country || 'N/A'}</span></div>`;
                 }
                 
-                // GEOLOCATION
-                html += '<div class="section-title">🌍 GPS COORDINATES & MAP LINKS</div>';
-                html += `<div class="result-line"><span class="result-label">📍 Latitude:</span> <span class="result-value">${lat}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📍 Longitude:</span> <span class="result-value">${lon}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🎯 Coordinates (DMS):</span> <span class="result-value">${decimalToDMS(lat, lon)}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📏 Accuracy Radius:</span> <span class="result-value">${data3?.accuracy || 'Unknown'} km</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🗺️ Google Maps (Satellite):</span> <span class="result-value"><a href="https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3" target="_blank">🛰️ Ultra Zoom Satellite View</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🚶 Google Street View:</span> <span class="result-value"><a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}&heading=0&pitch=0&fov=90" target="_blank">👁️ Street Level View</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🌐 Google Earth:</span> <span class="result-value"><a href="https://earth.google.com/web/@${lat},${lon},0a,1000d,35y,0h,0t,0r" target="_blank">🌍 Open in Google Earth</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">📱 Apple Maps:</span> <span class="result-value"><a href="http://maps.apple.com/?ll=${lat},${lon}&z=18" target="_blank">🍎 Open in Apple Maps</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🗺️ OpenStreetMap:</span> <span class="result-value"><a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=18" target="_blank">🗺️ OSM Detailed View</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🌍 Bing Maps:</span> <span class="result-value"><a href="https://www.bing.com/maps?cp=${lat}~${lon}&lvl=18&style=a" target="_blank">🔍 Bing Aerial View</a></span></div>`;
+                html += '<div class="section-title">GPS COORDINATES & MAPS</div>';
+                html += `<div class="result-line"><span class="result-label">Latitude:</span> <span class="result-value">${lat}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Longitude:</span> <span class="result-value">${lon}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Coordinates DMS:</span> <span class="result-value">${decimalToDMS(lat, lon)}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Google Maps Satellite:</span> <span class="result-value"><a href="https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3" target="_blank">Ultra Zoom Satellite</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Street View:</span> <span class="result-value"><a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}" target="_blank">Street Level View</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Google Earth:</span> <span class="result-value"><a href="https://earth.google.com/web/@${lat},${lon},0a,1000d,35y,0h,0t,0r" target="_blank">Open in Earth</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">OpenStreetMap:</span> <span class="result-value"><a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=18" target="_blank">OSM View</a></span></div>`;
                 
-                html += '<div class="section-title">🌎 LOCATION INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${data1?.country || data2?.country || data3?.country_name || 'N/A'} ${data1?.flag?.emoji || ''}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">${data1?.country_code || data2?.countryCode || data3?.country_code || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Region:</span> <span class="result-value">${data1?.region || data2?.regionName || data3?.region || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Region Code:</span> <span class="result-value">${data1?.region_code || data2?.region || data3?.region_code || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${data1?.city || data2?.city || data3?.city || 'N/A'}</span></div>`;
+                html += '<div class="section-title">LOCATION INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${data1?.country || data2?.country || 'N/A'} ${data1?.flag?.emoji || ''}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">${data1?.country_code || data2?.countryCode || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Region:</span> <span class="result-value">${data1?.region || data2?.regionName || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${data1?.city || data2?.city || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">District:</span> <span class="result-value">${data2?.district || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">ZIP/Postal:</span> <span class="result-value">${data1?.postal || data2?.zip || data3?.postal || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Continent:</span> <span class="result-value">${data1?.continent || data3?.continent_code || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Postal:</span> <span class="result-value">${data1?.postal || data2?.zip || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Continent:</span> <span class="result-value">${data1?.continent || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data1?.capital || 'N/A'}</span></div>`;
                 
-                // NETWORK INFO
-                html += '<div class="section-title">🌐 NETWORK INFORMATION</div>';
+                html += '<div class="section-title">NETWORK INFORMATION</div>';
                 html += `<div class="result-line"><span class="result-label">ISP:</span> <span class="result-value">${data1?.connection?.isp || data2?.isp || data3?.org || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Organization:</span> <span class="result-value">${data1?.connection?.org || data2?.org || data3?.org || 'N/A'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Organization:</span> <span class="result-value">${data1?.connection?.org || data2?.org || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">AS Number:</span> <span class="result-value">${data1?.connection?.asn || data2?.as || data3?.asn || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">AS Name:</span> <span class="result-value">${data3?.asn || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Domain:</span> <span class="result-value">${data1?.connection?.domain || data2?.reverse || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Network:</span> <span class="result-value">${data3?.network || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Area Code:</span> <span class="result-value">${data4?.area_code || 'N/A'}</span></div>`;
                 
-                // SECURITY & TYPE
-                html += '<div class="section-title">🔒 SECURITY & CONNECTION TYPE</div>';
-                html += `<div class="result-line"><span class="result-label">Mobile Connection:</span> <span class="result-value">${isMobile ? '✓ Yes' : '✗ No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Proxy/VPN:</span> <span class="result-value">${isVPN ? '⚠️ Detected' : '✓ No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Hosting/Datacenter:</span> <span class="result-value">${isHosting ? '⚠️ Yes' : '✓ No'}</span></div>`;
+                html += '<div class="section-title">SECURITY & CONNECTION TYPE</div>';
+                html += `<div class="result-line"><span class="result-label">Mobile Connection:</span> <span class="result-value">${isMobile ? 'Yes' : 'No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">VPN/Proxy:</span> <span class="result-value">${isVPN ? 'Detected' : 'No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Hosting/Datacenter:</span> <span class="result-value">${isHosting ? 'Yes' : 'No'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Connection Type:</span> <span class="result-value">${data3?.connection_type || 'N/A'}</span></div>`;
                 
-                // TIMEZONE
-                html += '<div class="section-title">🕐 TIMEZONE INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${data1?.timezone?.id || data2?.timezone || data3?.timezone || 'N/A'}</span></div>`;
+                html += '<div class="section-title">TIMEZONE</div>';
+                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${data1?.timezone?.id || data2?.timezone || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">UTC Offset:</span> <span class="result-value">${data1?.timezone?.offset || data3?.utc_offset || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Abbreviation:</span> <span class="result-value">${data1?.timezone?.abbr || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Current Time:</span> <span class="result-value">${data1?.timezone?.current_time || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Is DST:</span> <span class="result-value">${data1?.timezone?.is_dst ? 'Yes' : 'No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">DST:</span> <span class="result-value">${data1?.timezone?.is_dst ? 'Yes' : 'No'}</span></div>`;
                 
-                // COUNTRY DETAILS
-                html += '<div class="section-title">🏛️ COUNTRY DETAILS</div>';
+                html += '<div class="section-title">COUNTRY DETAILS</div>';
                 html += `<div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data1?.capital || data3?.capital || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Calling Code:</span> <span class="result-value">+${data1?.calling_code || data3?.country_calling_code || 'N/A'}</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Currency:</span> <span class="result-value">${data3?.currency_name || 'N/A'} (${data3?.currency || 'N/A'})</span></div>`;
                 html += `<div class="result-line"><span class="result-label">Languages:</span> <span class="result-value">${data3?.languages || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Is EU:</span> <span class="result-value">${data1?.is_eu || data3?.in_eu ? 'Yes' : 'No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">EU Member:</span> <span class="result-value">${data1?.is_eu || data3?.in_eu ? 'Yes' : 'No'}</span></div>`;
                 
                 html += '</div>';
                 
-                // Warnings
-                if (isVPN) {
-                    html += '<div class="warning">⚠️ VPN/PROXY DETECTED - Location data may be inaccurate or completely wrong!</div>';
-                }
-                
-                html += '<div class="info">ℹ️ ACCURACY INFO: Street addresses are based on GPS coordinates from the ISP server location. IP addresses typically point to the provider\'s infrastructure, not the exact user location. Accuracy varies from 50m to 50km depending on ISP and location.</div>';
+                if (isVPN) html += '<div class="warning">VPN/PROXY DETECTED - Location data may be inaccurate or completely wrong</div>';
+                html += '<div class="info">ACCURACY INFO: Street addresses are based on GPS coordinates from ISP server location. Accuracy varies from 50m to 50km depending on ISP and location.</div>';
                 
                 resultDiv.innerHTML = html;
                 
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der Daten! Bitte versuchen Sie es erneut.</div>';
+                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der Daten</div>';
                 console.error(error);
             }
         }
@@ -602,17 +718,17 @@
                 
                 resultDiv.innerHTML = `
                     <div class="result-data">
-                        <div class="result-line"><span class="result-label">Your IP Address:</span> <span class="result-value">${data.ip}</span></div>
+                        <div class="result-line"><span class="result-label">Your IP:</span> <span class="result-value">${data.ip}</span></div>
                         <div style="margin-top: 15px;">
                             <button class="submit-btn" onclick="document.getElementById('ipInput').value='${data.ip}'; backToMenu(); showTracker('ip'); trackIP();">
-                                Show Extended Info + Address
+                                Show Extended Info
                             </button>
                         </div>
                     </div>
                 `;
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der IP-Adresse!</div>';
+                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen</div>';
             }
         }
         
@@ -641,7 +757,26 @@
                 {name: 'Reddit', url: `https://www.reddit.com/user/${username}`},
                 {name: 'Twitch', url: `https://www.twitch.tv/${username}`},
                 {name: 'Medium', url: `https://medium.com/@${username}`},
-                {name: 'Telegram', url: `https://t.me/${username}`}
+                {name: 'Telegram', url: `https://t.me/${username}`},
+                {name: 'Discord', url: `https://discord.com/users/${username}`},
+                {name: 'Snapchat', url: `https://www.snapchat.com/add/${username}`},
+                {name: 'Spotify', url: `https://open.spotify.com/user/${username}`},
+                {name: 'SoundCloud', url: `https://soundcloud.com/${username}`},
+                {name: 'Vimeo', url: `https://vimeo.com/${username}`},
+                {name: 'Behance', url: `https://www.behance.net/${username}`},
+                {name: 'DeviantArt', url: `https://www.deviantart.com/${username}`},
+                {name: 'Dribbble', url: `https://dribbble.com/${username}`},
+                {name: 'Flickr', url: `https://www.flickr.com/people/${username}`},
+                {name: 'Tumblr', url: `https://${username}.tumblr.com`},
+                {name: 'WordPress', url: `https://${username}.wordpress.com`},
+                {name: 'Steam', url: `https://steamcommunity.com/id/${username}`},
+                {name: 'Mixer', url: `https://mixer.com/${username}`},
+                {name: 'Patreon', url: `https://www.patreon.com/${username}`},
+                {name: 'Roblox', url: `https://www.roblox.com/users/${username}`},
+                {name: 'VK', url: `https://vk.com/${username}`},
+                {name: 'Telegram', url: `https://t.me/${username}`},
+                {name: 'WhatsApp', url: `https://wa.me/${username}`},
+                {name: 'Signal', url: `https://signal.me/#p/${username}`}
             ];
             
             let html = '<div class="result-data">';
@@ -669,8 +804,6 @@
             
             try {
                 const phoneClean = phone.replace(/[^0-9+]/g, '');
-                
-                // Erweiterte Country Code Erkennung
                 let countryCode = '';
                 let localNumber = phoneClean;
                 
@@ -684,124 +817,69 @@
                     localNumber = phoneClean.substring(countryCode.length + 2);
                 }
                 
-                // Umfassendes Country Mapping
                 const countryData = {
-                    '1': { country: 'USA/Canada', iso: 'US/CA', carrier_examples: ['Verizon', 'AT&T', 'T-Mobile', 'Rogers', 'Bell'], timezone: 'UTC-5 to UTC-8', flag: '🇺🇸/🇨🇦' },
-                    '44': { country: 'United Kingdom', iso: 'GB', carrier_examples: ['EE', 'Vodafone', 'O2', 'Three'], timezone: 'UTC+0', flag: '🇬🇧' },
-                    '49': { country: 'Germany', iso: 'DE', carrier_examples: ['Telekom', 'Vodafone', 'O2', '1&1'], timezone: 'UTC+1', flag: '🇩🇪' },
-                    '33': { country: 'France', iso: 'FR', carrier_examples: ['Orange', 'SFR', 'Bouygues', 'Free'], timezone: 'UTC+1', flag: '🇫🇷' },
-                    '39': { country: 'Italy', iso: 'IT', carrier_examples: ['TIM', 'Vodafone', 'Wind Tre'], timezone: 'UTC+1', flag: '🇮🇹' },
-                    '34': { country: 'Spain', iso: 'ES', carrier_examples: ['Movistar', 'Orange', 'Vodafone'], timezone: 'UTC+1', flag: '🇪🇸' },
-                    '7': { country: 'Russia/Kazakhstan', iso: 'RU/KZ', carrier_examples: ['MTS', 'Beeline', 'MegaFon'], timezone: 'UTC+3 to UTC+12', flag: '🇷🇺' },
-                    '81': { country: 'Japan', iso: 'JP', carrier_examples: ['NTT Docomo', 'SoftBank', 'au'], timezone: 'UTC+9', flag: '🇯🇵' },
-                    '86': { country: 'China', iso: 'CN', carrier_examples: ['China Mobile', 'China Unicom', 'China Telecom'], timezone: 'UTC+8', flag: '🇨🇳' },
-                    '91': { country: 'India', iso: 'IN', carrier_examples: ['Airtel', 'Jio', 'Vodafone Idea'], timezone: 'UTC+5:30', flag: '🇮🇳' },
-                    '43': { country: 'Austria', iso: 'AT', carrier_examples: ['A1', 'Magenta', 'Drei'], timezone: 'UTC+1', flag: '🇦🇹' },
-                    '41': { country: 'Switzerland', iso: 'CH', carrier_examples: ['Swisscom', 'Sunrise', 'Salt'], timezone: 'UTC+1', flag: '🇨🇭' },
-                    '31': { country: 'Netherlands', iso: 'NL', carrier_examples: ['KPN', 'Vodafone', 'T-Mobile'], timezone: 'UTC+1', flag: '🇳🇱' },
-                    '32': { country: 'Belgium', iso: 'BE', carrier_examples: ['Proximus', 'Orange', 'Base'], timezone: 'UTC+1', flag: '🇧🇪' },
-                    '48': { country: 'Poland', iso: 'PL', carrier_examples: ['Orange', 'Play', 'Plus', 'T-Mobile'], timezone: 'UTC+1', flag: '🇵🇱' },
-                    '61': { country: 'Australia', iso: 'AU', carrier_examples: ['Telstra', 'Optus', 'Vodafone'], timezone: 'UTC+8 to UTC+11', flag: '🇦🇺' }
+                    '1': { country: 'USA/Canada', iso: 'US/CA', carriers: ['Verizon', 'AT&T', 'T-Mobile', 'Rogers', 'Bell'], timezone: 'UTC-5 to UTC-8' },
+                    '44': { country: 'United Kingdom', iso: 'GB', carriers: ['EE', 'Vodafone', 'O2', 'Three'], timezone: 'UTC+0' },
+                    '49': { country: 'Germany', iso: 'DE', carriers: ['Telekom', 'Vodafone', 'O2', '1&1'], timezone: 'UTC+1' },
+                    '33': { country: 'France', iso: 'FR', carriers: ['Orange', 'SFR', 'Bouygues', 'Free'], timezone: 'UTC+1' },
+                    '39': { country: 'Italy', iso: 'IT', carriers: ['TIM', 'Vodafone', 'Wind Tre'], timezone: 'UTC+1' },
+                    '34': { country: 'Spain', iso: 'ES', carriers: ['Movistar', 'Orange', 'Vodafone'], timezone: 'UTC+1' },
+                    '43': { country: 'Austria', iso: 'AT', carriers: ['A1', 'Magenta', 'Drei'], timezone: 'UTC+1' },
+                    '41': { country: 'Switzerland', iso: 'CH', carriers: ['Swisscom', 'Sunrise', 'Salt'], timezone: 'UTC+1' },
+                    '31': { country: 'Netherlands', iso: 'NL', carriers: ['KPN', 'Vodafone', 'T-Mobile'], timezone: 'UTC+1' },
+                    '32': { country: 'Belgium', iso: 'BE', carriers: ['Proximus', 'Orange', 'Base'], timezone: 'UTC+1' },
+                    '48': { country: 'Poland', iso: 'PL', carriers: ['Orange', 'Play', 'Plus', 'T-Mobile'], timezone: 'UTC+1' },
+                    '61': { country: 'Australia', iso: 'AU', carriers: ['Telstra', 'Optus', 'Vodafone'], timezone: 'UTC+8 to UTC+11' },
+                    '81': { country: 'Japan', iso: 'JP', carriers: ['NTT Docomo', 'SoftBank', 'au'], timezone: 'UTC+9' },
+                    '86': { country: 'China', iso: 'CN', carriers: ['China Mobile', 'China Unicom', 'China Telecom'], timezone: 'UTC+8' },
+                    '91': { country: 'India', iso: 'IN', carriers: ['Airtel', 'Jio', 'Vodafone Idea'], timezone: 'UTC+5:30' }
                 };
                 
-                const countryInfo = countryData[countryCode] || { country: 'Unknown', iso: 'N/A', carrier_examples: [], timezone: 'Unknown', flag: '🌍' };
+                const countryInfo = countryData[countryCode] || { country: 'Unknown', iso: 'N/A', carriers: [], timezone: 'Unknown' };
                 
-                // Line Type Detection basierend auf Prefix
                 let lineType = 'Unknown';
-                let lineTypeIcon = '📞';
+                let detectedCarrier = 'Unknown';
                 
                 if (countryCode === '49') {
                     if (localNumber.startsWith('15') || localNumber.startsWith('16') || localNumber.startsWith('17')) {
                         lineType = 'Mobile';
-                        lineTypeIcon = '📱';
-                    } else if (localNumber.startsWith('30') || localNumber.startsWith('40')) {
+                        const prefix = localNumber.substring(0, 3);
+                        const carrierMap = {
+                            '151': 'T-Mobile', '160': 'T-Mobile', '170': 'T-Mobile', '171': 'T-Mobile', '175': 'T-Mobile',
+                            '152': 'Vodafone', '155': 'Vodafone', '162': 'Vodafone', '172': 'Vodafone', '173': 'Vodafone', '174': 'Vodafone',
+                            '157': 'O2', '159': 'O2', '163': 'O2', '176': 'O2', '177': 'O2', '178': 'O2', '179': 'O2'
+                        };
+                        detectedCarrier = carrierMap[prefix] || 'Unknown';
+                    } else {
                         lineType = 'Landline';
-                        lineTypeIcon = '☎️';
-                    }
-                } else if (countryCode === '1') {
-                    const areaCode = localNumber.substring(0, 3);
-                    if (['201', '202', '212', '213', '305', '310', '312', '404', '415', '510', '617', '702', '713', '818', '917'].includes(areaCode)) {
-                        lineType = 'Mobile/Landline (Area-based)';
-                        lineTypeIcon = '📱☎️';
                     }
                 } else if (countryCode === '44') {
                     if (localNumber.startsWith('7')) {
                         lineType = 'Mobile';
-                        lineTypeIcon = '📱';
                     } else {
                         lineType = 'Landline';
-                        lineTypeIcon = '☎️';
                     }
+                } else if (countryCode === '1') {
+                    lineType = 'Mobile/Landline';
                 }
                 
-                // Carrier Detection
-                let detectedCarrier = 'Unknown';
-                const carrierPrefixes = {
-                    '49': {
-                        '151': 'T-Mobile', '152': 'Vodafone', '155': 'Vodafone', '157': 'E-Plus/O2',
-                        '159': 'O2', '160': 'T-Mobile', '162': 'Vodafone', '163': 'E-Plus/O2',
-                        '170': 'T-Mobile', '171': 'T-Mobile', '172': 'Vodafone', '173': 'Vodafone',
-                        '174': 'Vodafone', '175': 'T-Mobile', '176': 'O2', '177': 'E-Plus/O2',
-                        '178': 'E-Plus/O2', '179': 'O2'
-                    },
-                    '1': {
-                        // US Carriers - schwieriger zu erkennen ohne Datenbank
-                    }
-                };
-                
-                if (carrierPrefixes[countryCode]) {
-                    const prefix = localNumber.substring(0, 3);
-                    detectedCarrier = carrierPrefixes[countryCode][prefix] || 'Unknown';
-                }
-                
-                // Number Analysis
                 const numberLength = localNumber.length;
                 let numberValid = false;
-                
                 if (countryCode === '49') numberValid = numberLength >= 10 && numberLength <= 11;
                 else if (countryCode === '1') numberValid = numberLength === 10;
                 else if (countryCode === '44') numberValid = numberLength >= 9 && numberLength <= 10;
                 else numberValid = numberLength >= 7 && numberLength <= 15;
                 
-                loading.classList.remove('active');
-                
-                let html = '<div class="result-data">';
-                
-                html += '<div class="section-title">📱 PHONE NUMBER ANALYSIS</div>';
-                html += `<div class="result-line"><span class="result-label">📞 Original Input:</span> <span class="result-value">${phone}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔢 Cleaned Number:</span> <span class="result-value">${phoneClean}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🌍 International Format:</span> <span class="result-value">+${countryCode} ${localNumber}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📏 Number Length:</span> <span class="result-value">${numberLength} digits</span></div>`;
-                html += `<div class="result-line"><span class="result-label">✅ Format Valid:</span> <span class="result-value">${numberValid ? '✓ Likely Valid' : '⚠️ Invalid Length'}</span></div>`;
-                
-                html += '<div class="section-title">🌍 LOCATION INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">🚩 Country:</span> <span class="result-value">${countryInfo.flag} ${countryInfo.country}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔤 Country Code:</span> <span class="result-value">+${countryCode}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🆔 ISO Code:</span> <span class="result-value">${countryInfo.iso}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🕐 Timezone:</span> <span class="result-value">${countryInfo.timezone}</span></div>`;
-                
-                html += '<div class="section-title">📡 CARRIER & TYPE INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">📱 Line Type:</span> <span class="result-value">${lineTypeIcon} ${lineType}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🏢 Detected Carrier:</span> <span class="result-value">${detectedCarrier}</span></div>`;
-                
-                if (countryInfo.carrier_examples.length > 0) {
-                    html += `<div class="result-line"><span class="result-label">🌐 Common Carriers:</span> <span class="result-value">${countryInfo.carrier_examples.join(', ')}</span></div>`;
-                }
-                
-                // Carrier IP Lookup
+                let carrierIP = null;
+                let carrierDomain = null;
                 const mainCarriers = {
                     'T-Mobile': 't-mobile.de',
                     'Vodafone': 'vodafone.com',
                     'O2': 'o2online.de',
                     'AT&T': 'att.com',
                     'Verizon': 'verizon.com',
-                    'Orange': 'orange.com',
-                    'Telekom': 'telekom.de',
-                    'Deutsche Telekom': 'telekom.de'
+                    'Telekom': 'telekom.de'
                 };
-                
-                let carrierIP = null;
-                let carrierDomain = null;
                 
                 for (const [name, domain] of Object.entries(mainCarriers)) {
                     if (detectedCarrier.includes(name)) {
@@ -814,41 +892,63 @@
                     try {
                         const dnsResponse = await fetch(`https://dns.google/resolve?name=${carrierDomain}&type=A`);
                         const dnsData = await dnsResponse.json();
-                        
                         if (dnsData.Answer && dnsData.Answer.length > 0) {
                             carrierIP = dnsData.Answer[0].data;
                         }
                     } catch (e) {
-                        console.log('DNS failed:', e);
+                        console.log('DNS failed');
                     }
                 }
                 
-                html += '<div class="section-title">🌐 NETWORK & IP INFORMATION</div>';
-                if (carrierIP) {
-                    html += `<div class="result-line"><span class="result-label">🌍 Carrier Domain:</span> <span class="result-value">${carrierDomain}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">📍 Carrier Server IP:</span> <span class="result-value">${carrierIP}</span></div>`;
-                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${carrierIP}'; backToMenu(); showTracker('ip'); trackIP();">🔍 Track Carrier IP Location</button></div>`;
-                } else {
-                    html += `<div class="result-line"><span class="result-label">📍 Carrier IP:</span> <span class="result-value">Unable to resolve (Carrier: ${detectedCarrier})</span></div>`;
+                loading.classList.remove('active');
+                
+                let html = '<div class="result-data">';
+                
+                html += '<div class="section-title">PHONE NUMBER ANALYSIS</div>';
+                html += `<div class="result-line"><span class="result-label">Original Input:</span> <span class="result-value">${phone}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Cleaned Number:</span> <span class="result-value">${phoneClean}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">International Format:</span> <span class="result-value">+${countryCode} ${localNumber}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Number Length:</span> <span class="result-value">${numberLength} digits</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Format Valid:</span> <span class="result-value">${numberValid ? 'Likely Valid' : 'Invalid Length'}</span></div>`;
+                
+                html += '<div class="section-title">LOCATION INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${countryInfo.country}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">+${countryCode}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">ISO Code:</span> <span class="result-value">${countryInfo.iso}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${countryInfo.timezone}</span></div>`;
+                
+                html += '<div class="section-title">CARRIER & TYPE INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">Line Type:</span> <span class="result-value">${lineType}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Detected Carrier:</span> <span class="result-value">${detectedCarrier}</span></div>`;
+                if (countryInfo.carriers.length > 0) {
+                    html += `<div class="result-line"><span class="result-label">Common Carriers:</span> <span class="result-value">${countryInfo.carriers.join(', ')}</span></div>`;
                 }
                 
-                html += '<div class="section-title">🔍 OSINT & LOOKUP TOOLS</div>';
-                html += `<div class="result-line"><span class="result-label">🔎 Truecaller:</span> <span class="result-value"><a href="https://www.truecaller.com/search/${countryInfo.iso.split('/')[0]}/${encodeURIComponent(phoneClean)}" target="_blank">Search Name & Spam</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">⚠️ Spam Database:</span> <span class="result-value"><a href="https://www.shouldianswer.com/phone-number/${phoneClean}" target="_blank">Check Spam Reports</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">💬 WhatsApp:</span> <span class="result-value"><a href="https://wa.me/${phoneClean}" target="_blank">Open in WhatsApp</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">📞 Telegram:</span> <span class="result-value"><a href="https://t.me/${phoneClean}" target="_blank">Search on Telegram</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔍 Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=${encodeURIComponent(phone)}" target="_blank">Google This Number</a></span></div>`;
+                if (carrierIP) {
+                    html += '<div class="section-title">NETWORK & IP INFORMATION</div>';
+                    html += `<div class="result-line"><span class="result-label">Carrier Domain:</span> <span class="result-value">${carrierDomain}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Carrier Server IP:</span> <span class="result-value">${carrierIP}</span></div>`;
+                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${carrierIP}'; backToMenu(); showTracker('ip'); trackIP();">Track Carrier IP Location</button></div>`;
+                } else {
+                    html += '<div class="section-title">NETWORK INFORMATION</div>';
+                    html += `<div class="result-line"><span class="result-label">Carrier IP:</span> <span class="result-value">Unable to resolve (Carrier: ${detectedCarrier})</span></div>`;
+                }
+                
+                html += '<div class="section-title">OSINT & LOOKUP TOOLS</div>';
+                html += `<div class="result-line"><span class="result-label">Truecaller:</span> <span class="result-value"><a href="https://www.truecaller.com/search/${countryInfo.iso.split('/')[0]}/${encodeURIComponent(phoneClean)}" target="_blank">Search Name & Spam</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Spam Database:</span> <span class="result-value"><a href="https://www.shouldianswer.com/phone-number/${phoneClean}" target="_blank">Check Spam Reports</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">WhatsApp:</span> <span class="result-value"><a href="https://wa.me/${phoneClean}" target="_blank">Open in WhatsApp</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Telegram:</span> <span class="result-value"><a href="https://t.me/${phoneClean}" target="_blank">Search on Telegram</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=${encodeURIComponent(phone)}" target="_blank">Google This Number</a></span></div>`;
                 
                 html += '</div>';
-                
-                html += '<div class="info">ℹ️ ACCURACY: Carrier detection works best for German numbers. For other countries, common carriers are listed. IP shows carrier infrastructure location, not user location.</div>';
+                html += '<div class="info">ACCURACY: Carrier detection works best for German numbers. IP shows carrier infrastructure location, not user location.</div>';
                 
                 resultDiv.innerHTML = html;
                 
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse!</div>';
-                console.error(error);
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
             }
         }
         
@@ -858,7 +958,7 @@
             const resultDiv = document.getElementById('emailResult');
             
             if (!email) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine E-Mail-Adresse ein!</div>';
+                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine E-Mail ein!</div>';
                 return;
             }
             
@@ -871,13 +971,12 @@
                 
                 if (!isValidFormat) {
                     loading.classList.remove('active');
-                    resultDiv.innerHTML = '<div class="error">Ungültiges E-Mail-Format!</div>';
+                    resultDiv.innerHTML = '<div class="error">Ungueltiges E-Mail-Format!</div>';
                     return;
                 }
                 
                 const [username, domain] = email.split('@');
                 
-                // DNS Lookups (parallel)
                 const [mxResponse, aResponse, txtResponse, nsResponse] = await Promise.allSettled([
                     fetch(`https://dns.google/resolve?name=${domain}&type=MX`).then(r => r.json()),
                     fetch(`https://dns.google/resolve?name=${domain}&type=A`).then(r => r.json()),
@@ -914,39 +1013,26 @@
                     nameservers = nsData.Answer.map(r => r.data);
                 }
                 
-                // Enhanced Disposable Detection
                 const disposableDomains = [
                     'tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email',
-                    'mailinator.com', 'trashmail.com', 'temp-mail.org', 'fakeinbox.com',
-                    'sharklasers.com', 'getnada.com', 'yopmail.com', 'maildrop.cc',
-                    'dispostable.com', 'mintemail.com', 'mytemp.email'
+                    'mailinator.com', 'trashmail.com', 'temp-mail.org', 'fakeinbox.com'
                 ];
                 const isDisposable = disposableDomains.some(d => domain.toLowerCase().includes(d));
                 
-                // Enhanced Provider Detection
                 const providers = {
-                    'gmail.com': { name: 'Google Gmail', icon: '📧', type: 'Free', company: 'Google LLC', security: 'High' },
-                    'googlemail.com': { name: 'Google Gmail', icon: '📧', type: 'Free', company: 'Google LLC', security: 'High' },
-                    'outlook.com': { name: 'Microsoft Outlook', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
-                    'hotmail.com': { name: 'Microsoft Hotmail', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
-                    'live.com': { name: 'Microsoft Live', icon: '📨', type: 'Free', company: 'Microsoft', security: 'High' },
-                    'yahoo.com': { name: 'Yahoo Mail', icon: '📬', type: 'Free', company: 'Yahoo', security: 'Medium' },
-                    'icloud.com': { name: 'Apple iCloud', icon: '🍎', type: 'Free', company: 'Apple Inc.', security: 'High' },
-                    'me.com': { name: 'Apple iCloud', icon: '🍎', type: 'Free', company: 'Apple Inc.', security: 'High' },
-                    'protonmail.com': { name: 'ProtonMail', icon: '🔒', type: 'Secure', company: 'Proton AG', security: 'Very High' },
-                    'proton.me': { name: 'ProtonMail', icon: '🔒', type: 'Secure', company: 'Proton AG', security: 'Very High' },
-                    'tutanota.com': { name: 'Tutanota', icon: '🔐', type: 'Secure', company: 'Tutanota GmbH', security: 'Very High' },
-                    'tuta.io': { name: 'Tutanota', icon: '🔐', type: 'Secure', company: 'Tutanota GmbH', security: 'Very High' },
-                    'mailfence.com': { name: 'Mailfence', icon: '🔐', type: 'Secure', company: 'ContactOffice Group', security: 'High' },
-                    'aol.com': { name: 'AOL Mail', icon: '📮', type: 'Free', company: 'Yahoo', security: 'Medium' },
-                    'gmx.com': { name: 'GMX Mail', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
-                    'gmx.de': { name: 'GMX Mail', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
-                    'web.de': { name: 'WEB.DE', icon: '📧', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' }
+                    'gmail.com': { name: 'Google Gmail', type: 'Free', company: 'Google LLC', security: 'High' },
+                    'googlemail.com': { name: 'Google Gmail', type: 'Free', company: 'Google LLC', security: 'High' },
+                    'outlook.com': { name: 'Microsoft Outlook', type: 'Free', company: 'Microsoft', security: 'High' },
+                    'hotmail.com': { name: 'Microsoft Hotmail', type: 'Free', company: 'Microsoft', security: 'High' },
+                    'yahoo.com': { name: 'Yahoo Mail', type: 'Free', company: 'Yahoo', security: 'Medium' },
+                    'icloud.com': { name: 'Apple iCloud', type: 'Free', company: 'Apple Inc.', security: 'High' },
+                    'protonmail.com': { name: 'ProtonMail', type: 'Secure', company: 'Proton AG', security: 'Very High' },
+                    'gmx.com': { name: 'GMX Mail', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
+                    'web.de': { name: 'WEB.DE', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' }
                 };
                 
-                const provider = providers[domain.toLowerCase()] || { name: 'Custom/Business', icon: '🏢', type: 'Custom', company: 'Unknown', security: 'Unknown' };
+                const provider = providers[domain.toLowerCase()] || { name: 'Custom/Business', type: 'Custom', company: 'Unknown', security: 'Unknown' };
                 
-                // SPF/DKIM/DMARC Detection
                 let hasSPF = false;
                 let hasDKIM = false;
                 let hasDMARC = false;
@@ -961,81 +1047,74 @@
                 
                 let html = '<div class="result-data">';
                 
-                html += '<div class="section-title">📧 EMAIL ADDRESS ANALYSIS</div>';
-                html += `<div class="result-line"><span class="result-label">📬 Full Email:</span> <span class="result-value">${email}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">👤 Username:</span> <span class="result-value">${username}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🌐 Domain:</span> <span class="result-value">${domain}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">✅ Format Valid:</span> <span class="result-value">${isValidFormat ? '✓ Yes' : '✗ No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🏢 Provider:</span> <span class="result-value">${provider.icon} ${provider.name}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🏭 Company:</span> <span class="result-value">${provider.company}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📑 Type:</span> <span class="result-value">${provider.type}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔒 Security Level:</span> <span class="result-value">${provider.security}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🗑️ Disposable:</span> <span class="result-value">${isDisposable ? '⚠️ Yes (Temporary)' : '✓ No'}</span></div>`;
+                html += '<div class="section-title">EMAIL ADDRESS ANALYSIS</div>';
+                html += `<div class="result-line"><span class="result-label">Full Email:</span> <span class="result-value">${email}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Username:</span> <span class="result-value">${username}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Domain:</span> <span class="result-value">${domain}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Format Valid:</span> <span class="result-value">${isValidFormat ? 'Yes' : 'No'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Provider:</span> <span class="result-value">${provider.name}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Company:</span> <span class="result-value">${provider.company}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Type:</span> <span class="result-value">${provider.type}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Security Level:</span> <span class="result-value">${provider.security}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Disposable:</span> <span class="result-value">${isDisposable ? 'Yes (Temporary)' : 'No'}</span></div>`;
                 
                 if (mxRecords.length > 0) {
-                    html += '<div class="section-title">📬 MX RECORDS (Mail Servers)</div>';
+                    html += '<div class="section-title">MX RECORDS (Mail Servers)</div>';
                     mxRecords.forEach((mx, index) => {
                         html += `<div class="result-line"><span class="result-label">MX ${index + 1} (Priority ${mx.priority}):</span> <span class="result-value">${mx.server}</span></div>`;
                     });
-                    html += `<div class="result-line"><span class="result-label">✅ MX Status:</span> <span class="result-value">✓ Valid (${mxRecords.length} server${mxRecords.length > 1 ? 's' : ''})</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">📨 Can Receive:</span> <span class="result-value">✓ Yes</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">MX Status:</span> <span class="result-value">Valid (${mxRecords.length} server${mxRecords.length > 1 ? 's' : ''})</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Can Receive:</span> <span class="result-value">Yes</span></div>`;
                 } else {
-                    html += '<div class="section-title">📬 MX RECORDS</div>';
-                    html += `<div class="result-line"><span class="result-label">❌ MX Status:</span> <span class="result-value">⚠️ No MX records - Cannot receive email!</span></div>`;
+                    html += '<div class="section-title">MX RECORDS</div>';
+                    html += `<div class="result-line"><span class="result-label">MX Status:</span> <span class="result-value">No MX records - Cannot receive email</span></div>`;
                 }
                 
-                html += '<div class="section-title">🔒 EMAIL SECURITY (SPF/DKIM/DMARC)</div>';
-                html += `<div class="result-line"><span class="result-label">🛡️ SPF Record:</span> <span class="result-value">${hasSPF ? '✓ Configured' : '✗ Not Found'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔐 DKIM:</span> <span class="result-value">${hasDKIM ? '✓ Configured' : '✗ Not Found'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📋 DMARC:</span> <span class="result-value">${hasDMARC ? '✓ Configured' : '✗ Not Found'}</span></div>`;
+                html += '<div class="section-title">EMAIL SECURITY (SPF/DKIM/DMARC)</div>';
+                html += `<div class="result-line"><span class="result-label">SPF Record:</span> <span class="result-value">${hasSPF ? 'Configured' : 'Not Found'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">DKIM:</span> <span class="result-value">${hasDKIM ? 'Configured' : 'Not Found'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">DMARC:</span> <span class="result-value">${hasDMARC ? 'Configured' : 'Not Found'}</span></div>`;
                 const securityScore = (hasSPF ? 1 : 0) + (hasDKIM ? 1 : 0) + (hasDMARC ? 1 : 0);
-                html += `<div class="result-line"><span class="result-label">🎯 Security Score:</span> <span class="result-value">${securityScore}/3 ${securityScore === 3 ? '✓ Excellent' : securityScore === 2 ? '⚠️ Good' : '❌ Poor'}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Security Score:</span> <span class="result-value">${securityScore}/3 ${securityScore === 3 ? 'Excellent' : securityScore === 2 ? 'Good' : 'Poor'}</span></div>`;
                 
                 if (nameservers.length > 0) {
-                    html += '<div class="section-title">🌐 NAMESERVERS</div>';
+                    html += '<div class="section-title">NAMESERVERS</div>';
                     nameservers.forEach((ns, index) => {
                         html += `<div class="result-line"><span class="result-label">NS ${index + 1}:</span> <span class="result-value">${ns}</span></div>`;
                     });
                 }
                 
                 if (domainIP) {
-                    html += '<div class="section-title">📍 MAIL SERVER IP & LOCATION</div>';
-                    html += `<div class="result-line"><span class="result-label">🌍 Domain IP:</span> <span class="result-value">${domainIP}</span></div>`;
-                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${domainIP}'; backToMenu(); showTracker('ip'); trackIP();">🔍 Track Mail Server Location</button></div>`;
+                    html += '<div class="section-title">MAIL SERVER IP & LOCATION</div>';
+                    html += `<div class="result-line"><span class="result-label">Domain IP:</span> <span class="result-value">${domainIP}</span></div>`;
+                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${domainIP}'; backToMenu(); showTracker('ip'); trackIP();">Track Mail Server Location</button></div>`;
                 } else {
-                    html += '<div class="section-title">📍 MAIL SERVER IP</div>';
+                    html += '<div class="section-title">MAIL SERVER IP</div>';
                     html += `<div class="result-line"><span class="result-label">Domain IP:</span> <span class="result-value">Unable to resolve</span></div>`;
                 }
                 
-                html += '<div class="section-title">🔍 SECURITY & BREACH CHECK</div>';
-                html += `<div class="result-line"><span class="result-label">🔓 Data Breaches:</span> <span class="result-value"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank">Check HaveIBeenPwned</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">📊 Email Reputation:</span> <span class="result-value"><a href="https://emailrep.io/${encodeURIComponent(email)}" target="_blank">Check EmailRep.io</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🕵️ Email OSINT:</span> <span class="result-value"><a href="https://epieos.com/?q=${encodeURIComponent(email)}" target="_blank">Epieos Lookup</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔍 Hunter.io:</span> <span class="result-value"><a href="https://hunter.io/email-verifier/${encodeURIComponent(email)}" target="_blank">Verify Email</a></span></div>`;
+                html += '<div class="section-title">SECURITY & BREACH CHECK</div>';
+                html += `<div class="result-line"><span class="result-label">Data Breaches:</span> <span class="result-value"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank">Check HaveIBeenPwned</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Email Reputation:</span> <span class="result-value"><a href="https://emailrep.io/${encodeURIComponent(email)}" target="_blank">Check EmailRep.io</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Email OSINT:</span> <span class="result-value"><a href="https://epieos.com/?q=${encodeURIComponent(email)}" target="_blank">Epieos Lookup</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Hunter.io:</span> <span class="result-value"><a href="https://hunter.io/email-verifier/${encodeURIComponent(email)}" target="_blank">Verify Email</a></span></div>`;
                 
-                html += '<div class="section-title">🌐 DOMAIN INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">📋 WHOIS:</span> <span class="result-value"><a href="https://who.is/whois/${domain}" target="_blank">Domain Owner Info</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔧 DNS Tools:</span> <span class="result-value"><a href="https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}" target="_blank">MXToolbox Analysis</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🌍 Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=%22${encodeURIComponent(email)}%22" target="_blank">Search Email Online</a></span></div>`;
+                html += '<div class="section-title">DOMAIN INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">WHOIS:</span> <span class="result-value"><a href="https://who.is/whois/${domain}" target="_blank">Domain Owner Info</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">DNS Tools:</span> <span class="result-value"><a href="https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}" target="_blank">MXToolbox Analysis</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=%22${encodeURIComponent(email)}%22" target="_blank">Search Email Online</a></span></div>`;
                 
                 html += '</div>';
                 
-                if (isDisposable) {
-                    html += '<div class="warning">⚠️ DISPOSABLE EMAIL - This is a temporary/throwaway email service!</div>';
-                }
-                
-                if (securityScore === 0) {
-                    html += '<div class="warning">⚠️ NO EMAIL SECURITY - Domain has no SPF/DKIM/DMARC protection. High spam risk!</div>';
-                }
-                
-                html += '<div class="info">ℹ️ INFO: The IP address shown belongs to the email provider\'s mail servers, not the email sender\'s device. For providers like Gmail/Outlook, this will show Google/Microsoft datacenter IPs.</div>';
+                if (isDisposable) html += '<div class="warning">DISPOSABLE EMAIL - This is a temporary/throwaway email service</div>';
+                if (securityScore === 0) html += '<div class="warning">NO EMAIL SECURITY - Domain has no SPF/DKIM/DMARC protection. High spam risk</div>';
+                html += '<div class="info">INFO: The IP address shown belongs to the email provider\'s mail servers, not the email sender\'s device.</div>';
                 
                 resultDiv.innerHTML = html;
                 
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse!</div>';
-                console.error(error);
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
             }
         }
         
@@ -1049,9 +1128,8 @@
                 return;
             }
             
-            // Validierung: User ID muss nur aus Zahlen bestehen
             if (!/^\d+$/.test(userId)) {
-                resultDiv.innerHTML = '<div class="error">Ungültige User ID! Discord User IDs bestehen nur aus Zahlen.</div>';
+                resultDiv.innerHTML = '<div class="error">Ungueltige User ID!</div>';
                 return;
             }
             
@@ -1059,7 +1137,6 @@
             resultDiv.innerHTML = '';
             
             try {
-                // Account Creation Date aus Snowflake ID berechnen
                 const creationTimestamp = (BigInt(userId) >> 22n) + 1420070400000n;
                 const accountCreated = new Date(Number(creationTimestamp));
                 const accountAge = Math.floor((Date.now() - accountCreated.getTime()) / (1000 * 60 * 60 * 24));
@@ -1067,150 +1144,65 @@
                 const months = Math.floor((accountAge % 365) / 30);
                 const days = accountAge % 30;
                 
-                // Versuche User-Daten über Discord API zu holen (public endpoint ohne Auth)
                 let userData = null;
-                
                 try {
                     const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`);
-                    if (userResponse.ok) {
-                        userData = await userResponse.json();
-                    }
+                    if (userResponse.ok) userData = await userResponse.json();
                 } catch (e) {
-                    console.log('Discord API unavailable');
+                    console.log('API unavailable');
                 }
                 
                 loading.classList.remove('active');
                 
                 let html = '<div class="result-data">';
                 
-                html += '<div class="section-title">🆔 DISCORD USER ID INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">👤 User ID:</span> <span class="result-value">${userId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📅 Account Created:</span> <span class="result-value">${accountCreated.toLocaleString('de-DE')}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">⏰ Account Age:</span> <span class="result-value">${years} years, ${months} months, ${days} days (${accountAge} total days)</span></div>`;
+                html += '<div class="section-title">USER ID INFORMATION</div>';
+                html += `<div class="result-line"><span class="result-label">User ID:</span> <span class="result-value">${userId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Created:</span> <span class="result-value">${accountCreated.toLocaleString('de-DE')}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Account Age:</span> <span class="result-value">${years}y ${months}m ${days}d</span></div>`;
                 
-                // Snowflake Breakdown
                 const snowflakeTimestamp = Number(BigInt(userId) >> 22n);
                 const workerId = Number((BigInt(userId) & 0x3E0000n) >> 17n);
                 const processId = Number((BigInt(userId) & 0x1F000n) >> 12n);
                 const increment = Number(BigInt(userId) & 0xFFFn);
                 
-                html += '<div class="section-title">❄️ SNOWFLAKE ID BREAKDOWN</div>';
-                html += `<div class="result-line"><span class="result-label">⏱️ Timestamp:</span> <span class="result-value">${snowflakeTimestamp}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🖥️ Worker ID:</span> <span class="result-value">${workerId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">⚙️ Process ID:</span> <span class="result-value">${processId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔢 Increment:</span> <span class="result-value">${increment}</span></div>`;
+                html += '<div class="section-title">SNOWFLAKE BREAKDOWN</div>';
+                html += `<div class="result-line"><span class="result-label">Timestamp:</span> <span class="result-value">${snowflakeTimestamp}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Worker ID:</span> <span class="result-value">${workerId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Process ID:</span> <span class="result-value">${processId}</span></div>`;
+                html += `<div class="result-line"><span class="result-label">Increment:</span> <span class="result-value">${increment}</span></div>`;
                 
                 if (userData) {
-                    html += '<div class="section-title">👤 PUBLIC PROFILE DATA</div>';
-                    html += `<div class="result-line"><span class="result-label">👤 Username:</span> <span class="result-value">${userData.username}${userData.discriminator && userData.discriminator !== '0' ? '#' + userData.discriminator : ''}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🎨 Display Name:</span> <span class="result-value">${userData.global_name || userData.username}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🤖 Account Type:</span> <span class="result-value">${userData.bot ? '🤖 Bot Account' : '👤 User Account'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">🔒 System Account:</span> <span class="result-value">${userData.system ? '✓ Yes' : '✗ No'}</span></div>`;
+                    html += '<div class="section-title">PROFILE DATA</div>';
+                    html += `<div class="result-line"><span class="result-label">Username:</span> <span class="result-value">${userData.username}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Display Name:</span> <span class="result-value">${userData.global_name || userData.username}</span></div>`;
+                    html += `<div class="result-line"><span class="result-label">Bot:</span> <span class="result-value">${userData.bot ? 'Yes' : 'No'}</span></div>`;
                     
                     if (userData.avatar) {
                         const isAnimated = userData.avatar.startsWith('a_');
-                        const avatarExt = isAnimated ? 'gif' : 'png';
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${userData.avatar}.${avatarExt}?size=512`;
-                        html += `<div class="result-line"><span class="result-label">🖼️ Avatar:</span> <span class="result-value"><a href="${avatarUrl}" target="_blank">View ${isAnimated ? 'Animated ' : ''}Avatar</a></span></div>`;
-                        html += `<div class="result-line"><span class="result-label">🎭 Avatar Hash:</span> <span class="result-value">${userData.avatar}</span></div>`;
-                    } else {
-                        const defaultAvatar = (parseInt(userId) >> 22) % 6;
-                        html += `<div class="result-line"><span class="result-label">🖼️ Avatar:</span> <span class="result-value">Default Avatar #${defaultAvatar}</span></div>`;
-                        const defaultUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatar}.png`;
-                        html += `<div class="result-line"><span class="result-label">🔗 Default Avatar URL:</span> <span class="result-value"><a href="${defaultUrl}" target="_blank">View Default</a></span></div>`;
-                    }
-                    
-                    if (userData.banner) {
-                        const isAnimated = userData.banner.startsWith('a_');
-                        const bannerExt = isAnimated ? 'gif' : 'png';
-                        const bannerUrl = `https://cdn.discordapp.com/banners/${userId}/${userData.banner}.${bannerExt}?size=600`;
-                        html += `<div class="result-line"><span class="result-label">🎨 Banner:</span> <span class="result-value"><a href="${bannerUrl}" target="_blank">View ${isAnimated ? 'Animated ' : ''}Banner</a></span></div>`;
-                    } else {
-                        html += `<div class="result-line"><span class="result-label">🎨 Banner:</span> <span class="result-value">None</span></div>`;
-                    }
-                    
-                    if (userData.avatar_decoration_data) {
-                        html += `<div class="result-line"><span class="result-label">✨ Avatar Decoration:</span> <span class="result-value">Yes (SKU: ${userData.avatar_decoration_data.sku_id || 'N/A'})</span></div>`;
-                    }
-                    
-                    if (userData.accent_color) {
-                        const accentColor = '#' + userData.accent_color.toString(16).padStart(6, '0');
-                        html += `<div class="result-line"><span class="result-label">🎨 Accent Color:</span> <span class="result-value"><span style="display:inline-block; width:20px; height:20px; background:${accentColor}; border:1px solid #fff; vertical-align:middle; margin-right:5px;"></span>${accentColor}</span></div>`;
-                    }
-                    
-                    if (userData.public_flags !== undefined) {
-                        const flags = parseDiscordFlags(userData.public_flags);
-                        if (flags.length > 0) {
-                            html += `<div class="result-line"><span class="result-label">🏅 Badges & Flags:</span> <span class="result-value">${flags.join(', ')}</span></div>`;
-                        } else {
-                            html += `<div class="result-line"><span class="result-label">🏅 Badges:</span> <span class="result-value">None</span></div>`;
-                        }
+                        const ext = isAnimated ? 'gif' : 'png';
+                        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${userData.avatar}.${ext}?size=512`;
+                        html += `<div class="result-line"><span class="result-label">Avatar:</span> <span class="result-value"><a href="${avatarUrl}" target="_blank">View Avatar</a></span></div>`;
                     }
                     
                     if (userData.premium_type !== undefined && userData.premium_type !== 0) {
-                        const nitroTypes = {
-                            1: '💎 Nitro Classic',
-                            2: '💎 Nitro',
-                            3: '💎 Nitro Basic'
-                        };
-                        html += `<div class="result-line"><span class="result-label">💎 Nitro:</span> <span class="result-value">${nitroTypes[userData.premium_type] || 'Unknown Type'}</span></div>`;
-                    } else {
-                        html += `<div class="result-line"><span class="result-label">💎 Nitro:</span> <span class="result-value">No Active Subscription</span></div>`;
+                        const nitroTypes = { 1: 'Nitro Classic', 2: 'Nitro', 3: 'Nitro Basic' };
+                        html += `<div class="result-line"><span class="result-label">Nitro:</span> <span class="result-value">${nitroTypes[userData.premium_type]}</span></div>`;
                     }
-                } else {
-                    html += '<div class="section-title">⚠️ PUBLIC PROFILE NOT AVAILABLE</div>';
-                    html += `<div class="result-line"><span class="result-label">Status:</span> <span class="result-value">User profile is private or API access is restricted</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Info:</span> <span class="result-value">Basic information can still be derived from User ID</span></div>`;
                 }
                 
-                html += '<div class="section-title">🔍 DISCORD OSINT & LOOKUP TOOLS</div>';
-                html += `<div class="result-line"><span class="result-label">👤 Discord.id:</span> <span class="result-value"><a href="https://discord.id/?prefill=${userId}" target="_blank">Complete User Lookup</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔎 DiscordLookup:</span> <span class="result-value"><a href="https://discordlookup.com/user/${userId}" target="_blank">Extended Profile Info</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🕵️ Open in Discord:</span> <span class="result-value"><a href="https://discord.com/users/${userId}" target="_blank">View Profile (requires Discord)</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">📊 Lookup.guru:</span> <span class="result-value"><a href="https://lookup.guru/${userId}" target="_blank">Detailed Analysis</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">🔗 Discord Profile Link:</span> <span class="result-value">discord://-/users/${userId}</span></div>`;
-                
-                html += '<div class="section-title">📊 ADDITIONAL INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">🔗 User Mention Format:</span> <span class="result-value">&lt;@${userId}&gt;</span></div>`;
-                html += `<div class="result-line"><span class="result-label">📋 ID Copy:</span> <span class="result-value"><code style="background:rgba(0,0,0,0.3); padding:3px 8px; border-radius:3px;">${userId}</code></span></div>`;
+                html += '<div class="section-title">OSINT TOOLS</div>';
+                html += `<div class="result-line"><span class="result-label">Discord.id:</span> <span class="result-value"><a href="https://discord.id/?prefill=${userId}" target="_blank">Lookup</a></span></div>`;
+                html += `<div class="result-line"><span class="result-label">Profile:</span> <span class="result-value"><a href="https://discord.com/users/${userId}" target="_blank">View</a></span></div>`;
                 
                 html += '</div>';
-                
-                html += '<div class="info">ℹ️ INFO: User IDs are public information. Email addresses and phone numbers are private and cannot be accessed. Account creation date is calculated from the Snowflake ID structure. Profile data depends on user privacy settings.</div>';
                 
                 resultDiv.innerHTML = html;
                 
             } catch (error) {
                 loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse! Bitte überprüfen Sie die User ID.</div>';
-                console.error(error);
+                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
             }
-        }
-        
-        function parseDiscordFlags(flags) {
-            const flagNames = {
-                1: '👨‍💼 Discord Staff',
-                2: '👥 Partnered Server Owner',
-                4: '🎪 HypeSquad Events',
-                8: '🐛 Bug Hunter Level 1',
-                64: '⚡ HypeSquad Bravery',
-                128: '💚 HypeSquad Brilliance',
-                256: '💜 HypeSquad Balance',
-                512: '🎗️ Early Supporter',
-                16384: '🐛 Bug Hunter Level 2',
-                65536: '🏠 Verified Bot',
-                131072: '🤖 Verified Bot Developer',
-                262144: '🎓 Certified Moderator',
-                524288: '🔨 Active Developer'
-            };
-            
-            const userFlags = [];
-            for (const [bit, name] of Object.entries(flagNames)) {
-                if (flags & parseInt(bit)) {
-                    userFlags.push(name);
-                }
-            }
-            return userFlags;
         }
     </script>
 </body>
