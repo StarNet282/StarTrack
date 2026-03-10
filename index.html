@@ -1,1209 +1,1557 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarTrack System</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0014 0%, #1a0028 50%, #14000a 100%);
-            color: #ff3366;
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 0, 100, 0.15) 0%, transparent 50%);
-            animation: pulse 8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 5%) scale(1.1); }
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .banner {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #ff3366;
-            font-size: 14px;
-            line-height: 1.4;
-            white-space: pre;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8),
-                         0 0 20px rgba(138, 43, 226, 0.6),
-                         0 0 30px rgba(255, 0, 100, 0.4);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from { 
-                text-shadow: 0 0 10px rgba(255, 51, 102, 0.8),
-                            0 0 20px rgba(138, 43, 226, 0.6),
-                            0 0 30px rgba(255, 0, 100, 0.4); 
-            }
-            to { 
-                text-shadow: 0 0 20px rgba(255, 51, 102, 1),
-                            0 0 30px rgba(138, 43, 226, 0.8),
-                            0 0 40px rgba(255, 0, 100, 0.6); 
-            }
-        }
-        
-        .menu {
-            background: rgba(20, 0, 40, 0.8);
-            border: 2px solid #8a2be2;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5),
-                        inset 0 0 30px rgba(255, 0, 100, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        .menu-title {
-            text-align: center;
-            color: #ff3366;
-            margin-bottom: 25px;
-            font-size: 20px;
-            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
-        }
-        
-        .menu-options {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .menu-btn {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(255, 0, 100, 0.2) 100%);
-            border: 1px solid #8a2be2;
-            color: #ff3366;
-            padding: 18px;
-            cursor: pointer;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            transition: all 0.3s;
-            text-align: left;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .menu-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .menu-btn:hover::before {
-            left: 100%;
-        }
-        
-        .menu-btn:hover {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(255, 0, 100, 0.4) 100%);
-            transform: translateX(8px);
-            box-shadow: 0 0 25px rgba(138, 43, 226, 0.6),
-                        0 0 35px rgba(255, 0, 100, 0.4);
-            border-color: #ff3366;
-        }
-        
-        .result-box {
-            background: rgba(20, 0, 40, 0.95);
-            border: 2px solid #8a2be2;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-            display: none;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6),
-                        inset 0 0 20px rgba(255, 0, 100, 0.1);
-            backdrop-filter: blur(15px);
-        }
-        
-        .result-box::-webkit-scrollbar {
-            width: 12px;
-        }
-        
-        .result-box::-webkit-scrollbar-track {
-            background: rgba(138, 43, 226, 0.1);
-            border-radius: 10px;
-        }
-        
-        .result-box::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #8a2be2, #ff0064);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-        }
-        
-        .result-box.active {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .result-title {
-            color: #ff3366;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 20px;
-            border-bottom: 2px solid #8a2be2;
-            padding-bottom: 15px;
-            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #ffffff;
-            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
-        }
-        
-        .input-group input {
-            width: 100%;
-            padding: 14px;
-            background: rgba(10, 0, 20, 0.7);
-            border: 2px solid #8a2be2;
-            color: #ff3366;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 15px;
-            transition: all 0.3s;
-            box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.2);
-        }
-        
-        .input-group input:focus {
-            outline: none;
-            border-color: #ff3366;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6),
-                        inset 0 0 15px rgba(255, 0, 100, 0.2);
-        }
-        
-        .submit-btn {
-            background: linear-gradient(135deg, #8a2be2 0%, #ff0064 100%);
-            color: #fff;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .submit-btn:hover {
-            background: linear-gradient(135deg, #9d3ef0 0%, #ff1a7a 100%);
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.8),
-                        0 0 40px rgba(255, 0, 100, 0.6);
-        }
-        
-        .back-btn {
-            background: rgba(138, 43, 226, 0.3);
-            color: #fff;
-            border: 1px solid #8a2be2;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            margin-top: 15px;
-            transition: all 0.3s;
-        }
-        
-        .back-btn:hover {
-            background: rgba(138, 43, 226, 0.5);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
-        }
-        
-        .result-data {
-            background: rgba(10, 0, 20, 0.6);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-        }
-        
-        .section-title {
-            color: #ff3366;
-            font-size: 17px;
-            margin: 25px 0 15px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #8a2be2;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.6);
-        }
-        
-        .result-line {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
-        }
-        
-        .result-label {
-            color: #ffffff;
-            display: inline-block;
-            min-width: 220px;
-        }
-        
-        .result-value {
-            color: #ff3366;
-            text-shadow: 0 0 5px rgba(255, 51, 102, 0.3);
-        }
-        
-        .result-value a {
-            color: #8a2be2;
-            text-decoration: underline;
-            transition: all 0.3s;
-        }
-        
-        .result-value a:hover {
-            color: #ff3366;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
-        }
-        
-        .loading {
-            text-align: center;
-            color: #ff3366;
-            padding: 25px;
-            display: none;
-            font-size: 16px;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
-        }
-        
-        .loading.active {
-            display: block;
-            animation: loadingPulse 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes loadingPulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-        
-        .error {
-            color: #ff3366;
-            padding: 15px;
-            background: rgba(255, 51, 51, 0.2);
-            border: 2px solid #ff3366;
-            border-radius: 8px;
-            margin-top: 15px;
-            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StarTrack v3 — Enhanced Edition</title>
+<style>
+:root {
+  --bg: #070010;
+  --panel: rgba(14,0,28,0.92);
+  --border: #6a1fd0;
+  --accent: #ff2060;
+  --accent2: #a020f0;
+  --text: #e0c0ff;
+  --label: #c090f0;
+  --val: #ff4488;
+  --cyan: #00e5ff;
+  --green: #00ff88;
+  --yellow: #ffcc00;
+  --red: #ff3333;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Courier New',monospace;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:18px;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(160,32,240,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(255,32,96,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,229,255,0.04) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:bgPulse 12s ease-in-out infinite alternate;
+}
+@keyframes bgPulse{from{opacity:.7}to{opacity:1}}
 
-        .warning {
-            color: #ffaa00;
-            padding: 15px;
-            background: rgba(255, 170, 0, 0.2);
-            border: 2px solid #ffaa00;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 13px;
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
-        }
+.wrap{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
 
-        .info {
-            color: #00d4ff;
-            padding: 15px;
-            background: rgba(0, 212, 255, 0.2);
-            border: 2px solid #00d4ff;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 13px;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
-        }
+/* ── BANNER ── */
+.banner{
+  text-align:center;margin-bottom:24px;
+  color:var(--accent);font-size:13px;line-height:1.35;white-space:pre;
+  text-shadow:0 0 12px #ff206099,0 0 28px #a020f066;
+  animation:glow 3s ease-in-out infinite alternate;
+}
+@keyframes glow{
+  from{text-shadow:0 0 10px #ff206099,0 0 22px #a020f055;}
+  to  {text-shadow:0 0 22px #ff2060cc,0 0 40px #a020f088,0 0 60px #ff206033;}
+}
 
-        .security-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-            margin-left: 10px;
-            font-weight: bold;
-        }
+/* ── MENU ── */
+.menu{
+  background:var(--panel);border:1.5px solid var(--border);
+  border-radius:14px;padding:28px;margin-bottom:18px;
+  box-shadow:0 0 40px rgba(106,31,208,.4),inset 0 0 24px rgba(255,32,96,.06);
+  backdrop-filter:blur(14px);
+}
+.menu-title{
+  text-align:center;color:var(--accent);margin-bottom:22px;
+  font-size:19px;letter-spacing:4px;
+  text-shadow:0 0 16px var(--accent);
+}
+.menu-options{display:grid;gap:12px;}
+.menu-btn{
+  background:linear-gradient(135deg,rgba(106,31,208,.18),rgba(255,32,96,.12));
+  border:1px solid var(--border);color:var(--accent);padding:16px 20px;
+  cursor:pointer;border-radius:8px;font-family:'Courier New',monospace;
+  font-size:15px;transition:all .25s;text-align:left;
+  box-shadow:0 0 12px rgba(106,31,208,.25);position:relative;overflow:hidden;
+}
+.menu-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,32,96,.2),transparent);
+  transition:left .45s;
+}
+.menu-btn:hover::before{left:100%;}
+.menu-btn:hover{
+  background:linear-gradient(135deg,rgba(106,31,208,.35),rgba(255,32,96,.25));
+  transform:translateX(6px);border-color:var(--accent);
+  box-shadow:0 0 24px rgba(106,31,208,.55),0 0 40px rgba(255,32,96,.25);
+}
 
-        .badge-safe {
-            background: rgba(138, 43, 226, 0.3);
-            color: #8a2be2;
-            border: 1px solid #8a2be2;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-        }
+/* ── PANELS ── */
+.panel{
+  background:var(--panel);border:1.5px solid var(--border);border-radius:14px;
+  padding:24px;margin-top:18px;display:none;max-height:88vh;overflow-y:auto;
+  box-shadow:0 0 44px rgba(106,31,208,.55),inset 0 0 22px rgba(255,32,96,.07);
+  backdrop-filter:blur(16px);
+}
+.panel::-webkit-scrollbar{width:10px;}
+.panel::-webkit-scrollbar-track{background:rgba(106,31,208,.1);border-radius:8px;}
+.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6a1fd0,#ff2060);border-radius:8px;}
+.panel.active{display:block;animation:slideIn .35s ease-out;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
 
-        .badge-warning {
-            background: rgba(255, 170, 0, 0.3);
-            color: #ffaa00;
-            border: 1px solid #ffaa00;
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-        }
+.panel-title{
+  color:var(--accent);text-align:center;margin-bottom:22px;font-size:19px;
+  border-bottom:1.5px solid var(--border);padding-bottom:13px;letter-spacing:3px;
+  text-shadow:0 0 14px var(--accent);
+}
 
-        .badge-danger {
-            background: rgba(255, 51, 51, 0.3);
-            color: #ff3333;
-            border: 1px solid #ff3333;
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
-        }
-        
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        
-        .stat-item {
-            background: rgba(10, 0, 20, 0.5);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            text-align: center;
-        }
-        
-        .stat-label {
-            color: #ffffff;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            color: #ff3366;
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.6);
-        }
-    </style>
+/* ── INPUT ── */
+.igroup{margin-bottom:18px;}
+.igroup label{display:block;margin-bottom:8px;color:var(--label);font-size:13px;letter-spacing:1px;}
+.igroup input{
+  width:100%;padding:13px 16px;
+  background:rgba(8,0,18,.75);border:1.5px solid var(--border);
+  color:var(--accent);border-radius:8px;font-family:'Courier New',monospace;
+  font-size:14px;transition:all .25s;
+}
+.igroup input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 18px rgba(106,31,208,.55);}
+
+/* ── BUTTONS ── */
+.btn-run{
+  background:linear-gradient(135deg,#6a1fd0,#ff0060);
+  color:#fff;border:none;padding:13px 32px;border-radius:8px;
+  cursor:pointer;font-family:'Courier New',monospace;font-size:15px;
+  font-weight:bold;transition:all .25s;box-shadow:0 0 18px rgba(106,31,208,.55);
+}
+.btn-run:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(106,31,208,.8),0 0 40px rgba(255,0,96,.5);}
+.btn-back{
+  background:rgba(106,31,208,.25);color:var(--text);border:1px solid var(--border);
+  padding:11px 22px;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace;
+  margin-left:10px;transition:all .25s;font-size:14px;
+}
+.btn-back:hover{background:rgba(106,31,208,.45);box-shadow:0 0 14px rgba(106,31,208,.5);}
+.btn-mini{
+  background:linear-gradient(135deg,#6a1fd0,#ff0060);color:#fff;border:none;
+  padding:9px 18px;border-radius:6px;cursor:pointer;font-family:'Courier New',monospace;
+  font-size:13px;margin-top:12px;transition:all .25s;display:inline-block;
+}
+.btn-mini:hover{transform:scale(1.03);box-shadow:0 0 18px rgba(255,0,96,.6);}
+
+/* ── LOADER ── */
+.loader{
+  text-align:center;color:var(--accent);padding:22px;display:none;
+  font-size:15px;text-shadow:0 0 10px var(--accent);
+}
+.loader.on{display:block;animation:loadPulse 1.2s ease-in-out infinite;}
+@keyframes loadPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+.loader-bar{
+  height:3px;background:rgba(106,31,208,.2);border-radius:2px;margin-top:10px;
+  overflow:hidden;
+}
+.loader-bar-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#6a1fd0,#ff0060,#00e5ff);
+  border-radius:2px;animation:barLoad 2s ease-in-out infinite;
+}
+@keyframes barLoad{0%{width:0%;}50%{width:80%;}100%{width:100%;}}
+
+/* ── DATA ── */
+.data-wrap{background:rgba(8,0,18,.55);padding:18px;border-radius:10px;margin-top:14px;border:1px solid rgba(106,31,208,.28);}
+.sec{color:var(--accent);font-size:15px;margin:22px 0 12px;padding-bottom:7px;border-bottom:1.5px solid var(--border);letter-spacing:2px;text-shadow:0 0 8px var(--accent);}
+.row{padding:7px 0;border-bottom:1px solid rgba(106,31,208,.15);display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;}
+.lbl{color:var(--label);min-width:210px;font-size:13px;flex-shrink:0;}
+.val{color:var(--val);font-size:13px;word-break:break-all;}
+.val a{color:var(--accent2);text-decoration:none;border-bottom:1px dashed var(--accent2);}
+.val a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── STAT GRID ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin:14px 0;}
+.stat{background:rgba(8,0,18,.5);padding:11px;border-radius:7px;border:1px solid rgba(106,31,208,.28);text-align:center;}
+.slab{color:var(--label);font-size:11px;margin-bottom:4px;letter-spacing:1px;}
+.sval{color:var(--val);font-size:17px;font-weight:bold;text-shadow:0 0 8px var(--accent);}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:bold;margin-left:6px;vertical-align:middle;}
+.b-ok  {background:rgba(0,255,136,.12);color:var(--green);border:1px solid var(--green);}
+.b-warn{background:rgba(255,204,0,.12);color:var(--yellow);border:1px solid var(--yellow);}
+.b-bad {background:rgba(255,51,51,.12);color:var(--red);border:1px solid var(--red);}
+.b-info{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid var(--cyan);}
+.b-vip {background:rgba(160,32,240,.2);color:#c070ff;border:1px solid #a020f0;}
+
+/* ── PLATFORM GRID ── */
+.platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:8px;}
+.plat{
+  background:rgba(8,0,18,.5);border:1px solid rgba(106,31,208,.28);border-radius:7px;
+  padding:9px 13px;display:flex;align-items:center;gap:10px;transition:all .2s;
+}
+.plat:hover{border-color:var(--accent);background:rgba(255,32,96,.07);}
+.pname{color:var(--label);min-width:110px;font-size:12px;}
+.plink a{color:var(--accent2);font-size:11px;text-decoration:none;}
+.plink a:hover{color:var(--accent);}
+
+/* ── ALERTS ── */
+.alert-warn{color:var(--yellow);padding:13px 16px;background:rgba(255,204,0,.08);border:1.5px solid var(--yellow);border-radius:8px;margin-top:13px;font-size:13px;}
+.alert-info{color:var(--cyan);padding:13px 16px;background:rgba(0,229,255,.08);border:1.5px solid var(--cyan);border-radius:8px;margin-top:13px;font-size:13px;}
+.alert-err {color:var(--red);padding:13px 16px;background:rgba(255,51,51,.12);border:1.5px solid var(--red);border-radius:8px;margin-top:13px;}
+.alert-ok  {color:var(--green);padding:13px 16px;background:rgba(0,255,136,.08);border:1.5px solid var(--green);border-radius:8px;margin-top:13px;font-size:13px;}
+
+/* ── AVATAR ── */
+.ava{width:90px;height:90px;border-radius:50%;border:3px solid var(--accent2);display:block;margin:8px 0;box-shadow:0 0 22px rgba(160,32,240,.6);}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{margin-top:5px;}
+.prog-bar{height:6px;background:rgba(106,31,208,.15);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#6a1fd0,#ff0060);}
+
+/* ── MAP PREVIEW ── */
+.map-frame{width:100%;height:220px;border:1px solid var(--border);border-radius:8px;margin-top:10px;}
+
+/* ── FOOTER ── */
+.footer{
+  margin-top:36px;padding:18px 22px;
+  background:rgba(255,32,96,.05);
+  border:1px solid rgba(255,32,96,.25);
+  border-radius:12px;text-align:center;
+  font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.75;
+}
+.footer strong{color:var(--accent);}
+.footer .ftitle{color:var(--accent);font-size:12.5px;font-weight:bold;margin-bottom:7px;letter-spacing:3px;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="banner">
-       _____ __             ______                __  
-      / ___// /_____ ______/_  __/________ ______/ /__
-      \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
-     ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,<   
-    /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  
+<div class="wrap">
 
-         [ + ]  E N H A N C E D  E D I T I O N  [ + ]
-        </div>
-        
-        <div id="mainMenu" class="menu">
-            <div class="menu-title">STARTRACK SYSTEM</div>
-            <div class="menu-options">
-                <button class="menu-btn" onclick="showTracker('ip')">[ 1 ] IP Tracker - Extended Info + Address + Maps</button>
-                <button class="menu-btn" onclick="showTracker('myip')">[ 2 ] Show Your IP + Complete Analysis</button>
-                <button class="menu-btn" onclick="showTracker('username')">[ 3 ] Username Tracker - 50+ Platforms</button>
-                <button class="menu-btn" onclick="showTracker('phone')">[ 4 ] Phone Number Tracker + Carrier + Validation</button>
-                <button class="menu-btn" onclick="showTracker('email')">[ 5 ] Email Tracker + OSINT + Security Analysis</button>
-                <button class="menu-btn" onclick="showTracker('discord')">[ 6 ] Discord User ID - Profile + Badges + Nitro</button>
-            </div>
-        </div>
-        
-        <div id="ipTracker" class="result-box">
-            <div class="result-title">IP TRACKER</div>
-            <div class="input-group">
-                <label>Enter IP Address:</label>
-                <input type="text" id="ipInput" placeholder="z.B. 8.8.8.8">
-            </div>
-            <button class="submit-btn" onclick="trackIP()">Track IP</button>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-            <div class="loading" id="ipLoading">Collecting extended information and address data...</div>
-            <div id="ipResult"></div>
-        </div>
-        
-        <div id="myipTracker" class="result-box">
-            <div class="result-title">YOUR IP ADDRESS</div>
-            <div class="loading" id="myipLoading">Loading...</div>
-            <div id="myipResult"></div>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-        </div>
-        
-        <div id="usernameTracker" class="result-box">
-            <div class="result-title">USERNAME TRACKER</div>
-            <div class="input-group">
-                <label>Enter Username:</label>
-                <input type="text" id="usernameInput" placeholder="z.B. username123">
-            </div>
-            <button class="submit-btn" onclick="trackUsername()">Track Username</button>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-            <div class="loading" id="usernameLoading">Searching across 50+ platforms...</div>
-            <div id="usernameResult"></div>
-        </div>
-        
-        <div id="phoneTracker" class="result-box">
-            <div class="result-title">PHONE NUMBER TRACKER</div>
-            <div class="input-group">
-                <label>Enter Phone Number (with country code):</label>
-                <input type="text" id="phoneInput" placeholder="z.B. +491234567890">
-            </div>
-            <button class="submit-btn" onclick="trackPhone()">Track Phone</button>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-            <div class="loading" id="phoneLoading">Analyzing phone number and searching for IP data...</div>
-            <div id="phoneResult"></div>
-        </div>
-        
-        <div id="emailTracker" class="result-box">
-            <div class="result-title">EMAIL TRACKER & VALIDATOR</div>
-            <div class="input-group">
-                <label>Enter Email Address:</label>
-                <input type="text" id="emailInput" placeholder="z.B. example@domain.com">
-            </div>
-            <button class="submit-btn" onclick="trackEmail()">Analyze Email</button>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-            <div class="loading" id="emailLoading">Validating email and resolving domain IP...</div>
-            <div id="emailResult"></div>
-        </div>
-        
-        <div id="discordTracker" class="result-box">
-            <div class="result-title">DISCORD USER ID LOOKUP</div>
-            <div class="input-group">
-                <label>Enter Discord User ID:</label>
-                <input type="text" id="discordInput" placeholder="z.B. 1167475880260550820">
-            </div>
-            <button class="submit-btn" onclick="trackDiscord()">Lookup User</button>
-            <button class="back-btn" onclick="backToMenu()">Back</button>
-            <div class="loading" id="discordLoading">Fetching Discord user data...</div>
-            <div id="discordResult"></div>
-        </div>
-    </div>
+<div class="banner">
+    _____ __             ______                __  
+   / ___// /_____ ______/_  __/________ ______/ /__
+   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
+  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
+ /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  
 
-    <script>
-        function showTracker(type) {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById(type === 'ip' ? 'ipTracker' : 
-                                   type === 'myip' ? 'myipTracker' :
-                                   type === 'username' ? 'usernameTracker' :
-                                   type === 'phone' ? 'phoneTracker' :
-                                   type === 'email' ? 'emailTracker' : 'discordTracker').classList.add('active');
-            if (type === 'myip') getMyIP();
-        }
-        
-        function backToMenu() {
-            document.getElementById('mainMenu').style.display = 'block';
-            document.querySelectorAll('.result-box').forEach(box => {
-                box.classList.remove('active');
-                const resultDiv = box.querySelector('[id$="Result"]');
-                if (resultDiv) resultDiv.innerHTML = '';
-            });
-        }
-        
-        function decimalToDMS(lat, lon) {
-            const latDir = lat >= 0 ? 'N' : 'S';
-            const lonDir = lon >= 0 ? 'E' : 'W';
-            lat = Math.abs(lat);
-            lon = Math.abs(lon);
-            const latDeg = Math.floor(lat);
-            const latMin = Math.floor((lat - latDeg) * 60);
-            const latSec = ((lat - latDeg - latMin / 60) * 3600).toFixed(2);
-            const lonDeg = Math.floor(lon);
-            const lonMin = Math.floor((lon - lonDeg) * 60);
-            const lonSec = ((lon - lonDeg - lonMin / 60) * 3600).toFixed(2);
-            return `${latDeg}°${latMin}'${latSec}"${latDir}, ${lonDeg}°${lonMin}'${lonSec}"${lonDir}`;
-        }
-        
-        async function trackIP() {
-            const ip = document.getElementById('ipInput').value.trim();
-            const loading = document.getElementById('ipLoading');
-            const resultDiv = document.getElementById('ipResult');
-            
-            if (!ip) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine IP-Adresse ein!</div>';
-                return;
-            }
-            
-            loading.classList.add('active');
-            resultDiv.innerHTML = '';
-            
-            try {
-                const [ipwhoData, ipApiData, ipInfoData, geoData] = await Promise.allSettled([
-                    fetch(`https://ipwho.is/${ip}`).then(r => r.json()),
-                    fetch(`http://ip-api.com/json/${ip}?fields=66846719`).then(r => r.json()),
-                    fetch(`https://ipapi.co/${ip}/json/`).then(r => r.json()),
-                    fetch(`https://get.geojs.io/v1/ip/geo/${ip}.json`).then(r => r.json())
-                ]);
-                
-                const data1 = ipwhoData.status === 'fulfilled' ? ipwhoData.value : null;
-                const data2 = ipApiData.status === 'fulfilled' ? ipApiData.value : null;
-                const data3 = ipInfoData.status === 'fulfilled' ? ipInfoData.value : null;
-                const data4 = geoData.status === 'fulfilled' ? geoData.value : null;
-                
-                if (data1 && data1.success === false) {
-                    loading.classList.remove('active');
-                    resultDiv.innerHTML = '<div class="error">Ungueltige IP-Adresse!</div>';
-                    return;
-                }
-                
-                const lat = data1?.latitude || data2?.lat || data3?.latitude || 0;
-                const lon = data1?.longitude || data2?.lon || data3?.longitude || 0;
-                
-                let addressData = null;
-                let addressData2 = null;
-                if (lat && lon) {
-                    try {
-                        const [osm, bigdata] = await Promise.allSettled([
-                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
-                                headers: {'User-Agent': 'StarTrack-System/2.0'}
-                            }).then(r => r.json()),
-                            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`).then(r => r.json())
-                        ]);
-                        addressData = osm.status === 'fulfilled' ? osm.value : null;
-                        addressData2 = bigdata.status === 'fulfilled' ? bigdata.value : null;
-                    } catch (e) {
-                        console.log('Geocoding failed');
-                    }
-                }
-                
-                loading.classList.remove('active');
-                
-                const isVPN = data2?.proxy || false;
-                const isMobile = data2?.mobile || false;
-                const isHosting = data2?.hosting || false;
-                
-                let securityBadge = '';
-                if (isVPN) securityBadge = '<span class="security-badge badge-warning">VPN/PROXY</span>';
-                else if (isHosting) securityBadge = '<span class="security-badge badge-warning">HOSTING</span>';
-                else securityBadge = '<span class="security-badge badge-safe">RESIDENTIAL</span>';
-                if (isMobile) securityBadge += '<span class="security-badge badge-safe">MOBILE</span>';
-                
-                let html = '<div class="stat-grid">';
-                html += `<div class="stat-item"><div class="stat-label">IP Type</div><div class="stat-value">${data1?.type || 'IPv4'}</div></div>`;
-                html += `<div class="stat-item"><div class="stat-label">Connection</div><div class="stat-value">${isMobile ? 'Mobile' : 'Fixed'}</div></div>`;
-                html += `<div class="stat-item"><div class="stat-label">Security</div><div class="stat-value">${isVPN ? 'VPN' : 'Clean'}</div></div>`;
-                html += `<div class="stat-item"><div class="stat-label">Accuracy</div><div class="stat-value">${data3?.accuracy || data4?.accuracy || 'Unknown'} km</div></div>`;
-                html += '</div><div class="result-data">';
-                
-                html += '<div class="section-title">BASIC INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">IP Address:</span> <span class="result-value">${ip} ${securityBadge}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">IP Type:</span> <span class="result-value">${data1?.type || data3?.version || 'IPv4'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Reverse DNS:</span> <span class="result-value">${data1?.connection?.domain || data2?.reverse || 'N/A'}</span></div>`;
-                
-                if (addressData?.address) {
-                    const addr = addressData.address;
-                    html += '<div class="section-title">COMPLETE ADDRESS INFORMATION</div>';
-                    
-                    let fullAddr = '';
-                    if (addr.road || addr.pedestrian) fullAddr += (addr.road || addr.pedestrian);
-                    if (addr.house_number) fullAddr += ' ' + addr.house_number;
-                    if (fullAddr) fullAddr += ', ';
-                    if (addr.postcode) fullAddr += addr.postcode + ' ';
-                    if (addr.city || addr.town) fullAddr += (addr.city || addr.town) + ', ';
-                    if (addr.state) fullAddr += addr.state + ', ';
-                    if (addr.country) fullAddr += addr.country;
-                    
-                    if (fullAddr) {
-                        html += `<div class="result-line"><span class="result-label">Full Address:</span> <span class="result-value" style="font-weight:bold;">${fullAddr}</span></div>`;
-                    }
-                    
-                    html += `<div class="result-line"><span class="result-label">Street:</span> <span class="result-value">${addr.road || addr.pedestrian || addr.path || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">House Number:</span> <span class="result-value">${addr.house_number || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Neighborhood:</span> <span class="result-value">${addr.suburb || addr.neighbourhood || addressData2?.locality || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${addr.city || addr.town || addr.village || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Postcode:</span> <span class="result-value">${addr.postcode || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">County:</span> <span class="result-value">${addr.county || addr.state_district || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">State:</span> <span class="result-value">${addr.state || 'N/A'}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${addr.country || 'N/A'}</span></div>`;
-                }
-                
-                html += '<div class="section-title">GPS COORDINATES & MAPS</div>';
-                html += `<div class="result-line"><span class="result-label">Latitude:</span> <span class="result-value">${lat}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Longitude:</span> <span class="result-value">${lon}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Coordinates DMS:</span> <span class="result-value">${decimalToDMS(lat, lon)}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Google Maps Satellite:</span> <span class="result-value"><a href="https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3" target="_blank">Ultra Zoom Satellite</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Street View:</span> <span class="result-value"><a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}" target="_blank">Street Level View</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Google Earth:</span> <span class="result-value"><a href="https://earth.google.com/web/@${lat},${lon},0a,1000d,35y,0h,0t,0r" target="_blank">Open in Earth</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">OpenStreetMap:</span> <span class="result-value"><a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=18" target="_blank">OSM View</a></span></div>`;
-                
-                html += '<div class="section-title">LOCATION INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${data1?.country || data2?.country || 'N/A'} ${data1?.flag?.emoji || ''}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">${data1?.country_code || data2?.countryCode || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Region:</span> <span class="result-value">${data1?.region || data2?.regionName || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">City:</span> <span class="result-value">${data1?.city || data2?.city || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">District:</span> <span class="result-value">${data2?.district || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Postal:</span> <span class="result-value">${data1?.postal || data2?.zip || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Continent:</span> <span class="result-value">${data1?.continent || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data1?.capital || 'N/A'}</span></div>`;
-                
-                html += '<div class="section-title">NETWORK INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">ISP:</span> <span class="result-value">${data1?.connection?.isp || data2?.isp || data3?.org || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Organization:</span> <span class="result-value">${data1?.connection?.org || data2?.org || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">AS Number:</span> <span class="result-value">${data1?.connection?.asn || data2?.as || data3?.asn || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">AS Name:</span> <span class="result-value">${data3?.asn || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Network:</span> <span class="result-value">${data3?.network || 'N/A'}</span></div>`;
-                
-                html += '<div class="section-title">SECURITY & CONNECTION TYPE</div>';
-                html += `<div class="result-line"><span class="result-label">Mobile Connection:</span> <span class="result-value">${isMobile ? 'Yes' : 'No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">VPN/Proxy:</span> <span class="result-value">${isVPN ? 'Detected' : 'No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Hosting/Datacenter:</span> <span class="result-value">${isHosting ? 'Yes' : 'No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Connection Type:</span> <span class="result-value">${data3?.connection_type || 'N/A'}</span></div>`;
-                
-                html += '<div class="section-title">TIMEZONE</div>';
-                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${data1?.timezone?.id || data2?.timezone || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">UTC Offset:</span> <span class="result-value">${data1?.timezone?.offset || data3?.utc_offset || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Abbreviation:</span> <span class="result-value">${data1?.timezone?.abbr || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Current Time:</span> <span class="result-value">${data1?.timezone?.current_time || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">DST:</span> <span class="result-value">${data1?.timezone?.is_dst ? 'Yes' : 'No'}</span></div>`;
-                
-                html += '<div class="section-title">COUNTRY DETAILS</div>';
-                html += `<div class="result-line"><span class="result-label">Capital:</span> <span class="result-value">${data1?.capital || data3?.capital || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Calling Code:</span> <span class="result-value">+${data1?.calling_code || data3?.country_calling_code || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Currency:</span> <span class="result-value">${data3?.currency_name || 'N/A'} (${data3?.currency || 'N/A'})</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Languages:</span> <span class="result-value">${data3?.languages || 'N/A'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">EU Member:</span> <span class="result-value">${data1?.is_eu || data3?.in_eu ? 'Yes' : 'No'}</span></div>`;
-                
-                html += '</div>';
-                
-                if (isVPN) html += '<div class="warning">VPN/PROXY DETECTED - Location data may be inaccurate or completely wrong</div>';
-                html += '<div class="info">ACCURACY INFO: Street addresses are based on GPS coordinates from ISP server location. Accuracy varies from 50m to 50km depending on ISP and location.</div>';
-                
-                resultDiv.innerHTML = html;
-                
-            } catch (error) {
-                loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen der Daten</div>';
-                console.error(error);
-            }
-        }
-        
-        async function getMyIP() {
-            const loading = document.getElementById('myipLoading');
-            const resultDiv = document.getElementById('myipResult');
-            
-            loading.classList.add('active');
-            
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                
-                loading.classList.remove('active');
-                
-                resultDiv.innerHTML = `
-                    <div class="result-data">
-                        <div class="result-line"><span class="result-label">Your IP:</span> <span class="result-value">${data.ip}</span></div>
-                        <div style="margin-top: 15px;">
-                            <button class="submit-btn" onclick="document.getElementById('ipInput').value='${data.ip}'; backToMenu(); showTracker('ip'); trackIP();">
-                                Show Extended Info
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler beim Abrufen</div>';
-            }
-        }
-        
-        async function trackUsername() {
-            const username = document.getElementById('usernameInput').value.trim();
-            const loading = document.getElementById('usernameLoading');
-            const resultDiv = document.getElementById('usernameResult');
-            
-            if (!username) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie einen Benutzernamen ein!</div>';
-                return;
-            }
-            
-            loading.classList.add('active');
-            resultDiv.innerHTML = '';
-            
-            const platforms = [
-                {name: 'Facebook', url: `https://www.facebook.com/${username}`},
-                {name: 'Twitter', url: `https://www.twitter.com/${username}`},
-                {name: 'Instagram', url: `https://www.instagram.com/${username}`},
-                {name: 'LinkedIn', url: `https://www.linkedin.com/in/${username}`},
-                {name: 'GitHub', url: `https://www.github.com/${username}`},
-                {name: 'Pinterest', url: `https://www.pinterest.com/${username}`},
-                {name: 'YouTube', url: `https://www.youtube.com/@${username}`},
-                {name: 'TikTok', url: `https://www.tiktok.com/@${username}`},
-                {name: 'Reddit', url: `https://www.reddit.com/user/${username}`},
-                {name: 'Twitch', url: `https://www.twitch.tv/${username}`},
-                {name: 'Medium', url: `https://medium.com/@${username}`},
-                {name: 'Telegram', url: `https://t.me/${username}`},
-                {name: 'Discord', url: `https://discord.com/users/${username}`},
-                {name: 'Snapchat', url: `https://www.snapchat.com/add/${username}`},
-                {name: 'Spotify', url: `https://open.spotify.com/user/${username}`},
-                {name: 'SoundCloud', url: `https://soundcloud.com/${username}`},
-                {name: 'Vimeo', url: `https://vimeo.com/${username}`},
-                {name: 'Behance', url: `https://www.behance.net/${username}`},
-                {name: 'DeviantArt', url: `https://www.deviantart.com/${username}`},
-                {name: 'Dribbble', url: `https://dribbble.com/${username}`},
-                {name: 'Flickr', url: `https://www.flickr.com/people/${username}`},
-                {name: 'Tumblr', url: `https://${username}.tumblr.com`},
-                {name: 'WordPress', url: `https://${username}.wordpress.com`},
-                {name: 'Steam', url: `https://steamcommunity.com/id/${username}`},
-                {name: 'Mixer', url: `https://mixer.com/${username}`},
-                {name: 'Patreon', url: `https://www.patreon.com/${username}`},
-                {name: 'Roblox', url: `https://www.roblox.com/users/${username}`},
-                {name: 'VK', url: `https://vk.com/${username}`},
-                {name: 'Telegram', url: `https://t.me/${username}`},
-                {name: 'WhatsApp', url: `https://wa.me/${username}`},
-                {name: 'Signal', url: `https://signal.me/#p/${username}`}
-            ];
-            
-            let html = '<div class="result-data">';
-            platforms.forEach(platform => {
-                html += `<div class="result-line"><span class="result-label">${platform.name}:</span> <span class="result-value"><a href="${platform.url}" target="_blank">${platform.url}</a></span></div>`;
-            });
-            html += '</div>';
-            
-            loading.classList.remove('active');
-            resultDiv.innerHTML = html;
-        }
-        
-        async function trackPhone() {
-            const phone = document.getElementById('phoneInput').value.trim();
-            const loading = document.getElementById('phoneLoading');
-            const resultDiv = document.getElementById('phoneResult');
-            
-            if (!phone) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine Telefonnummer ein!</div>';
-                return;
-            }
-            
-            loading.classList.add('active');
-            resultDiv.innerHTML = '';
-            
-            try {
-                const phoneClean = phone.replace(/[^0-9+]/g, '');
-                let countryCode = '';
-                let localNumber = phoneClean;
-                
-                if (phoneClean.startsWith('+')) {
-                    const match = phoneClean.match(/^\+(\d{1,4})/);
-                    if (match) countryCode = match[1];
-                    localNumber = phoneClean.substring(countryCode.length + 1);
-                } else if (phoneClean.startsWith('00')) {
-                    const match = phoneClean.match(/^00(\d{1,4})/);
-                    if (match) countryCode = match[1];
-                    localNumber = phoneClean.substring(countryCode.length + 2);
-                }
-                
-                const countryData = {
-                    '1': { country: 'USA/Canada', iso: 'US/CA', carriers: ['Verizon', 'AT&T', 'T-Mobile', 'Rogers', 'Bell'], timezone: 'UTC-5 to UTC-8' },
-                    '44': { country: 'United Kingdom', iso: 'GB', carriers: ['EE', 'Vodafone', 'O2', 'Three'], timezone: 'UTC+0' },
-                    '49': { country: 'Germany', iso: 'DE', carriers: ['Telekom', 'Vodafone', 'O2', '1&1'], timezone: 'UTC+1' },
-                    '33': { country: 'France', iso: 'FR', carriers: ['Orange', 'SFR', 'Bouygues', 'Free'], timezone: 'UTC+1' },
-                    '39': { country: 'Italy', iso: 'IT', carriers: ['TIM', 'Vodafone', 'Wind Tre'], timezone: 'UTC+1' },
-                    '34': { country: 'Spain', iso: 'ES', carriers: ['Movistar', 'Orange', 'Vodafone'], timezone: 'UTC+1' },
-                    '43': { country: 'Austria', iso: 'AT', carriers: ['A1', 'Magenta', 'Drei'], timezone: 'UTC+1' },
-                    '41': { country: 'Switzerland', iso: 'CH', carriers: ['Swisscom', 'Sunrise', 'Salt'], timezone: 'UTC+1' },
-                    '31': { country: 'Netherlands', iso: 'NL', carriers: ['KPN', 'Vodafone', 'T-Mobile'], timezone: 'UTC+1' },
-                    '32': { country: 'Belgium', iso: 'BE', carriers: ['Proximus', 'Orange', 'Base'], timezone: 'UTC+1' },
-                    '48': { country: 'Poland', iso: 'PL', carriers: ['Orange', 'Play', 'Plus', 'T-Mobile'], timezone: 'UTC+1' },
-                    '61': { country: 'Australia', iso: 'AU', carriers: ['Telstra', 'Optus', 'Vodafone'], timezone: 'UTC+8 to UTC+11' },
-                    '81': { country: 'Japan', iso: 'JP', carriers: ['NTT Docomo', 'SoftBank', 'au'], timezone: 'UTC+9' },
-                    '86': { country: 'China', iso: 'CN', carriers: ['China Mobile', 'China Unicom', 'China Telecom'], timezone: 'UTC+8' },
-                    '91': { country: 'India', iso: 'IN', carriers: ['Airtel', 'Jio', 'Vodafone Idea'], timezone: 'UTC+5:30' }
-                };
-                
-                const countryInfo = countryData[countryCode] || { country: 'Unknown', iso: 'N/A', carriers: [], timezone: 'Unknown' };
-                
-                let lineType = 'Unknown';
-                let detectedCarrier = 'Unknown';
-                
-                if (countryCode === '49') {
-                    if (localNumber.startsWith('15') || localNumber.startsWith('16') || localNumber.startsWith('17')) {
-                        lineType = 'Mobile';
-                        const prefix = localNumber.substring(0, 3);
-                        const carrierMap = {
-                            '151': 'T-Mobile', '160': 'T-Mobile', '170': 'T-Mobile', '171': 'T-Mobile', '175': 'T-Mobile',
-                            '152': 'Vodafone', '155': 'Vodafone', '162': 'Vodafone', '172': 'Vodafone', '173': 'Vodafone', '174': 'Vodafone',
-                            '157': 'O2', '159': 'O2', '163': 'O2', '176': 'O2', '177': 'O2', '178': 'O2', '179': 'O2'
-                        };
-                        detectedCarrier = carrierMap[prefix] || 'Unknown';
-                    } else {
-                        lineType = 'Landline';
-                    }
-                } else if (countryCode === '44') {
-                    if (localNumber.startsWith('7')) {
-                        lineType = 'Mobile';
-                    } else {
-                        lineType = 'Landline';
-                    }
-                } else if (countryCode === '1') {
-                    lineType = 'Mobile/Landline';
-                }
-                
-                const numberLength = localNumber.length;
-                let numberValid = false;
-                if (countryCode === '49') numberValid = numberLength >= 10 && numberLength <= 11;
-                else if (countryCode === '1') numberValid = numberLength === 10;
-                else if (countryCode === '44') numberValid = numberLength >= 9 && numberLength <= 10;
-                else numberValid = numberLength >= 7 && numberLength <= 15;
-                
-                let carrierIP = null;
-                let carrierDomain = null;
-                const mainCarriers = {
-                    'T-Mobile': 't-mobile.de',
-                    'Vodafone': 'vodafone.com',
-                    'O2': 'o2online.de',
-                    'AT&T': 'att.com',
-                    'Verizon': 'verizon.com',
-                    'Telekom': 'telekom.de'
-                };
-                
-                for (const [name, domain] of Object.entries(mainCarriers)) {
-                    if (detectedCarrier.includes(name)) {
-                        carrierDomain = domain;
-                        break;
-                    }
-                }
-                
-                if (carrierDomain) {
-                    try {
-                        const dnsResponse = await fetch(`https://dns.google/resolve?name=${carrierDomain}&type=A`);
-                        const dnsData = await dnsResponse.json();
-                        if (dnsData.Answer && dnsData.Answer.length > 0) {
-                            carrierIP = dnsData.Answer[0].data;
-                        }
-                    } catch (e) {
-                        console.log('DNS failed');
-                    }
-                }
-                
-                loading.classList.remove('active');
-                
-                let html = '<div class="result-data">';
-                
-                html += '<div class="section-title">PHONE NUMBER ANALYSIS</div>';
-                html += `<div class="result-line"><span class="result-label">Original Input:</span> <span class="result-value">${phone}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Cleaned Number:</span> <span class="result-value">${phoneClean}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">International Format:</span> <span class="result-value">+${countryCode} ${localNumber}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Number Length:</span> <span class="result-value">${numberLength} digits</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Format Valid:</span> <span class="result-value">${numberValid ? 'Likely Valid' : 'Invalid Length'}</span></div>`;
-                
-                html += '<div class="section-title">LOCATION INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">Country:</span> <span class="result-value">${countryInfo.country}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Country Code:</span> <span class="result-value">+${countryCode}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">ISO Code:</span> <span class="result-value">${countryInfo.iso}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Timezone:</span> <span class="result-value">${countryInfo.timezone}</span></div>`;
-                
-                html += '<div class="section-title">CARRIER & TYPE INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">Line Type:</span> <span class="result-value">${lineType}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Detected Carrier:</span> <span class="result-value">${detectedCarrier}</span></div>`;
-                if (countryInfo.carriers.length > 0) {
-                    html += `<div class="result-line"><span class="result-label">Common Carriers:</span> <span class="result-value">${countryInfo.carriers.join(', ')}</span></div>`;
-                }
-                
-                if (carrierIP) {
-                    html += '<div class="section-title">NETWORK & IP INFORMATION</div>';
-                    html += `<div class="result-line"><span class="result-label">Carrier Domain:</span> <span class="result-value">${carrierDomain}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Carrier Server IP:</span> <span class="result-value">${carrierIP}</span></div>`;
-                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${carrierIP}'; backToMenu(); showTracker('ip'); trackIP();">Track Carrier IP Location</button></div>`;
-                } else {
-                    html += '<div class="section-title">NETWORK INFORMATION</div>';
-                    html += `<div class="result-line"><span class="result-label">Carrier IP:</span> <span class="result-value">Unable to resolve (Carrier: ${detectedCarrier})</span></div>`;
-                }
-                
-                html += '<div class="section-title">OSINT & LOOKUP TOOLS</div>';
-                html += `<div class="result-line"><span class="result-label">Truecaller:</span> <span class="result-value"><a href="https://www.truecaller.com/search/${countryInfo.iso.split('/')[0]}/${encodeURIComponent(phoneClean)}" target="_blank">Search Name & Spam</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Spam Database:</span> <span class="result-value"><a href="https://www.shouldianswer.com/phone-number/${phoneClean}" target="_blank">Check Spam Reports</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">WhatsApp:</span> <span class="result-value"><a href="https://wa.me/${phoneClean}" target="_blank">Open in WhatsApp</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Telegram:</span> <span class="result-value"><a href="https://t.me/${phoneClean}" target="_blank">Search on Telegram</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=${encodeURIComponent(phone)}" target="_blank">Google This Number</a></span></div>`;
-                
-                html += '</div>';
-                html += '<div class="info">ACCURACY: Carrier detection works best for German numbers. IP shows carrier infrastructure location, not user location.</div>';
-                
-                resultDiv.innerHTML = html;
-                
-            } catch (error) {
-                loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
-            }
-        }
-        
-        async function trackEmail() {
-            const email = document.getElementById('emailInput').value.trim();
-            const loading = document.getElementById('emailLoading');
-            const resultDiv = document.getElementById('emailResult');
-            
-            if (!email) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine E-Mail ein!</div>';
-                return;
-            }
-            
-            loading.classList.add('active');
-            resultDiv.innerHTML = '';
-            
-            try {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const isValidFormat = emailRegex.test(email);
-                
-                if (!isValidFormat) {
-                    loading.classList.remove('active');
-                    resultDiv.innerHTML = '<div class="error">Ungueltiges E-Mail-Format!</div>';
-                    return;
-                }
-                
-                const [username, domain] = email.split('@');
-                
-                const [mxResponse, aResponse, txtResponse, nsResponse] = await Promise.allSettled([
-                    fetch(`https://dns.google/resolve?name=${domain}&type=MX`).then(r => r.json()),
-                    fetch(`https://dns.google/resolve?name=${domain}&type=A`).then(r => r.json()),
-                    fetch(`https://dns.google/resolve?name=${domain}&type=TXT`).then(r => r.json()),
-                    fetch(`https://dns.google/resolve?name=${domain}&type=NS`).then(r => r.json())
-                ]);
-                
-                const mxData = mxResponse.status === 'fulfilled' ? mxResponse.value : null;
-                const aData = aResponse.status === 'fulfilled' ? aResponse.value : null;
-                const txtData = txtResponse.status === 'fulfilled' ? txtResponse.value : null;
-                const nsData = nsResponse.status === 'fulfilled' ? nsResponse.value : null;
-                
-                let mxRecords = [];
-                let domainIP = null;
-                let txtRecords = [];
-                let nameservers = [];
-                
-                if (mxData?.Answer) {
-                    mxRecords = mxData.Answer.map(record => {
-                        const parts = record.data.split(' ');
-                        return { priority: parts[0], server: parts[1] };
-                    });
-                }
-                
-                if (aData?.Answer && aData.Answer.length > 0) {
-                    domainIP = aData.Answer[0].data;
-                }
-                
-                if (txtData?.Answer) {
-                    txtRecords = txtData.Answer.map(r => r.data);
-                }
-                
-                if (nsData?.Answer) {
-                    nameservers = nsData.Answer.map(r => r.data);
-                }
-                
-                const disposableDomains = [
-                    'tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email',
-                    'mailinator.com', 'trashmail.com', 'temp-mail.org', 'fakeinbox.com'
-                ];
-                const isDisposable = disposableDomains.some(d => domain.toLowerCase().includes(d));
-                
-                const providers = {
-                    'gmail.com': { name: 'Google Gmail', type: 'Free', company: 'Google LLC', security: 'High' },
-                    'googlemail.com': { name: 'Google Gmail', type: 'Free', company: 'Google LLC', security: 'High' },
-                    'outlook.com': { name: 'Microsoft Outlook', type: 'Free', company: 'Microsoft', security: 'High' },
-                    'hotmail.com': { name: 'Microsoft Hotmail', type: 'Free', company: 'Microsoft', security: 'High' },
-                    'yahoo.com': { name: 'Yahoo Mail', type: 'Free', company: 'Yahoo', security: 'Medium' },
-                    'icloud.com': { name: 'Apple iCloud', type: 'Free', company: 'Apple Inc.', security: 'High' },
-                    'protonmail.com': { name: 'ProtonMail', type: 'Secure', company: 'Proton AG', security: 'Very High' },
-                    'gmx.com': { name: 'GMX Mail', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' },
-                    'web.de': { name: 'WEB.DE', type: 'Free', company: '1&1 Mail & Media', security: 'Medium' }
-                };
-                
-                const provider = providers[domain.toLowerCase()] || { name: 'Custom/Business', type: 'Custom', company: 'Unknown', security: 'Unknown' };
-                
-                let hasSPF = false;
-                let hasDKIM = false;
-                let hasDMARC = false;
-                
-                txtRecords.forEach(record => {
-                    if (record.includes('v=spf1')) hasSPF = true;
-                    if (record.includes('v=DKIM1')) hasDKIM = true;
-                    if (record.includes('v=DMARC1')) hasDMARC = true;
-                });
-                
-                loading.classList.remove('active');
-                
-                let html = '<div class="result-data">';
-                
-                html += '<div class="section-title">EMAIL ADDRESS ANALYSIS</div>';
-                html += `<div class="result-line"><span class="result-label">Full Email:</span> <span class="result-value">${email}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Username:</span> <span class="result-value">${username}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Domain:</span> <span class="result-value">${domain}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Format Valid:</span> <span class="result-value">${isValidFormat ? 'Yes' : 'No'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Provider:</span> <span class="result-value">${provider.name}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Company:</span> <span class="result-value">${provider.company}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Type:</span> <span class="result-value">${provider.type}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Security Level:</span> <span class="result-value">${provider.security}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Disposable:</span> <span class="result-value">${isDisposable ? 'Yes (Temporary)' : 'No'}</span></div>`;
-                
-                if (mxRecords.length > 0) {
-                    html += '<div class="section-title">MX RECORDS (Mail Servers)</div>';
-                    mxRecords.forEach((mx, index) => {
-                        html += `<div class="result-line"><span class="result-label">MX ${index + 1} (Priority ${mx.priority}):</span> <span class="result-value">${mx.server}</span></div>`;
-                    });
-                    html += `<div class="result-line"><span class="result-label">MX Status:</span> <span class="result-value">Valid (${mxRecords.length} server${mxRecords.length > 1 ? 's' : ''})</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Can Receive:</span> <span class="result-value">Yes</span></div>`;
-                } else {
-                    html += '<div class="section-title">MX RECORDS</div>';
-                    html += `<div class="result-line"><span class="result-label">MX Status:</span> <span class="result-value">No MX records - Cannot receive email</span></div>`;
-                }
-                
-                html += '<div class="section-title">EMAIL SECURITY (SPF/DKIM/DMARC)</div>';
-                html += `<div class="result-line"><span class="result-label">SPF Record:</span> <span class="result-value">${hasSPF ? 'Configured' : 'Not Found'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">DKIM:</span> <span class="result-value">${hasDKIM ? 'Configured' : 'Not Found'}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">DMARC:</span> <span class="result-value">${hasDMARC ? 'Configured' : 'Not Found'}</span></div>`;
-                const securityScore = (hasSPF ? 1 : 0) + (hasDKIM ? 1 : 0) + (hasDMARC ? 1 : 0);
-                html += `<div class="result-line"><span class="result-label">Security Score:</span> <span class="result-value">${securityScore}/3 ${securityScore === 3 ? 'Excellent' : securityScore === 2 ? 'Good' : 'Poor'}</span></div>`;
-                
-                if (nameservers.length > 0) {
-                    html += '<div class="section-title">NAMESERVERS</div>';
-                    nameservers.forEach((ns, index) => {
-                        html += `<div class="result-line"><span class="result-label">NS ${index + 1}:</span> <span class="result-value">${ns}</span></div>`;
-                    });
-                }
-                
-                if (domainIP) {
-                    html += '<div class="section-title">MAIL SERVER IP & LOCATION</div>';
-                    html += `<div class="result-line"><span class="result-label">Domain IP:</span> <span class="result-value">${domainIP}</span></div>`;
-                    html += `<div style="margin-top: 15px;"><button class="submit-btn" onclick="document.getElementById('ipInput').value='${domainIP}'; backToMenu(); showTracker('ip'); trackIP();">Track Mail Server Location</button></div>`;
-                } else {
-                    html += '<div class="section-title">MAIL SERVER IP</div>';
-                    html += `<div class="result-line"><span class="result-label">Domain IP:</span> <span class="result-value">Unable to resolve</span></div>`;
-                }
-                
-                html += '<div class="section-title">SECURITY & BREACH CHECK</div>';
-                html += `<div class="result-line"><span class="result-label">Data Breaches:</span> <span class="result-value"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank">Check HaveIBeenPwned</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Email Reputation:</span> <span class="result-value"><a href="https://emailrep.io/${encodeURIComponent(email)}" target="_blank">Check EmailRep.io</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Email OSINT:</span> <span class="result-value"><a href="https://epieos.com/?q=${encodeURIComponent(email)}" target="_blank">Epieos Lookup</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Hunter.io:</span> <span class="result-value"><a href="https://hunter.io/email-verifier/${encodeURIComponent(email)}" target="_blank">Verify Email</a></span></div>`;
-                
-                html += '<div class="section-title">DOMAIN INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">WHOIS:</span> <span class="result-value"><a href="https://who.is/whois/${domain}" target="_blank">Domain Owner Info</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">DNS Tools:</span> <span class="result-value"><a href="https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}" target="_blank">MXToolbox Analysis</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Google Search:</span> <span class="result-value"><a href="https://www.google.com/search?q=%22${encodeURIComponent(email)}%22" target="_blank">Search Email Online</a></span></div>`;
-                
-                html += '</div>';
-                
-                if (isDisposable) html += '<div class="warning">DISPOSABLE EMAIL - This is a temporary/throwaway email service</div>';
-                if (securityScore === 0) html += '<div class="warning">NO EMAIL SECURITY - Domain has no SPF/DKIM/DMARC protection. High spam risk</div>';
-                html += '<div class="info">INFO: The IP address shown belongs to the email provider\'s mail servers, not the email sender\'s device.</div>';
-                
-                resultDiv.innerHTML = html;
-                
-            } catch (error) {
-                loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
-            }
-        }
-        
-        async function trackDiscord() {
-            const userId = document.getElementById('discordInput').value.trim();
-            const loading = document.getElementById('discordLoading');
-            const resultDiv = document.getElementById('discordResult');
-            
-            if (!userId) {
-                resultDiv.innerHTML = '<div class="error">Bitte geben Sie eine Discord User ID ein!</div>';
-                return;
-            }
-            
-            if (!/^\d+$/.test(userId)) {
-                resultDiv.innerHTML = '<div class="error">Ungueltige User ID!</div>';
-                return;
-            }
-            
-            loading.classList.add('active');
-            resultDiv.innerHTML = '';
-            
-            try {
-                const creationTimestamp = (BigInt(userId) >> 22n) + 1420070400000n;
-                const accountCreated = new Date(Number(creationTimestamp));
-                const accountAge = Math.floor((Date.now() - accountCreated.getTime()) / (1000 * 60 * 60 * 24));
-                const years = Math.floor(accountAge / 365);
-                const months = Math.floor((accountAge % 365) / 30);
-                const days = accountAge % 30;
-                
-                let userData = null;
-                try {
-                    const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`);
-                    if (userResponse.ok) userData = await userResponse.json();
-                } catch (e) {
-                    console.log('API unavailable');
-                }
-                
-                loading.classList.remove('active');
-                
-                let html = '<div class="result-data">';
-                
-                html += '<div class="section-title">USER ID INFORMATION</div>';
-                html += `<div class="result-line"><span class="result-label">User ID:</span> <span class="result-value">${userId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Created:</span> <span class="result-value">${accountCreated.toLocaleString('de-DE')}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Account Age:</span> <span class="result-value">${years}y ${months}m ${days}d</span></div>`;
-                
-                const snowflakeTimestamp = Number(BigInt(userId) >> 22n);
-                const workerId = Number((BigInt(userId) & 0x3E0000n) >> 17n);
-                const processId = Number((BigInt(userId) & 0x1F000n) >> 12n);
-                const increment = Number(BigInt(userId) & 0xFFFn);
-                
-                html += '<div class="section-title">SNOWFLAKE BREAKDOWN</div>';
-                html += `<div class="result-line"><span class="result-label">Timestamp:</span> <span class="result-value">${snowflakeTimestamp}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Worker ID:</span> <span class="result-value">${workerId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Process ID:</span> <span class="result-value">${processId}</span></div>`;
-                html += `<div class="result-line"><span class="result-label">Increment:</span> <span class="result-value">${increment}</span></div>`;
-                
-                if (userData) {
-                    html += '<div class="section-title">PROFILE DATA</div>';
-                    html += `<div class="result-line"><span class="result-label">Username:</span> <span class="result-value">${userData.username}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Display Name:</span> <span class="result-value">${userData.global_name || userData.username}</span></div>`;
-                    html += `<div class="result-line"><span class="result-label">Bot:</span> <span class="result-value">${userData.bot ? 'Yes' : 'No'}</span></div>`;
-                    
-                    if (userData.avatar) {
-                        const isAnimated = userData.avatar.startsWith('a_');
-                        const ext = isAnimated ? 'gif' : 'png';
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${userData.avatar}.${ext}?size=512`;
-                        html += `<div class="result-line"><span class="result-label">Avatar:</span> <span class="result-value"><a href="${avatarUrl}" target="_blank">View Avatar</a></span></div>`;
-                    }
-                    
-                    if (userData.premium_type !== undefined && userData.premium_type !== 0) {
-                        const nitroTypes = { 1: 'Nitro Classic', 2: 'Nitro', 3: 'Nitro Basic' };
-                        html += `<div class="result-line"><span class="result-label">Nitro:</span> <span class="result-value">${nitroTypes[userData.premium_type]}</span></div>`;
-                    }
-                }
-                
-                html += '<div class="section-title">OSINT TOOLS</div>';
-                html += `<div class="result-line"><span class="result-label">Discord.id:</span> <span class="result-value"><a href="https://discord.id/?prefill=${userId}" target="_blank">Lookup</a></span></div>`;
-                html += `<div class="result-line"><span class="result-label">Profile:</span> <span class="result-value"><a href="https://discord.com/users/${userId}" target="_blank">View</a></span></div>`;
-                
-                html += '</div>';
-                
-                resultDiv.innerHTML = html;
-                
-            } catch (error) {
-                loading.classList.remove('active');
-                resultDiv.innerHTML = '<div class="error">Fehler bei der Analyse</div>';
-            }
-        }
-    </script>
+      [ + ]  M A X I M U M  I N T E L  E D I T I O N  v3.0  [ + ]
+</div>
+
+<!-- MAIN MENU -->
+<div id="mainMenu" class="menu">
+  <div class="menu-title">◈ STARTRACK SYSTEM ◈</div>
+  <div class="menu-options">
+    <button class="menu-btn" onclick="show('ip')">[ 01 ] IP TRACKER ──── Geo · ASN · Abuse · Threat · Reverse · Maps · ISP</button>
+    <button class="menu-btn" onclick="show('myip')">[ 02 ] MEINE IP ──────── Vollanalyse · Browser · Gerät · Netzwerk · Canvas</button>
+    <button class="menu-btn" onclick="show('username')">[ 03 ] USERNAME ─────── 70+ Plattformen · Live-Check · Google Dorks</button>
+    <button class="menu-btn" onclick="show('phone')">[ 04 ] TELEFON ──────── Carrier · Prefix · Zeitzone · OSINT · Links</button>
+    <button class="menu-btn" onclick="show('email')">[ 05 ] E-MAIL ────────── DNS · MX · SPF/DKIM/DMARC · Breach · Anbieter</button>
+    <button class="menu-btn" onclick="show('discord')">[ 06 ] DISCORD ──────── Snowflake · Badges · Avatar · Nitro · Aktivität</button>
+    <button class="menu-btn" onclick="show('domain')">[ 07 ] DOMAIN ───────── DNS · SSL · Tech · Geo · Shodan · History</button>
+  </div>
+</div>
+
+<!-- IP -->
+<div id="ip" class="panel">
+  <div class="panel-title">◈ IP TRACKER ◈</div>
+  <div class="igroup"><label>IP-ADRESSE EINGEBEN (IPv4 oder IPv6)</label>
+    <input id="ipInput" placeholder="z.B. 8.8.8.8 oder 2001:4860:4860::8888" onkeydown="if(e=event,e.key==='Enter')trackIP()">
+  </div>
+  <button class="btn-run" onclick="trackIP()">▶ TRACKEN</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="ipL">⚡ Analysiere mit 6 APIs...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="ipR"></div>
+</div>
+
+<!-- MY IP -->
+<div id="myip" class="panel">
+  <div class="panel-title">◈ MEINE IP ◈</div>
+  <div class="loader on" id="myipL">⚡ Sammle alle Infos...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="myipR"></div>
+  <button class="btn-back" onclick="back()" style="margin-top:14px">← ZURÜCK</button>
+</div>
+
+<!-- USERNAME -->
+<div id="username" class="panel">
+  <div class="panel-title">◈ USERNAME TRACKER ◈</div>
+  <div class="igroup"><label>BENUTZERNAMEN EINGEBEN</label>
+    <input id="unInput" placeholder="z.B. johndoe123" onkeydown="if(e=event,e.key==='Enter')trackUN()">
+  </div>
+  <button class="btn-run" onclick="trackUN()">▶ SUCHEN</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="unL">⚡ Durchsuche 70+ Plattformen...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="unR"></div>
+</div>
+
+<!-- PHONE -->
+<div id="phone" class="panel">
+  <div class="panel-title">◈ TELEFON TRACKER ◈</div>
+  <div class="igroup"><label>TELEFONNUMMER (mit Ländervorwahl)</label>
+    <input id="phInput" placeholder="z.B. +4915112345678" onkeydown="if(e=event,e.key==='Enter')trackPhone()">
+  </div>
+  <button class="btn-run" onclick="trackPhone()">▶ ANALYSIEREN</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="phL">⚡ Analysiere Nummer...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="phR"></div>
+</div>
+
+<!-- EMAIL -->
+<div id="email" class="panel">
+  <div class="panel-title">◈ E-MAIL TRACKER ◈</div>
+  <div class="igroup"><label>E-MAIL ADRESSE EINGEBEN</label>
+    <input id="emInput" placeholder="z.B. user@example.com" onkeydown="if(e=event,e.key==='Enter')trackEmail()">
+  </div>
+  <button class="btn-run" onclick="trackEmail()">▶ ANALYSIEREN</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="emL">⚡ Prüfe DNS + Sicherheit...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="emR"></div>
+</div>
+
+<!-- DISCORD -->
+<div id="discord" class="panel">
+  <div class="panel-title">◈ DISCORD LOOKUP ◈</div>
+  <div class="igroup"><label>DISCORD USER ID EINGEBEN</label>
+    <input id="dcInput" placeholder="z.B. 1167475880260550820" onkeydown="if(e=event,e.key==='Enter')trackDC()">
+  </div>
+  <button class="btn-run" onclick="trackDC()">▶ LOOKUP</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="dcL">⚡ Fetche Discord-Profil...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="dcR"></div>
+</div>
+
+<!-- DOMAIN -->
+<div id="domain" class="panel">
+  <div class="panel-title">◈ DOMAIN TRACKER ◈</div>
+  <div class="igroup"><label>DOMAIN EINGEBEN</label>
+    <input id="dmInput" placeholder="z.B. google.com" onkeydown="if(e=event,e.key==='Enter')trackDomain()">
+  </div>
+  <button class="btn-run" onclick="trackDomain()">▶ ANALYSIEREN</button>
+  <button class="btn-back" onclick="back()">← ZURÜCK</button>
+  <div class="loader" id="dmL">⚡ Analysiere DNS + SSL + Geo...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div id="dmR"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="ftitle">⚠ HAFTUNGSAUSSCHLUSS — NUTZUNG AUF EIGENE HAFTUNG ⚠</div>
+  <strong>Dieses Tool wird ohne jegliche Gewähr bereitgestellt.</strong> Die Nutzung erfolgt vollständig auf <strong>eigene Haftung und eigenes Risiko</strong> des Nutzers.
+  Jeglicher Missbrauch — insbesondere Stalking, Doxxing, Belästigung, unbefugte Überwachung oder andere illegale Aktivitäten — ist <strong>strengstens untersagt</strong> und kann zivil- und/oder strafrechtlich verfolgt werden.
+  Der Entwickler übernimmt <strong>keinerlei Haftung</strong> für direkte, indirekte oder Folgeschäden. Alle Daten stammen aus öffentlich zugänglichen APIs (Open Source Intelligence).
+  Mit der Nutzung bestätigst du, dass du <strong>volljährig</strong> bist, die geltenden Gesetze kennst und die <strong>alleinige rechtliche Verantwortung</strong> für dein Handeln trägst.
+</div>
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+function show(t){
+  $('mainMenu').style.display='none';
+  $(t).classList.add('active');
+  if(t==='myip') getMyIP();
+}
+function back(){
+  $('mainMenu').style.display='block';
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.remove('active');
+    const r=p.querySelector('[id$="R"]');if(r)r.innerHTML='';
+  });
+  // reset loaders
+  ['ipL','myipL','unL','phL','emL','dcL','dmL'].forEach(id=>{
+    const el=$(id); if(el){el.classList.remove('on');}
+  });
+  $('myipL').classList.add('on');
+}
+function ld(id,on){const el=$(id);if(el)el.classList[on?'add':'remove']('on');}
+function dms(lat,lon){
+  const f=(v,d)=>{const dir=v>=0?d[0]:d[1];v=Math.abs(v);const g=Math.floor(v),m=Math.floor((v-g)*60),s=((v-g-m/60)*3600).toFixed(1);return`${g}°${m}'${s}"${dir}`;};
+  return`${f(lat,'NS')}, ${f(lon,'EW')}`;
+}
+function r(label,value,badge=''){return`<div class="row"><span class="lbl">${label}</span><span class="val">${value}${badge?` <span class="badge ${badge.cls}">${badge.txt}</span>`:''}</span></div>`;}
+function sec(t){return`<div class="sec">▸ ${t}</div>`;}
+function stats(...items){
+  return`<div class="stats">${items.map(([l,v])=>`<div class="stat"><div class="slab">${l}</div><div class="sval">${v}</div></div>`).join('')}</div>`;
+}
+function lnk(text,url){return`<a href="${url}" target="_blank">${text}</a>`;}
+function safeFetch(url,opts){return fetch(url,opts||{}).then(r=>r.json()).catch(()=>null);}
+
+// ══════════════════════════════════════════════════════════
+// IP TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackIP(prefill){
+  const ip = prefill || $('ipInput').value.trim();
+  if(!ip){$('ipR').innerHTML='<div class="alert-err">Bitte IP eingeben!</div>';return;}
+  if(prefill) $('ipInput').value=prefill;
+  ld('ipL',true); $('ipR').innerHTML='';
+
+  // 6 parallel geo APIs
+  const [r1,r2,r3,r4,r5,r6] = await Promise.allSettled([
+    safeFetch(`https://ipwho.is/${ip}`),
+    safeFetch(`http://ip-api.com/json/${ip}?fields=66846719`),
+    safeFetch(`https://ipapi.co/${ip}/json/`),
+    safeFetch(`https://get.geojs.io/v1/ip/geo/${ip}.json`),
+    safeFetch(`https://freeipapi.com/api/json/${ip}`),
+    safeFetch(`https://api.iplocation.net/?ip=${ip}`)
+  ]);
+  const d1=r1.value,d2=r2.value,d3=r3.value,d4=r4.value,d5=r5.value,d6=r6.value;
+  if(d1?.success===false&&d2?.status==='fail'){ld('ipL',false);$('ipR').innerHTML='<div class="alert-err">Ungültige IP-Adresse!</div>';return;}
+
+  const lat = d1?.latitude||d2?.lat||d3?.latitude||d5?.latitude||0;
+  const lon = d1?.longitude||d2?.lon||d3?.longitude||d5?.longitude||0;
+  const isV6 = ip.includes(':');
+
+  // Reverse geocode (2 sources)
+  let osm=null,bdc=null;
+  if(lat&&lon&&!isV6){
+    [osm,bdc]=await Promise.all([
+      safeFetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,{headers:{'User-Agent':'StarTrack/3.0'}}),
+      safeFetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`)
+    ]);
+  }
+
+  // Abuse/threat check via DNS blacklist
+  const reversedIP = ip.split('.').reverse().join('.');
+  const [abuseChk] = await Promise.allSettled([
+    safeFetch(`https://dns.google/resolve?name=${reversedIP}.zen.spamhaus.org&type=A`)
+  ]);
+  const onSpamhaus = abuseChk.value?.Answer?.length > 0;
+
+  ld('ipL',false);
+
+  const isVPN=d2?.proxy||false, isMobile=d2?.mobile||false, isHosting=d2?.hosting||false;
+  const country = d1?.country||d2?.country||d5?.countryName||d6?.country_name||'N/A';
+  const city = d1?.city||d2?.city||d5?.cityName||'N/A';
+  const isp = d1?.connection?.isp||d2?.isp||d3?.org||'N/A';
+  const asn = d1?.connection?.asn||d2?.as?.split(' ')[0]||d3?.asn||'N/A';
+
+  let html = stats(
+    ['IP Version',isV6?'IPv6':'IPv4'],
+    ['VPN/Proxy',isVPN?'⚠ Ja':'Nein'],
+    ['Hosting/DC',isHosting?'⚠ Ja':'Nein'],
+    ['Mobile',isMobile?'Ja':'Nein'],
+    ['Spamhaus',onSpamhaus?'⚠ LISTED':'Clean'],
+    ['Kontinent',d1?.continent||d5?.continent||'N/A'],
+    ['Land',d1?.country_code||d5?.countryCode||'N/A'],
+    ['PLZ',d1?.postal||d2?.zip||d5?.zipCode||'N/A']
+  );
+
+  html+='<div class="data-wrap">';
+
+  html+=sec('BASISINFORMATIONEN');
+  html+=r('IP Adresse',ip,(isVPN?{cls:'b-warn',txt:'VPN'}:isHosting?{cls:'b-warn',txt:'HOSTING'}:{cls:'b-ok',txt:'RESIDENTIAL'}));
+  html+=r('IP Version',isV6?'IPv6 (128-bit)':'IPv4 (32-bit)');
+  html+=r('Reverse DNS',d1?.connection?.domain||d2?.reverse||'N/A');
+  html+=r('IP Klasse',!isV6?(parseInt(ip.split('.')[0]))<128?'Klasse A':(parseInt(ip.split('.')[0]))<192?'Klasse B':'Klasse C':'IPv6');
+  html+=r('Privat/Public',isPrivateIP(ip)?'Privat (LAN)':'Öffentlich');
+
+  // Full address block
+  if(osm?.address){
+    const a=osm.address;
+    const fullAddr=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village),a.state,a.country].filter(Boolean).join(', ');
+    html+=sec('REVERSE GEOCODING — ADRESSE');
+    if(fullAddr) html+=r('Vollständige Adresse',`<strong>${fullAddr}</strong>`);
+    html+=r('Straße',a.road||a.pedestrian||a.path||a.footway||'N/A');
+    html+=r('Hausnummer',a.house_number||'N/A');
+    html+=r('Stadtteil',a.suburb||a.neighbourhood||bdc?.locality||'N/A');
+    html+=r('Stadtbezirk',a.city_district||a.borough||'N/A');
+    html+=r('Stadt',a.city||a.town||a.village||a.hamlet||'N/A');
+    html+=r('Postleitzahl',a.postcode||'N/A');
+    html+=r('Landkreis',a.county||a.state_district||'N/A');
+    html+=r('Bundesland',a.state||'N/A');
+    html+=r('Land',a.country||'N/A');
+    html+=r('OSM Objekt-ID',osm.osm_id||'N/A');
+    html+=r('OSM Typ',osm.osm_type||'N/A');
+    html+=r('Adress-Typ',osm.type||osm.category||'N/A');
+    if(bdc){
+      html+=r('BigDataCloud Ort',bdc.city||bdc.locality||'N/A');
+      html+=r('BigDataCloud PLZ',bdc.postcode||'N/A');
+      html+=r('Gemeindeschlüssel',bdc.localityInfo?.informative?.[0]?.geonameId||'N/A');
+    }
+  }
+
+  html+=sec('GPS & KARTENDIENSTE');
+  html+=r('Breitengrad',lat);
+  html+=r('Längengrad',lon);
+  html+=r('DMS Format',lat&&lon?dms(lat,lon):'N/A');
+  html+=r('Genauigkeit',d3?.accuracy?(d3.accuracy+' km'):(d4?.accuracy?d4.accuracy+' km':'N/A'));
+  html+=r('Google Maps Street',lnk('Street View',`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`));
+  html+=r('Google Satellit',lnk('Ultra Zoom',`https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3`));
+  html+=r('Google Earth',lnk('3D Ansicht',`https://earth.google.com/web/@${lat},${lon},0a,800d,35y`));
+  html+=r('OpenStreetMap',lnk('OSM Karte',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=17`));
+  html+=r('Bing Aerial',lnk('Bing Maps',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=17&style=a`));
+  html+=r('Wikimapia',lnk('Wikimapia',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=16`));
+  html+=r('Yandex Maps',lnk('Yandex',`https://yandex.com/maps/?ll=${lon},${lat}&z=15`));
+  html+=r('HERE Maps',lnk('HERE',`https://wego.here.com/?map=${lat},${lon},17,normal`));
+  if(lat&&lon){
+    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.005},${lat-0.005},${lon+0.005},${lat+0.005}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
+  }
+
+  html+=sec('STANDORT');
+  html+=r('Land',`${country} ${d1?.flag?.emoji||''}`);
+  html+=r('Ländercode (ISO2)',d1?.country_code||d2?.countryCode||d5?.countryCode||'N/A');
+  html+=r('Ländercode (ISO3)',d6?.country_code3||'N/A');
+  html+=r('Region',d1?.region||d2?.regionName||d5?.regionName||'N/A');
+  html+=r('Region Code',d2?.region||d5?.regionCode||'N/A');
+  html+=r('Stadt',city);
+  html+=r('Stadtbezirk',d2?.district||'N/A');
+  html+=r('Postleitzahl',d1?.postal||d2?.zip||d5?.zipCode||'N/A');
+  html+=r('Kontinent',d1?.continent||d5?.continent||'N/A');
+  html+=r('Hauptstadt',d1?.capital||'N/A');
+  html+=r('EU-Mitglied',(d1?.is_eu||d3?.in_eu)?'Ja':'Nein');
+
+  html+=sec('NETZWERK & ASN DETAILS');
+  html+=r('ISP',isp);
+  html+=r('Organisation',d1?.connection?.org||d2?.org||'N/A');
+  html+=r('AS-Nummer',asn);
+  html+=r('AS-Name',d1?.connection?.org||d3?.org||d2?.as||'N/A');
+  html+=r('Netzwerk CIDR',d3?.network||'N/A');
+  html+=r('Verbindungstyp',d3?.connection_type||'N/A');
+  html+=r('IP Version',d1?.type||'IPv4');
+  html+=r('ARIN RDAP',lnk('Registrar-Infos',`https://search.arin.net/rdap/?query=${ip}`));
+  html+=r('Hurricane Electric',lnk('BGP Details',`https://bgp.he.net/ip/${ip}`));
+  html+=r('PeeringDB',lnk('Peering-Infos',`https://www.peeringdb.com/net?asn=${(asn+'').replace('AS','')}`));
+  html+=r('Robtex',lnk('Netzwerkgraph',`https://www.robtex.com/ip-lookup/${ip}`));
+
+  html+=sec('SICHERHEIT & BEDROHUNGSANALYSE');
+  html+=r('Mobile Verbindung',isMobile?'Ja':'Nein');
+  html+=r('VPN / Proxy',isVPN?'⚠ Erkannt':'Nein');
+  html+=r('Hosting / Datacenter',isHosting?'⚠ Ja':'Nein');
+  html+=r('Spamhaus ZEN',onSpamhaus?'⚠ GELISTET':'Nicht gelistet');
+  html+=r('AbuseIPDB',lnk('Abuse-Score prüfen',`https://www.abuseipdb.com/check/${ip}`));
+  html+=r('VirusTotal',lnk('Malware/Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
+  html+=r('Shodan',lnk('Offene Ports + Dienste',`https://www.shodan.io/host/${ip}`));
+  html+=r('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts/${ip}`));
+  html+=r('IPVoid Blacklist',lnk('Blacklist-Check',`https://www.ipvoid.com/ip-blacklist-check/?ip=${ip}`));
+  html+=r('GreyNoise',lnk('Internet-Scanning?',`https://viz.greynoise.io/ip/${ip}`));
+  html+=r('ThreatFox',lnk('IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
+
+  html+=sec('ZEITZONE & LOKALE INFOS');
+  html+=r('Zeitzone ID',d1?.timezone?.id||d2?.timezone||d5?.timeZone||'N/A');
+  html+=r('UTC Offset',d1?.timezone?.offset||d3?.utc_offset||'N/A');
+  html+=r('Zeitzonenkürzel',d1?.timezone?.abbr||'N/A');
+  html+=r('Aktuelle Zeit (dort)',d1?.timezone?.current_time||'N/A');
+  html+=r('DST aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
+  html+=r('DST Abweichung',d1?.timezone?.dst_savings!==undefined?d1.timezone.dst_savings+'h':'N/A');
+  html+=r('Sonnenlicht-Modus',calcSunStatus(lat,lon));
+
+  html+=sec('LÄNDERINFORMATIONEN');
+  html+=r('Vorwahl',`+${d1?.calling_code||d3?.country_calling_code||'N/A'}`);
+  html+=r('Währung',`${d3?.currency_name||'N/A'} (${d3?.currency||'N/A'})`);
+  html+=r('Sprachen',d3?.languages||'N/A');
+  html+=r('Fläche',d3?.country_area?d3.country_area.toLocaleString()+' km²':'N/A');
+  html+=r('Bevölkerung',d3?.country_population?Number(d3.country_population).toLocaleString():'N/A');
+
+  html+='</div>';
+  if(isVPN) html+='<div class="alert-warn">⚠ VPN/PROXY erkannt — Standortdaten können stark abweichen!</div>';
+  if(onSpamhaus) html+='<div class="alert-warn">⚠ Diese IP steht auf der Spamhaus-Blockliste!</div>';
+  html+='<div class="alert-info">ℹ Adressen basieren auf ISP-Serverstandort. Genauigkeit 50m–50km je nach ISP.</div>';
+  $('ipR').innerHTML=html;
+}
+
+function isPrivateIP(ip){
+  return /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd)/.test(ip);
+}
+
+function calcSunStatus(lat,lon){
+  if(!lat||!lon) return 'N/A';
+  const h=new Date().getUTCHours()+(lon/15);
+  const local=((h%24)+24)%24;
+  if(local>=6&&local<8) return '🌅 Sonnenaufgang';
+  if(local>=8&&local<18) return '☀️ Tag';
+  if(local>=18&&local<20) return '🌇 Sonnenuntergang';
+  return '🌙 Nacht';
+}
+
+// ══════════════════════════════════════════════════════════
+// MY IP — COMPLETE BROWSER FINGERPRINT
+// ══════════════════════════════════════════════════════════
+async function getMyIP(){
+  ld('myipL',true); $('myipR').innerHTML='';
+  const [r1,r2,r3,r4] = await Promise.allSettled([
+    safeFetch('https://api.ipify.org?format=json'),
+    safeFetch('https://api64.ipify.org?format=json'),
+    safeFetch('https://ipwho.is/'),
+    safeFetch('https://ipapi.co/json/')
+  ]);
+  const ipv4=r1.value?.ip||r3.value?.ip||'N/A';
+  const ipv6raw=r2.value?.ip;
+  const ipv6=(ipv6raw&&ipv6raw!==ipv4)?ipv6raw:null;
+  const d=r3.value, d2=r4.value;
+  ld('myipL',false);
+
+  // Browser fingerprint
+  const ua=navigator.userAgent;
+  const lang=navigator.language||'N/A';
+  const langs=(navigator.languages||[]).join(', ');
+  const platform=navigator.platform||'N/A';
+  const cores=navigator.hardwareConcurrency||'N/A';
+  const mem=navigator.deviceMemory?navigator.deviceMemory+' GB':'N/A';
+  const screen_r=`${screen.width}×${screen.height}`;
+  const screen_av=`${screen.availWidth}×${screen.availHeight}`;
+  const colorD=screen.colorDepth+'bit';
+  const pixRat=window.devicePixelRatio||1;
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tzOff=new Date().getTimezoneOffset();
+  const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  const touch='ontouchstart' in window||navigator.maxTouchPoints>0;
+  const battery=navigator.getBattery?'Unterstützt':'N/A';
+  const vendor=navigator.vendor||'N/A';
+  const product=navigator.product||'N/A';
+  const appVer=(navigator.appVersion||'').substring(0,60);
+  const dnt=navigator.doNotTrack||window.doNotTrack||'N/A';
+  const java=navigator.javaEnabled?.()??false;
+  const pdfView=navigator.pdfViewerEnabled?'Ja':'Nein';
+  const oscpu=navigator.oscpu||'N/A';
+
+  // Canvas fingerprint (just hash indicator)
+  let canvasFP='N/A';
+  try{
+    const cv=document.createElement('canvas'); cv.width=200;cv.height=50;
+    const ctx=cv.getContext('2d');
+    ctx.textBaseline='top'; ctx.font='14px Arial';
+    ctx.fillStyle='#f60'; ctx.fillRect(125,1,62,20);
+    ctx.fillStyle='#069'; ctx.fillText('StarTrack🔍',2,15);
+    ctx.fillStyle='rgba(102,204,0,0.7)'; ctx.fillText('StarTrack🔍',4,17);
+    const data=cv.toDataURL(); let hash=0;
+    for(let i=0;i<data.length;i++) hash=((hash<<5)-hash)+data.charCodeAt(i);
+    canvasFP='0x'+(hash>>>0).toString(16).toUpperCase();
+  }catch(e){}
+
+  // WebGL info
+  let glVendor='N/A',glRenderer='N/A';
+  try{
+    const gl=document.createElement('canvas').getContext('webgl');
+    const ext=gl?.getExtension('WEBGL_debug_renderer_info');
+    if(ext){ glVendor=gl.getParameter(ext.UNMASKED_VENDOR_WEBGL); glRenderer=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL); }
+  }catch(e){}
+
+  // Installed fonts (basic check)
+  const testFonts=['Arial','Times New Roman','Courier New','Georgia','Verdana','Helvetica','Tahoma','Comic Sans MS','Impact','Palatino'];
+  const cv2=document.createElement('canvas');cv2.width=200;cv2.height=30;
+  const ctx2=cv2.getContext('2d');
+  function fontExists(f){ctx2.font=`16px '${f}', serif`;const w1=ctx2.measureText('abcdefghij').width;ctx2.font=`16px serif`;const w2=ctx2.measureText('abcdefghij').width;return w1!==w2;}
+  const presentFonts=testFonts.filter(fontExists);
+
+  let html=`<div class="data-wrap">`;
+
+  html+=sec('DEINE IP-ADRESSEN');
+  html+=r('IPv4',ipv4);
+  if(ipv6) html+=r('IPv6',ipv6);
+  html+=r('Reverse DNS',d?.connection?.domain||'N/A');
+  html+=r('IP Typ',d?.type||'N/A');
+
+  html+=sec('STANDORT (via IP)');
+  html+=r('Land',`${d?.country||'N/A'} ${d?.flag?.emoji||''}`);
+  html+=r('Region',d?.region||'N/A');
+  html+=r('Stadt',d?.city||'N/A');
+  html+=r('PLZ',d?.postal||'N/A');
+  html+=r('Koordinaten',`${d?.latitude||'N/A'}, ${d?.longitude||'N/A'}`);
+  html+=r('Zeitzone (Server)',d?.timezone?.id||'N/A');
+
+  html+=sec('NETZWERK');
+  html+=r('ISP',d?.connection?.isp||'N/A');
+  html+=r('Organisation',d?.connection?.org||'N/A');
+  html+=r('ASN',d?.connection?.asn||'N/A');
+  if(conn){
+    html+=r('Verbindungstyp',conn.effectiveType||'N/A');
+    html+=r('Downloadgeschwindigkeit',conn.downlink?conn.downlink+' Mbps':'N/A');
+    html+=r('RTT Latenz',conn.rtt?conn.rtt+' ms':'N/A');
+    html+=r('Datensparend',conn.saveData?'Ja':'Nein');
+  }
+
+  html+=sec('BROWSER IDENTIFIKATION');
+  html+=r('User-Agent',ua.substring(0,80)+'...');
+  html+=r('Browser-Anbieter',vendor);
+  html+=r('Produkt',product);
+  html+=r('App-Version',appVer);
+  html+=r('Hauptsprache',lang);
+  html+=r('Alle Sprachen',langs);
+
+  html+=sec('BETRIEBSSYSTEM & GERÄT');
+  html+=r('Plattform',platform);
+  html+=r('OS CPU',oscpu);
+  html+=r('CPU Kerne',cores);
+  html+=r('RAM',mem);
+  html+=r('Touchscreen',touch?'Ja':'Nein');
+  html+=r('Touch-Punkte Max',navigator.maxTouchPoints||0);
+  html+=r('Mobiles Gerät',/Mobi|Android|iPhone|iPad/i.test(ua)?'Ja':'Nein');
+  html+=r('64-Bit Browser',/WOW64|x86_64|Win64/.test(ua)?'Ja':'Unbekannt');
+
+  html+=sec('BILDSCHIRM & DISPLAY');
+  html+=r('Auflösung',screen_r);
+  html+=r('Verfügbare Fläche',screen_av);
+  html+=r('Farbtiefe',colorD);
+  html+=r('Pixel-Ratio (DPI)',pixRat+'x');
+  html+=r('Orientierung',screen?.orientation?.type||'N/A');
+  html+=r('Bildschirmfenster',`${window.innerWidth}×${window.innerHeight} px`);
+
+  html+=sec('DATENSCHUTZ & TRACKING');
+  html+=r('Cookies erlaubt',navigator.cookieEnabled?'Ja':'Nein');
+  html+=r('Do Not Track',dnt==='1'?'Aktiv':'Inaktiv/N/A');
+  html+=r('Java aktiviert',java?'Ja':'Nein');
+  html+=r('PDF-Viewer eingebaut',pdfView);
+  html+=r('Online-Status',navigator.onLine?'Online':'Offline');
+  html+=r('Akku-API',battery);
+  html+=r('Gespeicherte Daten',navigator.storage?'Unterstützt':'N/A');
+
+  html+=sec('BROWSER FINGERPRINT');
+  html+=r('Canvas-Fingerprint',canvasFP);
+  html+=r('Zeitzone Browser',tz);
+  html+=r('UTC-Offset',`${tzOff>0?'-':'+'}${Math.abs(Math.floor(tzOff/60))}:${String(Math.abs(tzOff%60)).padStart(2,'0')}`);
+  html+=r('WebGL Anbieter',glVendor);
+  html+=r('WebGL Renderer',glRenderer.substring(0,60));
+  html+=r('Erkannte Schriften',presentFonts.length>0?presentFonts.join(', '):'Keine erkannt');
+  html+=r('Plugins',Array.from(navigator.plugins||[]).map(p=>p.name).slice(0,5).join(', ')||'N/A');
+
+  html+=`<div style="margin-top:16px"><button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${ipv4}';trackIP('${ipv4}');},200)">▶ Vollanalyse für ${ipv4}</button></div>`;
+  html+=`</div>`;
+  html+='<div class="alert-info">ℹ Diese Seite liest deine öffentlich sichtbaren Browser-Eigenschaften — kein Plugin nötig.</div>';
+  $('myipR').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════
+// USERNAME TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackUN(){
+  const u=$('unInput').value.trim();
+  if(!u){$('unR').innerHTML='<div class="alert-err">Bitte Username eingeben!</div>';return;}
+  ld('unL',true);$('unR').innerHTML='';
+
+  const cats={
+    '📘 Social Media':[
+      ['Facebook',`https://facebook.com/${u}`],['Instagram',`https://instagram.com/${u}`],
+      ['Twitter/X',`https://twitter.com/${u}`],['TikTok',`https://tiktok.com/@${u}`],
+      ['Snapchat',`https://snapchat.com/add/${u}`],['Pinterest',`https://pinterest.com/${u}`],
+      ['LinkedIn',`https://linkedin.com/in/${u}`],['XING',`https://xing.com/profile/${u}`],
+      ['VK',`https://vk.com/${u}`],['Tumblr',`https://${u}.tumblr.com`],
+      ['Mastodon',`https://mastodon.social/@${u}`],['Bluesky',`https://bsky.app/profile/${u}`],
+      ['Threads',`https://threads.net/@${u}`],['BeReal',`https://bere.al/${u}`],
+      ['Plurk',`https://plurk.com/${u}`],['MeWe',`https://mewe.com/i/${u}`],
+    ],
+    '🎬 Video & Streaming':[
+      ['YouTube',`https://youtube.com/@${u}`],['Twitch',`https://twitch.tv/${u}`],
+      ['Vimeo',`https://vimeo.com/${u}`],['Dailymotion',`https://dailymotion.com/${u}`],
+      ['Rumble',`https://rumble.com/user/${u}`],['Odysee',`https://odysee.com/@${u}`],
+      ['Kick',`https://kick.com/${u}`],['Trovo',`https://trovo.live/${u}`],
+      ['Caffeine',`https://caffeine.tv/${u}`],
+    ],
+    '💻 Tech & Dev':[
+      ['GitHub',`https://github.com/${u}`],['GitLab',`https://gitlab.com/${u}`],
+      ['Bitbucket',`https://bitbucket.org/${u}`],['Stack Overflow',`https://stackoverflow.com/users/${u}`],
+      ['HackerNews',`https://news.ycombinator.com/user?id=${u}`],['Replit',`https://replit.com/@${u}`],
+      ['CodePen',`https://codepen.io/${u}`],['JSFiddle',`https://jsfiddle.net/user/${u}`],
+      ['npm',`https://npmjs.com/~${u}`],['PyPI',`https://pypi.org/user/${u}`],
+      ['Leetcode',`https://leetcode.com/${u}`],['HackerRank',`https://hackerrank.com/${u}`],
+      ['Kaggle',`https://kaggle.com/${u}`],['Dev.to',`https://dev.to/${u}`],
+    ],
+    '💬 Messaging':[
+      ['Telegram',`https://t.me/${u}`],['Discord',`https://discord.com/users/${u}`],
+      ['Signal',`https://signal.me/#p/${u}`],['Kik',`https://ws.kik.com/u/${u}`],
+      ['Skype',`https://join.skype.com/invite/${u}`],['Line',`https://line.me/ti/p/~${u}`],
+      ['ICQ',`https://icq.com/${u}`],['Matrix',`https://matrix.to/#/@${u}:matrix.org`],
+    ],
+    '🎵 Musik & Audio':[
+      ['Spotify',`https://open.spotify.com/user/${u}`],['SoundCloud',`https://soundcloud.com/${u}`],
+      ['Last.fm',`https://last.fm/user/${u}`],['Bandcamp',`https://${u}.bandcamp.com`],
+      ['Mixcloud',`https://mixcloud.com/${u}`],['Audiomack',`https://audiomack.com/${u}`],
+      ['ReverbNation',`https://reverbnation.com/${u}`],['Musixmatch',`https://musixmatch.com/profile/${u}`],
+    ],
+    '🎨 Kreativ & Design':[
+      ['Behance',`https://behance.net/${u}`],['Dribbble',`https://dribbble.com/${u}`],
+      ['DeviantArt',`https://deviantart.com/${u}`],['Flickr',`https://flickr.com/people/${u}`],
+      ['500px',`https://500px.com/p/${u}`],['ArtStation',`https://artstation.com/${u}`],
+      ['Pixiv',`https://pixiv.net/en/users/${u}`],['Newgrounds',`https://newgrounds.com/${u}`],
+      ['Unsplash',`https://unsplash.com/@${u}`],
+    ],
+    '✍️ Blog & Schreiben':[
+      ['Medium',`https://medium.com/@${u}`],['WordPress',`https://${u}.wordpress.com`],
+      ['Substack',`https://${u}.substack.com`],['Ghost',`https://${u}.ghost.io`],
+      ['Blogger',`https://${u}.blogspot.com`],['Wattpad',`https://wattpad.com/user/${u}`],
+      ['Reddit',`https://reddit.com/user/${u}`],['Quora',`https://quora.com/profile/${u}`],
+    ],
+    '🎮 Gaming':[
+      ['Steam',`https://steamcommunity.com/id/${u}`],['Roblox',`https://roblox.com/users/profile?username=${u}`],
+      ['Xbox',`https://account.xbox.com/profile?gamertag=${u}`],['PSN',`https://psnprofiles.com/${u}`],
+      ['Epic Games',`https://epicgames.com/id/${u}`],['Battle.net',`https://battle.net`],
+      ['Faceit',`https://faceit.com/en/players/${u}`],['ESEA',`https://play.esea.net/users/${u}`],
+      ['Chess.com',`https://chess.com/member/${u}`],['Lichess',`https://lichess.org/@/${u}`],
+    ],
+    '💰 Support & Sonstiges':[
+      ['Patreon',`https://patreon.com/${u}`],['Ko-fi',`https://ko-fi.com/${u}`],
+      ['Buy Me Coffee',`https://buymeacoffee.com/${u}`],['ProductHunt',`https://producthunt.com/@${u}`],
+      ['Gravatar',`https://gravatar.com/${u}`],['About.me',`https://about.me/${u}`],
+      ['Linktree',`https://linktr.ee/${u}`],['Carrd',`https://${u}.carrd.co`],
+      ['Itch.io',`https://${u}.itch.io`],['Gumroad',`https://gumroad.com/${u}`],
+    ]
+  };
+
+  let total=0;Object.values(cats).forEach(v=>total+=v.length);
+
+  let html=`<div class="data-wrap">`;
+  html+=sec('SUCHPARAMETER');
+  html+=r('Username',u);
+  html+=r('Gesamte Plattformen',total+'');
+  html+=r('Kategorien',Object.keys(cats).length+'');
+  html+=r('WhatsMyName (Live)',lnk('Echtzeit Username-Check',`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
+  html+=r('Namechk.com',lnk('Verfügbarkeit prüfen',`https://namechk.com/${encodeURIComponent(u)}`));
+  html+=r('Google Dork',lnk(`"${u}" googeln`,`https://google.com/search?q=%22${encodeURIComponent(u)}%22`));
+  html+=r('Bing Dork',lnk(`"${u}" bei Bing`,`https://bing.com/search?q=%22${encodeURIComponent(u)}%22`));
+  html+=r('Yandex',lnk(`Yandex-Suche`,`https://yandex.com/search/?text=${encodeURIComponent(u)}`));
+  html+=r('Sherlock (lokal)',lnk('GitHub — Sherlock Tool',`https://github.com/sherlock-project/sherlock`));
+  html+=r('OSINT Industries',lnk('osint.industries (kostenpflichtig)',`https://osint.industries/`));
+
+  for(const [cat,plats] of Object.entries(cats)){
+    html+=sec(cat);
+    html+='<div class="platgrid">';
+    plats.forEach(([name,url])=>{
+      html+=`<div class="plat"><span class="pname">${name}</span><span class="plink">${lnk(url.replace(/https?:\/\/(www\.)?/,'').substring(0,38)+'…',url)}</span></div>`;
+    });
+    html+='</div>';
+  }
+  html+='</div>';
+  ld('unL',false);
+  $('unR').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════
+// PHONE TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackPhone(){
+  const ph=$('phInput').value.trim();
+  if(!ph){$('phR').innerHTML='<div class="alert-err">Bitte Nummer eingeben!</div>';return;}
+  ld('phL',true);$('phR').innerHTML='';
+
+  const clean=ph.replace(/[\s\-().]/g,'');
+  let cc='',local=clean;
+  if(clean.startsWith('+')){const m=clean.match(/^\+(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+1);}}
+  else if(clean.startsWith('00')){const m=clean.match(/^00(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+2);}}
+
+  // Carrier IP lookup via DNS
+  let carrierIP=null,carrierDomain=null;
+
+  const DB={
+    '1':{c:'USA/Kanada',iso:'US',reg:'Nordamerika',tz:'UTC-5 bis -8',currency:'USD',lang:'Englisch',flag:'🇺🇸',
+      carriers:['Verizon','AT&T','T-Mobile','US Cellular','Boost','Cricket'],
+      prefixes:{},emergency:'911'},
+    '44':{c:'Großbritannien',iso:'GB',reg:'Europa',tz:'UTC+0/+1',currency:'GBP',lang:'Englisch',flag:'🇬🇧',
+      carriers:['EE','Vodafone UK','O2 UK','Three UK','Sky Mobile','Virgin Mobile'],
+      prefixes:{'7':'Mobil'},emergency:'999'},
+    '49':{c:'Deutschland',iso:'DE',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Deutsch',flag:'🇩🇪',
+      carriers:['Telekom','Vodafone DE','O2/Telefónica','1&1 Drillisch','congstar','Aldi Talk'],
+      prefixes:{
+        '150':'Telekom','151':'Telekom','152':'Vodafone','153':'O2','155':'Vodafone',
+        '156':'O2','157':'O2','158':'Telekom','159':'O2','160':'Telekom','162':'Vodafone',
+        '163':'O2','170':'Telekom','171':'Telekom','172':'Vodafone','173':'Vodafone',
+        '174':'Vodafone','175':'Telekom','176':'O2','177':'O2','178':'O2','179':'O2',
+        '1511':'Telekom','1512':'Vodafone','1514':'1&1','1515':'O2','1516':'O2',
+        '1517':'O2','1520':'Vodafone','1521':'O2','1522':'Vodafone','1523':'O2',
+        '1570':'O2','1573':'O2','1575':'O2','1577':'O2','1578':'O2','1579':'O2',
+        '800':'Gebührenfrei','900':'Premium (teuer!)'
+      },emergency:'110/112'},
+    '43':{c:'Österreich',iso:'AT',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Deutsch',flag:'🇦🇹',
+      carriers:['A1 Telekom','Magenta AT','Drei AT','HoT','Spusu'],
+      prefixes:{'650':'Drei/3','660':'A1','664':'A1','676':'A1','677':'Magenta','678':'Magenta','680':'Drei','688':'Drei','699':'A1','6[5-9]':'Mobil'},
+      emergency:'112'},
+    '41':{c:'Schweiz',iso:'CH',reg:'Europa',tz:'UTC+1/+2',currency:'CHF',lang:'DE/FR/IT',flag:'🇨🇭',
+      carriers:['Swisscom','Sunrise UPC','Salt Mobile','Coop Mobile'],
+      prefixes:{'74':'Sunrise','75':'Swisscom','76':'Salt','77':'Sunrise','78':'Swisscom','79':'Swisscom/Salt'},
+      emergency:'112'},
+    '33':{c:'Frankreich',iso:'FR',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Französisch',flag:'🇫🇷',
+      carriers:['Orange FR','SFR','Bouygues Telecom','Free Mobile','La Poste Mobile'],
+      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
+    '39':{c:'Italien',iso:'IT',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Italienisch',flag:'🇮🇹',
+      carriers:['TIM','Vodafone IT','Wind Tre','Iliad Italia','PosteMobile'],
+      prefixes:{'3':'Mobil'},emergency:'112'},
+    '34':{c:'Spanien',iso:'ES',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Spanisch',flag:'🇪🇸',
+      carriers:['Movistar','Orange ES','Vodafone ES','MásMóvil','Yoigo'],
+      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
+    '31':{c:'Niederlande',iso:'NL',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Niederländisch',flag:'🇳🇱',
+      carriers:['KPN','Vodafone NL','T-Mobile NL','Tele2 NL'],
+      prefixes:{'6':'Mobil'},emergency:'112'},
+    '32':{c:'Belgien',iso:'BE',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'NL/FR/DE',flag:'🇧🇪',
+      carriers:['Proximus','Orange BE','Base/Telenet'],
+      prefixes:{'4':'Mobil'},emergency:'112'},
+    '46':{c:'Schweden',iso:'SE',reg:'Europa',tz:'UTC+1/+2',currency:'SEK',lang:'Schwedisch',flag:'🇸🇪',
+      carriers:['Telia','Tele2 SE','Telenor SE','Three SE'],
+      prefixes:{'7':'Mobil'},emergency:'112'},
+    '47':{c:'Norwegen',iso:'NO',reg:'Europa',tz:'UTC+1/+2',currency:'NOK',lang:'Norwegisch',flag:'🇳🇴',
+      carriers:['Telenor','Telia NO','Ice'],
+      prefixes:{'4':'Mobil','9':'Mobil'},emergency:'112'},
+    '45':{c:'Dänemark',iso:'DK',reg:'Europa',tz:'UTC+1/+2',currency:'DKK',lang:'Dänisch',flag:'🇩🇰',
+      carriers:['TDC','Telenor DK','Telia DK','3 DK'],
+      prefixes:{},emergency:'112'},
+    '48':{c:'Polen',iso:'PL',reg:'Europa',tz:'UTC+1/+2',currency:'PLN',lang:'Polnisch',flag:'🇵🇱',
+      carriers:['Orange PL','Play','Plus','T-Mobile PL'],
+      prefixes:{'5':'Mobil','6':'Mobil','7':'Mobil'},emergency:'112'},
+    '7':{c:'Russland/KZ',iso:'RU',reg:'Eurasien',tz:'UTC+2 bis +12',currency:'RUB',lang:'Russisch',flag:'🇷🇺',
+      carriers:['MTS','MegaFon','VimpelCom/Beeline','Tele2 RU'],
+      prefixes:{'9':'Mobil'},emergency:'112'},
+    '86':{c:'China',iso:'CN',reg:'Asien',tz:'UTC+8',currency:'CNY',lang:'Mandarin',flag:'🇨🇳',
+      carriers:['China Mobile','China Unicom','China Telecom'],
+      prefixes:{'13':'Mobil','14':'Mobil','15':'Mobil','17':'Mobil','18':'Mobil','19':'Mobil'},
+      emergency:'110'},
+    '81':{c:'Japan',iso:'JP',reg:'Asien',tz:'UTC+9',currency:'JPY',lang:'Japanisch',flag:'🇯🇵',
+      carriers:['NTT Docomo','SoftBank','au (KDDI)','Rakuten Mobile'],
+      prefixes:{'7':'Mobil','8':'Mobil','9':'Mobil'},emergency:'110'},
+    '82':{c:'Südkorea',iso:'KR',reg:'Asien',tz:'UTC+9',currency:'KRW',lang:'Koreanisch',flag:'🇰🇷',
+      carriers:['SK Telecom','KT Corporation','LG Uplus'],
+      prefixes:{'1':'Mobil'},emergency:'112'},
+    '91':{c:'Indien',iso:'IN',reg:'Asien',tz:'UTC+5:30',currency:'INR',lang:'Hindi/Englisch',flag:'🇮🇳',
+      carriers:['Jio','Airtel','Vodafone Idea (Vi)','BSNL'],
+      prefixes:{'6':'Mobil','7':'Mobil','8':'Mobil','9':'Mobil'},emergency:'112'},
+    '55':{c:'Brasilien',iso:'BR',reg:'S-Amerika',tz:'UTC-3 bis -5',currency:'BRL',lang:'Portugiesisch',flag:'🇧🇷',
+      carriers:['Claro','TIM BR','Vivo','Oi'],
+      prefixes:{'9':'Mobil'},emergency:'190'},
+    '52':{c:'Mexiko',iso:'MX',reg:'N-Amerika',tz:'UTC-6 bis -8',currency:'MXN',lang:'Spanisch',flag:'🇲🇽',
+      carriers:['Telcel','Movistar MX','AT&T MX'],
+      prefixes:{},emergency:'911'},
+    '27':{c:'Südafrika',iso:'ZA',reg:'Afrika',tz:'UTC+2',currency:'ZAR',lang:'11 Sprachen',flag:'🇿🇦',
+      carriers:['Vodacom','MTN SA','Cell C','Telkom Mobile'],
+      prefixes:{'6':'Mobil','7':'Mobil','8':'Mobil'},emergency:'10111'},
+    '971':{c:'Vereinigte Arab. Emirate',iso:'AE',reg:'Naher Osten',tz:'UTC+4',currency:'AED',lang:'Arabisch',flag:'🇦🇪',
+      carriers:['Etisalat (e&)','du (EITC)'],
+      prefixes:{'5':'Mobil'},emergency:'999'},
+    '966':{c:'Saudi-Arabien',iso:'SA',reg:'Naher Osten',tz:'UTC+3',currency:'SAR',lang:'Arabisch',flag:'🇸🇦',
+      carriers:['STC','Mobily','Zain SA'],
+      prefixes:{'5':'Mobil'},emergency:'911'},
+    '90':{c:'Türkei',iso:'TR',reg:'Eurasien',tz:'UTC+3',currency:'TRY',lang:'Türkisch',flag:'🇹🇷',
+      carriers:['Turkcell','Vodafone TR','Türk Telekom (Türkcell)'],
+      prefixes:{'5':'Mobil'},emergency:'112'},
+    '358':{c:'Finnland',iso:'FI',reg:'Europa',tz:'UTC+2/+3',currency:'EUR',lang:'Finnisch/Schwedisch',flag:'🇫🇮',
+      carriers:['Elisa','Telia FI','DNA'],
+      prefixes:{'4':'Mobil','5':'Mobil'},emergency:'112'},
+    '420':{c:'Tschechien',iso:'CZ',reg:'Europa',tz:'UTC+1/+2',currency:'CZK',lang:'Tschechisch',flag:'🇨🇿',
+      carriers:['T-Mobile CZ','O2 CZ','Vodafone CZ'],
+      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
+    '36':{c:'Ungarn',iso:'HU',reg:'Europa',tz:'UTC+1/+2',currency:'HUF',lang:'Ungarisch',flag:'🇭🇺',
+      carriers:['Magyar Telekom','Telenor HU','Vodafone HU'],
+      prefixes:{'2':'Mobil','3':'Mobil','7':'Mobil'},emergency:'112'},
+    '61':{c:'Australien',iso:'AU',reg:'Ozeanien',tz:'UTC+8 bis +11',currency:'AUD',lang:'Englisch',flag:'🇦🇺',
+      carriers:['Telstra','Optus','Vodafone AU'],
+      prefixes:{'4':'Mobil'},emergency:'000'},
+  };
+
+  const info=DB[cc]||{c:'Unbekannt',iso:'N/A',reg:'N/A',tz:'N/A',currency:'N/A',lang:'N/A',flag:'🌐',carriers:[],prefixes:{},emergency:'N/A'};
+
+  // Detect carrier from prefix
+  let lineType='Unbekannt',carrier='Unbekannt';
+  if(cc==='49'){
+    if(/^(15|16|17)/.test(local)){
+      lineType='Mobilfunk';
+      const sorted=Object.entries(info.prefixes).sort((a,b)=>b[0].length-a[0].length);
+      for(const[pre,c]of sorted){if(local.startsWith(pre)){carrier=c;break;}}
+    } else if(/^800/.test(local)){lineType='Gebührenfreie Nummer';carrier='N/A';}
+    else if(/^900/.test(local)){lineType='Premium/Mehrwert';carrier='N/A';}
+    else if(/^0/.test(local)){lineType='Festnetz (Ortsvorwahl)';}
+    else{lineType='Festnetz';}
+  } else {
+    const mobilePrefix=info.prefixes;
+    for(const[pre]of Object.entries(mobilePrefix)){
+      if(local.startsWith(pre)){lineType='Mobilfunk';break;}
+    }
+    if(lineType==='Unbekannt') lineType='Festnetz/Unbekannt';
+  }
+
+  // Carrier domain DNS lookup
+  const cDomains={'Telekom':'telekom.de','Vodafone':'vodafone.de','O2':'o2online.de','1&1':'1und1.de',
+    'AT&T':'att.com','Verizon':'verizon.com','T-Mobile':'t-mobile.com','Orange':'orange.com',
+    'Swisscom':'swisscom.ch','A1':'a1.net','Telia':'telia.com','Telenor':'telenor.com'};
+  for(const[c,dom]of Object.entries(cDomains)){
+    if(carrier.includes(c)||info.carriers[0]?.includes(c)){carrierDomain=dom;break;}
+  }
+  if(carrierDomain){
+    const dns=await safeFetch(`https://dns.google/resolve?name=${carrierDomain}&type=A`);
+    if(dns?.Answer?.[0]) carrierIP=dns.Answer[0].data;
+  }
+
+  // Format validation
+  const validLens={'49':[10,11],'1':[10,10],'44':[9,10],'43':[7,13],'41':[9,10],'33':[9,9],'39':[9,10],'46':[9,9]};
+  const[mn,mx]=validLens[cc]||[7,15];
+  const valid=local.length>=mn&&local.length<=mx;
+
+  // E.164 format
+  const e164=`+${cc}${local}`;
+  // National format
+  const natFormat=cc==='49'?`0${local.substring(0,3)} ${local.substring(3,7)} ${local.substring(7)}`:`+${cc} ${local}`;
+
+  ld('phL',false);
+
+  let html='<div class="data-wrap">';
+  html+=sec('NUMMERNANALYSE');
+  html+=r('Eingabe',ph);
+  html+=r('Bereinigt',clean);
+  html+=r('E.164 Format',e164);
+  html+=r('Nationales Format',natFormat);
+  html+=r('Stellenzahl (lokal)',local.length+' Ziffern');
+  html+=r('Format gültig',valid?'✓ Wahrscheinlich gültig':'⚠ Ungewöhnliche Länge');
+  html+=r('Leitungstyp',lineType);
+  html+=r('Erkannter Carrier',carrier);
+
+  html+=sec(`LAND & REGION ${info.flag}`);
+  html+=r('Land',`${info.c} ${info.flag}`);
+  html+=r('Ländervorwahl',`+${cc}`);
+  html+=r('ISO-Code',info.iso);
+  html+=r('Region',info.reg);
+  html+=r('Zeitzone',info.tz);
+  html+=r('Währung',info.currency);
+  html+=r('Sprache(n)',info.lang);
+  html+=r('Notruf',info.emergency);
+
+  html+=sec('CARRIER & NETZ');
+  html+=r('Erkannter Carrier',carrier);
+  html+=r('Bekannte Anbieter',info.carriers.join(', ')||'N/A');
+  html+=r('Carrier-Domain',carrierDomain||'Nicht zugeordnet');
+  if(carrierIP){
+    html+=r('Carrier Server-IP',carrierIP);
+    html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${carrierIP}';trackIP('${carrierIP}');},200)">▶ Carrier-IP tracken</button>`;
+  }
+
+  html+=sec('FORMATVARIANTEN');
+  html+=r('International',e164);
+  html+=r('Mit Klammern',`(+${cc}) ${local.substring(0,3)} ${local.substring(3)}`);
+  html+=r('Mit Bindestrichen',e164.replace(/(\+\d{2})(\d{3})(\d{3,4})(\d{4})/,'$1-$2-$3-$4'));
+  html+=r('Nur Ziffern',clean.replace('+',''));
+  html+=r('Ohne Ländervorwahl',local);
+
+  html+=sec('OSINT & REVERSE LOOKUP');
+  html+=r('Truecaller',lnk('Name + Spam suchen',`https://www.truecaller.com/search/${info.iso.toLowerCase()}/${encodeURIComponent(clean)}`));
+  html+=r('Tellows DE',lnk('Bewertungen prüfen',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
+  html+=r('NumLookup',lnk('Carrier + Name',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
+  html+=r('Should I Answer',lnk('Spam-Reports',`https://www.shouldianswer.com/phone-number/${clean}`));
+  html+=r('WhoCallsMe',lnk('Who Calls Me',`https://whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
+  html+=r('CallFilter',lnk('Deutsche Datenbank',`https://www.callfilter.app/de/phone-number/${clean.replace('+','')}`));
+  html+=r('OSINT Framework',lnk('Telefon-OSINT',`https://osintframework.com/`));
+
+  html+=sec('MESSENGER & KONTAKT');
+  html+=r('WhatsApp',lnk('In WhatsApp öffnen',`https://wa.me/${clean.replace('+','')}`));
+  html+=r('Telegram',lnk('Telegram-Suche',`https://t.me/${clean.replace('+','')}`));
+  html+=r('Signal',lnk('Signal öffnen',`https://signal.me/#p/${e164}`));
+  html+=r('Viber',lnk('Viber öffnen',`viber://contact?number=${encodeURIComponent(e164)}`));
+  html+=r('Skype',lnk('Skype Call',`skype:${e164}?call`));
+  html+=r('FaceTime',lnk('FaceTime (Apple)',`facetime:${e164}`));
+  html+=r('Google Suche',lnk('Nummer googlen',`https://google.com/search?q=${encodeURIComponent(e164)}`));
+  html+=r('Bing',lnk('Bing-Suche',`https://bing.com/search?q=${encodeURIComponent(e164)}`));
+
+  html+='</div>';
+  html+='<div class="alert-info">ℹ Carrier-Erkennung zuverlässig für DE/AT/CH. Carrier-IP = Infrastrukturstandort, nicht Nutzerstandort.</div>';
+  $('phR').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════
+// EMAIL TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackEmail(){
+  const em=$('emInput').value.trim();
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('emR').innerHTML='<div class="alert-err">Ungültige E-Mail!</div>';return;}
+  ld('emL',true);$('emR').innerHTML='';
+  const[uname,domain]=em.split('@');
+
+  // DNS queries: A, AAAA, MX, TXT, NS, CAA, CNAME, SOA + subdomain SPF check
+  const [rA,rAAAA,rMX,rTXT,rNS,rCAA,rCNAME,rSOA,rDMARCTXT] = await Promise.allSettled([
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=A`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=AAAA`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=MX`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=TXT`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=NS`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=CAA`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=CNAME`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=SOA`),
+    safeFetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`)
+  ]);
+
+  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1],ttl:r.TTL};})??[];
+  const aRecs=rA.value?.Answer?.map(r=>({ip:r.data,ttl:r.TTL}))??[];
+  const aaaaRecs=rAAAA.value?.Answer?.map(r=>r.data)??[];
+  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)??[];
+  const nsRecs=rNS.value?.Answer?.map(r=>r.data)??[];
+  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)??[];
+  const cname=rCNAME.value?.Answer?.[0]?.data??null;
+  const soa=rSOA.value?.Answer?.[0]?.data??null;
+  const dmarcTxt=rDMARCTXT.value?.Answer?.[0]?.data??null;
+
+  let spf='',dmarc='',hasDKIM=false,hasMTASTS=false,hasBimi=false;
+  txtRecs.forEach(t=>{
+    if(t.includes('v=spf1'))spf=t;
+    if(t.includes('v=DMARC1'))dmarc=t;
+    if(t.includes('v=DKIM1'))hasDKIM=true;
+    if(t.includes('v=STSv1'))hasMTASTS=true;
+    if(t.includes('v=BIMI1'))hasBimi=true;
+  });
+  const finalDmarc=dmarcTxt||dmarc;
+  const hasSPF=!!spf, hasDMARC=!!finalDmarc;
+
+  // Detect disposable
+  const dispList=['tempmail','guerrillamail','10minutemail','throwaway','mailinator','trashmail',
+    'temp-mail','fakeinbox','yopmail','getnada','sharklasers','dispostable','mailnull',
+    'spamgourmet','guerrillamailblock','spam4.me','maildrop','throwam','tempinbox'];
+  const isDisp=dispList.some(d=>domain.toLowerCase().includes(d));
+
+  // Provider database
+  const provDB={
+    'gmail.com':{n:'Google Gmail',co:'Google LLC',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
+    'googlemail.com':{n:'Google Gmail',co:'Google LLC',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
+    'outlook.com':{n:'Microsoft Outlook',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
+    'hotmail.com':{n:'Microsoft Hotmail',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
+    'hotmail.de':{n:'Microsoft Hotmail DE',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
+    'live.com':{n:'Microsoft Live',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
+    'yahoo.com':{n:'Yahoo Mail',co:'Yahoo/Verizon',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'Teilweise'},
+    'yahoo.de':{n:'Yahoo Mail DE',co:'Yahoo',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'Teilweise'},
+    'icloud.com':{n:'Apple iCloud Mail',co:'Apple Inc.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
+    'me.com':{n:'Apple Me Mail',co:'Apple Inc.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
+    'protonmail.com':{n:'ProtonMail',co:'Proton AG (CH)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
+    'proton.me':{n:'Proton Mail',co:'Proton AG (CH)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
+    'tutanota.com':{n:'Tutanota',co:'Tutao GmbH (DE)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
+    'tuta.io':{n:'Tuta',co:'Tutao GmbH (DE)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
+    'gmx.com':{n:'GMX International',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    'gmx.de':{n:'GMX Deutschland',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    'gmx.at':{n:'GMX Österreich',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    'gmx.ch':{n:'GMX Schweiz',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    'web.de':{n:'WEB.DE',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    't-online.de':{n:'Telekom Mail',co:'Deutsche Telekom',plan:'Kundendienst',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
+    'posteo.de':{n:'Posteo',co:'Posteo e.K. (DE)',plan:'Bezahlt (1€/Monat)',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
+    'mailbox.org':{n:'mailbox.org',co:'Heinlein Support (DE)',plan:'Bezahlt',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
+    'fastmail.com':{n:'Fastmail',co:'Fastmail Pty Ltd (AU)',plan:'Bezahlt',sec:'Hoch',e2e:'Nein',dsgvo:'Teilweise'},
+    'zoho.com':{n:'Zoho Mail',co:'Zoho Corporation',plan:'Free/Paid',sec:'Hoch',e2e:'Nein',dsgvo:'Teilweise'},
+    'aol.com':{n:'AOL Mail',co:'Yahoo/Verizon',plan:'Kostenlos',sec:'Niedrig',e2e:'Nein',dsgvo:'Nein'},
+  };
+  const prov=provDB[domain.toLowerCase()]||{n:'Custom/Geschäftlich',co:'Unbekannt',plan:'Unbekannt',sec:'Unbekannt',e2e:'N/A',dsgvo:'N/A'};
+
+  // Geo for first MX IP
+  let mxGeo=null;
+  if(mxRecs[0]?.srv){
+    const mxIP=await safeFetch(`https://dns.google/resolve?name=${mxRecs[0].srv}&type=A`);
+    if(mxIP?.Answer?.[0]){
+      mxGeo=await safeFetch(`https://ipwho.is/${mxIP.Answer[0].data}`);
+    }
+  }
+
+  // Security score
+  const secScore=(hasSPF?1:0)+(hasDKIM?1:0)+(hasDMARC?1:0)+(hasMTASTS?1:0);
+  const spoofRisk=secScore<=1?'⚠ Hoch':secScore===2?'Mittel':'Niedrig';
+
+  ld('emL',false);
+
+  let html='<div class="data-wrap">';
+  html+=sec('E-MAIL ANALYSE');
+  html+=r('Vollständige E-Mail',em);
+  html+=r('Benutzername',uname);
+  html+=r('Domain',domain);
+  html+=r('Top-Level-Domain','.'+domain.split('.').pop());
+  html+=r('Format',`✓ Gültig`);
+  html+=r('Wegwerf-Mail',isDisp?'⚠ Ja (Temporär)':'Nein');
+  if(cname) html+=r('Domain-CNAME',cname);
+
+  html+=sec('ANBIETER DETAILS');
+  html+=r('Dienst',prov.n);
+  html+=r('Unternehmen',prov.co);
+  html+=r('Kontotyp',prov.plan);
+  html+=r('Sicherheitsniveau',prov.sec);
+  html+=r('Ende-zu-Ende-Verschlüsselung',prov.e2e);
+  html+=r('DSGVO-konform',prov.dsgvo);
+
+  html+=sec('MX-EINTRÄGE (Mailserver)');
+  if(mxRecs.length>0){
+    mxRecs.forEach((mx,i)=>html+=r(`MX ${i+1} (Prio ${mx.prio})`,`${mx.srv} <em style="color:var(--label);font-size:11px">TTL: ${mx.ttl}s</em>`));
+    html+=r('Empfang möglich','✓ Ja');
+    html+=r('Anzahl Mailserver',mxRecs.length+'');
+  } else {
+    html+=r('MX Status','✗ Keine MX-Einträge — kann keine E-Mails empfangen!');
+  }
+
+  html+=sec('DNS EINTRÄGE');
+  aRecs.forEach((a,i)=>html+=r(`A ${i+1} (IPv4)`,`${a.ip} <em style="color:var(--label);font-size:11px">TTL: ${a.ttl}s</em>`));
+  if(aaaaRecs.length>0) aaaaRecs.forEach((a,i)=>html+=r(`AAAA ${i+1} (IPv6)`,a.substring(0,50)));
+  if(nsRecs.length>0) nsRecs.forEach((ns,i)=>html+=r(`NS ${i+1}`,ns));
+  if(soa) html+=r('SOA Record',soa.substring(0,100));
+  if(caaRecs.length>0) caaRecs.forEach((c,i)=>html+=r(`CAA ${i+1}`,c));
+
+  html+=sec('E-MAIL SICHERHEIT (SPF / DKIM / DMARC)');
+  html+=r('SPF Record',hasSPF?`✓ Konfiguriert`:'✗ Fehlt');
+  if(hasSPF) html+=r('SPF Details',spf.substring(0,100));
+  html+=r('SPF Mechanismus',hasSPF?parseSPF(spf):'N/A');
+  html+=r('DKIM',hasDKIM?'✓ Konfiguriert':'✗ Fehlt');
+  html+=r('DMARC',hasDMARC?'✓ Konfiguriert':'✗ Fehlt');
+  if(hasDMARC) html+=r('DMARC Record',finalDmarc.substring(0,100));
+  if(hasDMARC) html+=r('DMARC Policy',parseDMARC(finalDmarc));
+  html+=r('MTA-STS',hasMTASTS?'✓ Konfiguriert':'✗ N/A');
+  html+=r('BIMI',hasBimi?'✓ Logo-Eintrag':'✗ N/A');
+  html+=r('Security Score',`${secScore}/4 — ${secScore===4?'Ausgezeichnet':secScore>=2?'Gut':'Schwach'}`);
+  html+=r('Spoofing-Risiko',spoofRisk);
+  html+=r('Anti-Spoofing',secScore>=2?'✓ Teilweise geschützt':secScore>=3?'✓ Gut geschützt':'⚠ Anfällig');
+
+  if(mxGeo&&mxGeo.success){
+    html+=sec('MAILSERVER STANDORT (MX IP)');
+    html+=r('Mailserver IP',mxGeo.ip||'N/A');
+    html+=r('Land',`${mxGeo.country||'N/A'} ${mxGeo.flag?.emoji||''}`);
+    html+=r('Stadt',mxGeo.city||'N/A');
+    html+=r('ISP/Hosting',mxGeo.connection?.isp||'N/A');
+    html+=r('Organisation',mxGeo.connection?.org||'N/A');
+    html+=r('ASN',mxGeo.connection?.asn||'N/A');
+    if(aRecs[0]){
+      html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${mxGeo.ip}';trackIP('${mxGeo.ip}');},200)">▶ Mailserver-IP tracken</button>`;
+    }
+  }
+
+  html+=sec('BREACH & REPUTATION CHECK');
+  html+=r('Have I Been Pwned',lnk('Datenlecks prüfen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
+  html+=r('Dehashed',lnk('Passwort-Leaks',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
+  html+=r('LeakCheck.io',lnk('Breach-Suche',`https://leakcheck.io/email/${encodeURIComponent(em)}`));
+  html+=r('Intelligence X',lnk('IntelX Suche',`https://intelx.io/?s=${encodeURIComponent(em)}`));
+  html+=r('EmailRep.io',lnk('Reputations-Check',`https://emailrep.io/${encodeURIComponent(em)}`));
+  html+=r('Epieos',lnk('Verbundene Konten',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
+  html+=r('Hunter.io',lnk('E-Mail verifizieren',`https://hunter.io/email-verifier/${encodeURIComponent(em)}`));
+  html+=r('Google',lnk('"'+em+'" googlen',`https://google.com/search?q=%22${encodeURIComponent(em)}%22`));
+
+  html+=sec('DOMAIN TOOLS');
+  html+=r('WHOIS',lnk('Registrierungs-Infos',`https://who.is/whois/${domain}`));
+  html+=r('MXToolbox',lnk('DNS/MX Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
+  html+=r('Google Admin Toolbox',lnk('MX/DNS Checker',`https://toolbox.googleapps.com/apps/checkmx/check?domain=${domain}`));
+  html+=r('DMARC Analyzer',lnk('DMARC testen',`https://dmarcian.com/dmarc-inspector/?domain=${domain}`));
+
+  html+=r('TXT Records',txtRecs.length>0?txtRecs.slice(0,5).map((t,i)=>`<small style="display:block;margin-top:3px;color:var(--label)">[${i+1}] ${t.substring(0,100)}</small>`).join(''):'Keine');
+
+  html+='</div>';
+  if(isDisp) html+='<div class="alert-warn">⚠ WEGWERF-MAIL — Temporärer Dienst, kein echtes Konto!</div>';
+  if(secScore<2) html+='<div class="alert-warn">⚠ SCHLECHTE E-MAIL-SICHERHEIT — Anfällig für Spoofing/Spam!</div>';
+  html+='<div class="alert-info">ℹ IP-Adressen gehören zu Mailservern des Anbieters — nicht zum Absendergerät.</div>';
+  $('emR').innerHTML=html;
+}
+
+function parseSPF(spf){
+  if(!spf) return 'N/A';
+  const parts=[];
+  if(spf.includes('~all')) parts.push('~all (Softfail)');
+  else if(spf.includes('-all')) parts.push('-all (Hardfail ✓)');
+  else if(spf.includes('+all')) parts.push('+all (⚠ Offen!)');
+  if(spf.includes('include:')) parts.push('includes: '+spf.match(/include:([^\s]+)/g)?.join(', '));
+  if(spf.includes('ip4:')) parts.push('IP4-Ranges vorhanden');
+  if(spf.includes('ip6:')) parts.push('IP6-Ranges vorhanden');
+  return parts.join(' | ')||spf.substring(0,60);
+}
+
+function parseDMARC(d){
+  if(!d) return 'N/A';
+  const p=d.match(/p=(\w+)/)?.[1]||'none';
+  const sp=d.match(/sp=(\w+)/)?.[1]||p;
+  const pct=d.match(/pct=(\d+)/)?.[1]||'100';
+  return`Policy: ${p} | Subdomain: ${sp} | Prozent: ${pct}%`;
+}
+
+// ══════════════════════════════════════════════════════════
+// DISCORD TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackDC(){
+  const uid=$('dcInput').value.trim();
+  if(!uid||!/^\d{17,20}$/.test(uid)){$('dcR').innerHTML='<div class="alert-err">Ungültige Discord User ID (17-20 Ziffern)!</div>';return;}
+  ld('dcL',true);$('dcR').innerHTML='';
+
+  // Snowflake decode
+  const big=BigInt(uid);
+  const ts=(big>>22n)+1420070400000n;
+  const created=new Date(Number(ts));
+  const ageMs=Date.now()-created.getTime();
+  const ageDays=Math.floor(ageMs/86400000);
+  const workerId=Number((big&0x3E0000n)>>17n);
+  const processId=Number((big&0x1F000n)>>12n);
+  const increment=Number(big&0xFFFn);
+
+  // Multiple data sources
+  const [r1,r2,r3] = await Promise.allSettled([
+    safeFetch(`https://discord.com/api/v10/users/${uid}`),
+    safeFetch(`https://api.lanyard.rest/v1/users/${uid}`),
+    safeFetch(`https://discord.id/api/v10/users/${uid}`)
+  ]);
+
+  let ud = r1.value?.username ? r1.value :
+           r2.value?.data?.discord_user ? r2.value.data.discord_user :
+           r3.value?.username ? r3.value : null;
+
+  // Lanyard for presence
+  const presence = r2.value?.data;
+
+  ld('dcL',false);
+
+  const flags=ud?.public_flags||0;
+  const flagDefs={
+    1:'Discord Staff',2:'Discord Partner',4:'HypeSquad Events Organizer',
+    8:'Bug Hunter Level 1',64:'HypeSquad Bravery',128:'HypeSquad Brilliance',
+    256:'HypeSquad Balance',512:'Early Nitro Supporter',16384:'Bug Hunter Level 2',
+    65536:'Verified Bot',131072:'Verified Bot Developer',262144:'Discord Certified Moderator',
+    1048576:'Bot HTTP Interactions',4194304:'Active Developer'
+  };
+  const badges=Object.entries(flagDefs).filter(([b])=>(flags&Number(b))!==0).map(([,n])=>n);
+
+  // Account age breakdown
+  const years=Math.floor(ageDays/365),months=Math.floor((ageDays%365)/30),days=ageDays%30;
+  const accountTier = ageDays>2000?'Veteran':ageDays>1000?'Erfahren':ageDays>365?'Regular':ageDays>90?'Neu':'Sehr neu';
+
+  let html='<div class="data-wrap">';
+
+  if(ud?.avatar){
+    const ext=ud.avatar.startsWith('a_')?'gif':'png';
+    html+=`<img src="https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=256" class="ava" onerror="this.style.display='none'" alt="Avatar">`;
+  }
+
+  html+=sec('SNOWFLAKE DECODE');
+  html+=r('User ID',uid);
+  html+=r('Konto erstellt',created.toLocaleString('de-DE',{dateStyle:'full',timeStyle:'medium'}));
+  html+=r('Kontoalter',`${years} Jahre, ${months} Monate, ${days} Tage`);
+  html+=r('Kontoalter (Tage)',ageDays.toLocaleString()+' Tage');
+  html+=r('Account-Tier',accountTier);
+  html+=r('Discord Epoch',new Date(Number(ts)).toISOString());
+  html+=r('Snowflake Timestamp',Number(big>>22n)+'');
+  html+=r('Worker ID',workerId+'');
+  html+=r('Process ID',processId+'');
+  html+=r('Inkrement',increment+'');
+  html+=r('Binary',big.toString(2).padStart(64,'0').match(/.{1,8}/g)?.join(' ')||'');
+
+  if(ud){
+    html+=sec('PROFIL DATEN');
+    html+=r('Username',ud.username||'N/A');
+    html+=r('Display Name',ud.global_name||ud.username||'N/A');
+    html+=r('Discriminator',ud.discriminator&&ud.discriminator!=='0'?'#'+ud.discriminator:'Neues System (kein #)');
+    html+=r('Bot-Konto',ud.bot?'✓ Ja':'Nein');
+    html+=r('System-Account',ud.system?'✓ Ja':'Nein');
+    html+=r('Verifiziert',ud.verified?'✓ Ja':'Unbekannt');
+
+    if(ud.avatar){
+      const isAnim=ud.avatar.startsWith('a_');
+      const ext=isAnim?'gif':'png';
+      html+=r('Avatar Hash',ud.avatar);
+      html+=r('Avatar Animiert',isAnim?'✓ Ja (Nitro-Indikator)':'Nein');
+      html+=r('Avatar 256px',lnk('Avatar öffnen',`https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=256`));
+      html+=r('Avatar 1024px',lnk('Full HD',`https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=1024`));
+    } else {
+      const defaultAva=`https://cdn.discordapp.com/embed/avatars/${Number(BigInt(uid)%5n)}.png`;
+      html+=r('Avatar','Standard-Avatar (kein benutzerdefinierter)');
+      html+=r('Standard Avatar',lnk('Anzeigen',defaultAva));
+    }
+
+    if(ud.banner){
+      const bExt=ud.banner.startsWith('a_')?'gif':'png';
+      html+=r('Banner',lnk('Banner anzeigen',`https://cdn.discordapp.com/banners/${uid}/${ud.banner}.${bExt}?size=600`));
+      html+=r('Banner Animiert',ud.banner.startsWith('a_')?'✓ Ja':'Nein');
+    }
+
+    if(ud.accent_color!=null) html+=r('Profilfarbe',`#${ud.accent_color.toString(16).padStart(6,'0')}`);
+    if(ud.banner_color) html+=r('Banner-Farbe',ud.banner_color);
+
+    html+=sec('NITRO STATUS');
+    if(ud.premium_type&&ud.premium_type>0){
+      const nt={1:'Nitro Classic',2:'Nitro (voll)',3:'Nitro Basic'};
+      html+=r('Nitro',`✓ ${nt[ud.premium_type]||'Aktiv'}`);
+    } else {
+      html+=r('Nitro','Nicht direkt erkennbar (privat)');
+    }
+    html+=r('Animierter Avatar',ud.avatar?.startsWith('a_')?'→ Nitro-Indikator!':'Kein Hinweis');
+    html+=r('Animiertes Banner',ud.banner?.startsWith('a_')?'→ Nitro-Indikator!':'N/A');
+  }
+
+  if(badges.length>0){
+    html+=sec(`BADGES (${badges.length} erkannt)`);
+    badges.forEach(b=>html+=r('Badge',`✓ ${b}`));
+    html+=r('Flags-Wert (roh)',flags+'');
+  } else {
+    html+=sec('BADGES');
+    html+=r('Badges','Keine öffentlichen Badges');
+  }
+
+  if(presence){
+    html+=sec('AKTIVITÄTSSTATUS (Lanyard)');
+    html+=r('Online-Status',presence.discord_status||'Unbekannt');
+    html+=r('Aktiv auf Desktop',presence.active_on_discord_desktop?'✓ Ja':'Nein');
+    html+=r('Aktiv auf Mobile',presence.active_on_discord_mobile?'✓ Ja':'Nein');
+    html+=r('Aktiv im Web',presence.active_on_discord_web?'✓ Ja':'Nein');
+    if(presence.activities?.length>0){
+      presence.activities.forEach((act,i)=>{
+        html+=r(`Aktivität ${i+1}`,`${act.name||'N/A'} — ${act.state||act.details||'...'}`);
+      });
+    }
+    if(presence.listening_to_spotify){
+      const sp=presence.spotify;
+      html+=r('Spotify 🎵',`${sp?.song||'N/A'} – ${sp?.artist||'N/A'} (${sp?.album||''})`);
+    }
+    if(presence.kv){
+      const kv=presence.kv;
+      if(kv.location) html+=r('Kustom-Status Ort',kv.location);
+    }
+  }
+
+  html+=sec('OSINT TOOLS');
+  html+=r('Discord.id',lnk('Erweiterte Infos',`https://discord.id/?prefill=${uid}`));
+  html+=r('Discord Profil',lnk('Direkt öffnen',`https://discord.com/users/${uid}`));
+  html+=r('Lanyard API',lnk('Live-Aktivität JSON',`https://api.lanyard.rest/v1/users/${uid}`));
+  html+=r('Lookup.guru',lnk('Lookup',`https://lookup.guru/${uid}`));
+  html+=r('Discord History',lnk('Historische Daten',`https://discordhistory.com/user/${uid}`));
+  if(ud?.username){
+    html+=r('Username suchen',lnk(`"${ud.username}" googlen`,`https://google.com/search?q=discord+%22${encodeURIComponent(ud.username)}%22`));
+    html+=r('Sherlock',lnk(`Username auf Plattformen`,`https://whatsmyname.app/?q=${encodeURIComponent(ud.username)}`));
+  }
+
+  html+='</div>';
+  if(!ud) html+='<div class="alert-warn">⚠ Profildaten nicht abrufbar — API-Zugriff begrenzt oder Bot ohne Token.</div>';
+  html+='<div class="alert-info">ℹ Snowflake-Daten sind immer verfügbar. Profilinfos nur wenn öffentlich zugänglich.</div>';
+  $('dcR').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════
+// DOMAIN TRACKER
+// ══════════════════════════════════════════════════════════
+async function trackDomain(){
+  let domain=$('dmInput').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*/,'');
+  if(!domain){$('dmR').innerHTML='<div class="alert-err">Bitte Domain eingeben!</div>';return;}
+  ld('dmL',true);$('dmR').innerHTML='';
+
+  // Comprehensive DNS + additional checks
+  const [rA,rAAAA,rMX,rTXT,rNS,rCNAME,rSOA,rCAA,rDMARCTXT,rDKIM,rSTS] = await Promise.allSettled([
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=A`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=AAAA`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=MX`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=TXT`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=NS`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=CNAME`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=SOA`),
+    safeFetch(`https://dns.google/resolve?name=${domain}&type=CAA`),
+    safeFetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`),
+    safeFetch(`https://dns.google/resolve?name=default._domainkey.${domain}&type=TXT`),
+    safeFetch(`https://dns.google/resolve?name=_mta-sts.${domain}&type=TXT`)
+  ]);
+
+  const aRecs=rA.value?.Answer?.map(r=>({ip:r.data,ttl:r.TTL}))??[];
+  const aaaaRecs=rAAAA.value?.Answer?.map(r=>r.data)??[];
+  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1]};})??[];
+  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)??[];
+  const nsRecs=rNS.value?.Answer?.map(r=>r.data)??[];
+  const cname=rCNAME.value?.Answer?.[0]?.data??null;
+  const soa=rSOA.value?.Answer?.[0]?.data??null;
+  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)??[];
+  const dmarcTxt=rDMARCTXT.value?.Answer?.[0]?.data??null;
+  const dkimTxt=rDKIM.value?.Answer?.[0]?.data??null;
+  const stsTxt=rSTS.value?.Answer?.[0]?.data??null;
+
+  let spf=''; txtRecs.forEach(t=>{if(t.includes('v=spf1'))spf=t;});
+  const hasSPF=!!spf,hasDMARC=!!dmarcTxt,hasDKIM=!!dkimTxt,hasMTASTS=!!stsTxt;
+  const secScore=(hasSPF?1:0)+(hasDMARC?1:0)+(hasDKIM?1:0)+(hasMTASTS?1:0);
+
+  // Geo for A records
+  let geoData=null;
+  if(aRecs[0]?.ip){
+    geoData=await safeFetch(`https://ipwho.is/${aRecs[0].ip}`);
+  }
+
+  // Hosting detection
+  let hostingProvider='Unbekannt';
+  const nsStr=nsRecs.join(' ').toLowerCase();
+  const mxStr=mxRecs.map(m=>m.srv).join(' ').toLowerCase();
+  if(nsStr.includes('cloudflare')) hostingProvider='Cloudflare';
+  else if(nsStr.includes('awsdns')) hostingProvider='Amazon AWS/Route53';
+  else if(nsStr.includes('azure')) hostingProvider='Microsoft Azure';
+  else if(nsStr.includes('google')) hostingProvider='Google Cloud';
+  else if(nsStr.includes('hetzner')) hostingProvider='Hetzner Online';
+  else if(nsStr.includes('strato')) hostingProvider='STRATO AG';
+  else if(nsStr.includes('ionos')||nsStr.includes('1und1')) hostingProvider='IONOS/1&1';
+  else if(nsStr.includes('godaddy')) hostingProvider='GoDaddy';
+  if(mxStr.includes('google')) hostingProvider+=' | Gmail';
+  else if(mxStr.includes('outlook')||mxStr.includes('microsoft')) hostingProvider+=' | Microsoft 365';
+  else if(mxStr.includes('proton')) hostingProvider+=' | ProtonMail';
+
+  ld('dmL',false);
+
+  let html=stats(
+    ['A Records',aRecs.length+''],
+    ['AAAA (IPv6)',aaaaRecs.length+''],
+    ['MX Server',mxRecs.length+''],
+    ['Nameserver',nsRecs.length+''],
+    ['SPF',hasSPF?'✓':'✗'],
+    ['DMARC',hasDMARC?'✓':'✗'],
+    ['DKIM',hasDKIM?'✓':'✗'],
+    ['MTA-STS',hasMTASTS?'✓':'✗']
+  );
+
+  html+='<div class="data-wrap">';
+  html+=sec('DOMAIN INFORMATIONEN');
+  html+=r('Domain',domain);
+  html+=r('TLD','.'+domain.split('.').pop());
+  html+=r('Subdomain',domain.split('.').length>2?domain.split('.').slice(0,-2).join('.'):'(Root-Domain)');
+  html+=r('Hosting/Provider',hostingProvider);
+  html+=r('Existiert',aRecs.length>0||mxRecs.length>0?'✓ Ja (DNS vorhanden)':'⚠ Möglicherweise nicht');
+  if(cname) html+=r('CNAME Ziel',cname);
+  if(soa){
+    const soaParts=soa.split(' ');
+    html+=r('SOA Primary NS',soaParts[0]||'N/A');
+    html+=r('SOA Responsible',soaParts[1]||'N/A');
+    html+=r('SOA Serial',soaParts[2]||'N/A');
+    html+=r('SOA Refresh',soaParts[3]?soaParts[3]+'s':'N/A');
+    html+=r('SOA TTL',soaParts[6]?soaParts[6]+'s':'N/A');
+  }
+
+  if(aRecs.length>0){
+    html+=sec('A-EINTRÄGE (IPv4)');
+    aRecs.forEach((a,i)=>html+=r(`A ${i+1}`,`${a.ip} <em style="color:var(--label);font-size:11px">TTL: ${a.ttl}s</em>`));
+  }
+  if(aaaaRecs.length>0){
+    html+=sec('AAAA-EINTRÄGE (IPv6)');
+    aaaaRecs.forEach((a,i)=>html+=r(`AAAA ${i+1}`,a));
+  }
+  if(nsRecs.length>0){
+    html+=sec('NAMESERVER (NS)');
+    nsRecs.forEach((ns,i)=>html+=r(`NS ${i+1}`,ns));
+  }
+  if(mxRecs.length>0){
+    html+=sec('MX-EINTRÄGE (Mailserver)');
+    mxRecs.forEach((mx,i)=>html+=r(`MX ${i+1} (Prio ${mx.prio})`,mx.srv));
+  }
+  if(caaRecs.length>0){
+    html+=sec('CAA-EINTRÄGE (SSL-Aussteller)');
+    caaRecs.forEach((c,i)=>html+=r(`CAA ${i+1}`,c));
+    html+=r('Erlaubte CAs',caaRecs.filter(c=>c.includes('issue')).map(c=>c.split('"')[1]).join(', ')||'Alle');
+  }
+  if(txtRecs.length>0){
+    html+=sec('TXT-EINTRÄGE');
+    txtRecs.slice(0,10).forEach((t,i)=>html+=r(`TXT ${i+1}`,t.substring(0,120)));
+  }
+
+  html+=sec('E-MAIL SICHERHEIT');
+  html+=r('SPF',hasSPF?'✓ '+spf.substring(0,80):'✗ Fehlt');
+  if(hasSPF) html+=r('SPF Auswertung',parseSPF(spf));
+  html+=r('DKIM (default)',hasDKIM?`✓ ${(dkimTxt||'').substring(0,70)}`:'✗ Nicht gefunden');
+  html+=r('DMARC',hasDMARC?'✓ '+dmarcTxt.substring(0,80):'✗ Fehlt');
+  if(hasDMARC) html+=r('DMARC Policy',parseDMARC(dmarcTxt));
+  html+=r('MTA-STS',hasMTASTS?'✓ '+stsTxt.substring(0,60):'✗ N/A');
+  html+=r('Security Score',`${secScore}/4`);
+
+  if(geoData&&geoData.success){
+    html+=sec('SERVER STANDORT (IP GEO)');
+    html+=r('Server IP',aRecs[0].ip);
+    html+=r('Land',`${geoData.country||'N/A'} ${geoData.flag?.emoji||''}`);
+    html+=r('Region',geoData.region||'N/A');
+    html+=r('Stadt',geoData.city||'N/A');
+    html+=r('ISP',geoData.connection?.isp||'N/A');
+    html+=r('Organisation',geoData.connection?.org||'N/A');
+    html+=r('ASN',geoData.connection?.asn||'N/A');
+    html+=r('Koordinaten',`${geoData.latitude||'N/A'}, ${geoData.longitude||'N/A'}`);
+    if(geoData.latitude&&geoData.longitude){
+      html+=r('Google Maps',lnk('Server-Standort',`https://maps.google.com/?q=${geoData.latitude},${geoData.longitude}`));
+    }
+    html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${aRecs[0].ip}';trackIP('${aRecs[0].ip}');},200)">▶ Server-IP vollständig tracken</button>`;
+  }
+
+  html+=sec('ANALYSE & TOOLS');
+  html+=r('WHOIS',lnk('Registrar + Ablauf',`https://who.is/whois/${domain}`));
+  html+=r('WHOIS (lookup.icann)',lnk('ICANN Lookup',`https://lookup.icann.org/en/lookup?name=${domain}`));
+  html+=r('MXToolbox',lnk('DNS/MX Deep Scan',`https://mxtoolbox.com/SuperTool.aspx?action=dns:${domain}`));
+  html+=r('SSL Labs',lnk('SSL/TLS Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${domain}`));
+  html+=r('crt.sh (SSL Certs)',lnk('Alle Zertifikate',`https://crt.sh/?q=${domain}`));
+  html+=r('SecurityTrails',lnk('DNS History',`https://securitytrails.com/domain/${domain}/dns`));
+  html+=r('Shodan',lnk('Offene Ports',`https://shodan.io/search?query=${domain}`));
+  html+=r('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts?q=${domain}`));
+  html+=r('VirusTotal',lnk('Bedrohungscheck',`https://virustotal.com/gui/domain/${domain}`));
+  html+=r('BuiltWith',lnk('Tech-Stack erkennen',`https://builtwith.com/${domain}`));
+  html+=r('URLScan.io',lnk('URL Scan + Screenshot',`https://urlscan.io/search/#domain:${domain}`));
+  html+=r('Wayback Machine',lnk('Historische Snapshots',`https://web.archive.org/web/*/${domain}`));
+  html+=r('DNSDumpster',lnk('DNS Mapping',`https://dnsdumpster.com/`));
+  html+=r('HackerTarget',lnk('Subdomains',`https://hackertarget.com/find-dns-host-records/?q=${domain}`));
+  html+=r('RapidDNS',lnk('Subdomain-Suche',`https://rapiddns.io/subdomain/${domain}`));
+  html+=r('ThreatFox',lnk('IOC Check',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${domain}`));
+
+  html+='</div>';
+  html+='<div class="alert-info">ℹ Alle DNS-Daten werden live via Google DNS-over-HTTPS (8.8.8.8) abgerufen.</div>';
+  $('dmR').innerHTML=html;
+}
+</script>
 </body>
 </html>
