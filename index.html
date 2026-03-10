@@ -2,347 +2,646 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StarTrack v3 — Enhanced Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>StarTrack v5</title>
 <style>
-:root {
-  --bg: #070010;
-  --panel: rgba(14,0,28,0.92);
-  --border: #6a1fd0;
-  --accent: #ff2060;
-  --accent2: #a020f0;
-  --text: #e0c0ff;
-  --label: #c090f0;
-  --val: #ff4488;
-  --cyan: #00e5ff;
-  --green: #00ff88;
-  --yellow: #ffcc00;
-  --red: #ff3333;
+:root{
+  --bg:#05000f;
+  --panel:rgba(10,0,22,0.94);
+  --border:#5a18c0;
+  --accent:#ff1a5e;
+  --accent2:#9010e0;
+  --text:#ddb8ff;
+  --label:#9060c8;
+  --val:#ff3377;
+  --cyan:#00d4f0;
+  --green:#00ef80;
+  --yellow:#f0c000;
+  --red:#ff2828;
+  --tap:48px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+
 body{
   font-family:'Courier New',monospace;
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
-  padding:18px;
+  padding:14px;
   overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
-body::before{
-  content:'';position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(160,32,240,0.12) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 80%, rgba(255,32,96,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 50%, rgba(0,229,255,0.04) 0%, transparent 70%);
-  pointer-events:none;z-index:0;
-  animation:bgPulse 12s ease-in-out infinite alternate;
+
+/* ── LIVE WALLPAPER ── */
+#cvs{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;
+  opacity:.85;
 }
-@keyframes bgPulse{from{opacity:.7}to{opacity:1}}
 
 .wrap{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
 
 /* ── BANNER ── */
 .banner{
-  text-align:center;margin-bottom:24px;
-  color:var(--accent);font-size:13px;line-height:1.35;white-space:pre;
-  text-shadow:0 0 12px #ff206099,0 0 28px #a020f066;
+  text-align:center;margin-bottom:20px;
+  color:var(--accent);
+  text-shadow:0 0 14px rgba(255,26,94,.75),0 0 32px rgba(144,16,224,.5);
   animation:glow 3s ease-in-out infinite alternate;
 }
+.ban-ascii{
+  font-size:clamp(5.5px,1.55vw,13px);
+  white-space:pre;display:block;line-height:1.3;
+}
+.ban-sub{
+  font-size:clamp(9px,2.2vw,12px);
+  letter-spacing:clamp(2px,1.5vw,5px);
+  margin-top:7px;color:var(--label);
+  text-shadow:0 0 8px rgba(144,16,224,.5);
+}
 @keyframes glow{
-  from{text-shadow:0 0 10px #ff206099,0 0 22px #a020f055;}
-  to  {text-shadow:0 0 22px #ff2060cc,0 0 40px #a020f088,0 0 60px #ff206033;}
+  from{text-shadow:0 0 10px rgba(255,26,94,.7),0 0 24px rgba(144,16,224,.45);}
+  to  {text-shadow:0 0 22px rgba(255,26,94,.95),0 0 44px rgba(144,16,224,.7),0 0 66px rgba(255,26,94,.25);}
 }
 
 /* ── MENU ── */
 .menu{
-  background:var(--panel);border:1.5px solid var(--border);
-  border-radius:14px;padding:28px;margin-bottom:18px;
-  box-shadow:0 0 40px rgba(106,31,208,.4),inset 0 0 24px rgba(255,32,96,.06);
-  backdrop-filter:blur(14px);
+  background:var(--panel);
+  border:1.5px solid var(--border);
+  border-radius:14px;padding:clamp(14px,4vw,26px);margin-bottom:14px;
+  box-shadow:0 0 44px rgba(90,24,192,.38),inset 0 0 28px rgba(255,26,94,.05);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
 .menu-title{
-  text-align:center;color:var(--accent);margin-bottom:22px;
-  font-size:19px;letter-spacing:4px;
-  text-shadow:0 0 16px var(--accent);
+  text-align:center;color:var(--accent);margin-bottom:20px;
+  font-size:clamp(13px,3.2vw,18px);letter-spacing:clamp(2px,2vw,5px);
+  text-shadow:0 0 14px var(--accent);
 }
-.menu-options{display:grid;gap:12px;}
-.menu-btn{
-  background:linear-gradient(135deg,rgba(106,31,208,.18),rgba(255,32,96,.12));
-  border:1px solid var(--border);color:var(--accent);padding:16px 20px;
-  cursor:pointer;border-radius:8px;font-family:'Courier New',monospace;
-  font-size:15px;transition:all .25s;text-align:left;
-  box-shadow:0 0 12px rgba(106,31,208,.25);position:relative;overflow:hidden;
+.menu-grid{display:grid;gap:10px;}
+@media(min-width:560px){.menu-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:860px){.menu-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
+
+.mbtn{
+  background:linear-gradient(135deg,rgba(90,24,192,.16),rgba(255,26,94,.10));
+  border:1px solid var(--border);color:var(--accent);
+  padding:clamp(13px,3vw,15px) clamp(12px,3vw,18px);
+  cursor:pointer;border-radius:10px;font-family:'Courier New',monospace;
+  font-size:clamp(11.5px,2.5vw,13.5px);
+  transition:all .22s;text-align:left;
+  box-shadow:0 0 10px rgba(90,24,192,.22);
+  position:relative;overflow:hidden;
+  min-height:var(--tap);display:flex;flex-direction:column;justify-content:center;
+  -webkit-user-select:none;user-select:none;
 }
-.menu-btn::before{
+.mbtn-label{font-weight:bold;letter-spacing:1.5px;}
+.mbtn-desc{font-size:clamp(9px,2vw,10.5px);color:var(--label);margin-top:3px;opacity:.85;}
+.mbtn::before{
   content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,32,96,.2),transparent);
-  transition:left .45s;
+  background:linear-gradient(90deg,transparent,rgba(255,26,94,.18),transparent);
+  transition:left .38s;
 }
-.menu-btn:hover::before{left:100%;}
-.menu-btn:hover{
-  background:linear-gradient(135deg,rgba(106,31,208,.35),rgba(255,32,96,.25));
-  transform:translateX(6px);border-color:var(--accent);
-  box-shadow:0 0 24px rgba(106,31,208,.55),0 0 40px rgba(255,32,96,.25);
+.mbtn:hover::before,.mbtn:active::before{left:100%;}
+.mbtn:hover,.mbtn:active{
+  background:linear-gradient(135deg,rgba(90,24,192,.32),rgba(255,26,94,.22));
+  border-color:var(--accent);
+  box-shadow:0 0 22px rgba(90,24,192,.52),0 0 36px rgba(255,26,94,.22);
+  transform:translateY(-1px);
 }
+.mbtn-new{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,212,240,.25);}
+.mbtn-new .mbtn-label{color:var(--cyan);}
+.mbtn-new .mbtn-desc{color:rgba(0,212,240,.65);}
 
 /* ── PANELS ── */
 .panel{
   background:var(--panel);border:1.5px solid var(--border);border-radius:14px;
-  padding:24px;margin-top:18px;display:none;max-height:88vh;overflow-y:auto;
-  box-shadow:0 0 44px rgba(106,31,208,.55),inset 0 0 22px rgba(255,32,96,.07);
-  backdrop-filter:blur(16px);
+  padding:clamp(14px,4vw,22px);margin-top:14px;
+  display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
+  box-shadow:0 0 48px rgba(90,24,192,.5),inset 0 0 24px rgba(255,26,94,.06);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--accent2) transparent;
 }
-.panel::-webkit-scrollbar{width:10px;}
-.panel::-webkit-scrollbar-track{background:rgba(106,31,208,.1);border-radius:8px;}
-.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6a1fd0,#ff2060);border-radius:8px;}
-.panel.active{display:block;animation:slideIn .35s ease-out;}
-@keyframes slideIn{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+.panel::-webkit-scrollbar{width:5px;}
+.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:4px;}
+.panel.active{display:block;animation:slideIn .28s ease-out;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
 
-.panel-title{
-  color:var(--accent);text-align:center;margin-bottom:22px;font-size:19px;
-  border-bottom:1.5px solid var(--border);padding-bottom:13px;letter-spacing:3px;
-  text-shadow:0 0 14px var(--accent);
+.ptitle{
+  color:var(--accent);text-align:center;margin-bottom:18px;
+  font-size:clamp(13px,3.2vw,18px);
+  border-bottom:1.5px solid var(--border);padding-bottom:12px;
+  letter-spacing:clamp(2px,2vw,4px);text-shadow:0 0 12px var(--accent);
 }
 
 /* ── INPUT ── */
-.igroup{margin-bottom:18px;}
-.igroup label{display:block;margin-bottom:8px;color:var(--label);font-size:13px;letter-spacing:1px;}
-.igroup input{
-  width:100%;padding:13px 16px;
-  background:rgba(8,0,18,.75);border:1.5px solid var(--border);
-  color:var(--accent);border-radius:8px;font-family:'Courier New',monospace;
-  font-size:14px;transition:all .25s;
+.ig{margin-bottom:14px;}
+.ig label{display:block;margin-bottom:6px;color:var(--label);font-size:clamp(9.5px,2.2vw,11.5px);letter-spacing:1.5px;}
+.ig input,.ig select{
+  width:100%;padding:clamp(11px,2.8vw,13px) clamp(12px,3vw,15px);
+  background:rgba(5,0,15,.82);border:1.5px solid var(--border);
+  color:var(--accent);border-radius:9px;
+  font-family:'Courier New',monospace;font-size:clamp(12px,2.8vw,14px);
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
 }
-.igroup input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 18px rgba(106,31,208,.55);}
+.ig input:focus,.ig select:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 16px rgba(90,24,192,.5);
+}
 
 /* ── BUTTONS ── */
-.btn-run{
-  background:linear-gradient(135deg,#6a1fd0,#ff0060);
-  color:#fff;border:none;padding:13px 32px;border-radius:8px;
-  cursor:pointer;font-family:'Courier New',monospace;font-size:15px;
-  font-weight:bold;transition:all .25s;box-shadow:0 0 18px rgba(106,31,208,.55);
+.brow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:2px;}
+.brun{
+  background:linear-gradient(135deg,#5a18c0,#e0003c);
+  color:#fff;border:none;
+  padding:clamp(11px,2.8vw,13px) clamp(18px,4.5vw,30px);
+  border-radius:9px;cursor:pointer;font-family:'Courier New',monospace;
+  font-size:clamp(12px,2.8vw,14px);font-weight:bold;transition:all .22s;
+  box-shadow:0 0 16px rgba(90,24,192,.5);
+  min-height:var(--tap);-webkit-user-select:none;user-select:none;
 }
-.btn-run:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(106,31,208,.8),0 0 40px rgba(255,0,96,.5);}
-.btn-back{
-  background:rgba(106,31,208,.25);color:var(--text);border:1px solid var(--border);
-  padding:11px 22px;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace;
-  margin-left:10px;transition:all .25s;font-size:14px;
+.brun:hover,.brun:active{transform:scale(1.04);box-shadow:0 0 26px rgba(90,24,192,.8),0 0 38px rgba(255,26,94,.45);}
+.bback{
+  background:rgba(90,24,192,.2);color:var(--text);border:1px solid var(--border);
+  padding:clamp(11px,2.8vw,13px) clamp(14px,3.5vw,20px);
+  border-radius:9px;cursor:pointer;font-family:'Courier New',monospace;
+  font-size:clamp(11px,2.5vw,13px);transition:all .22s;min-height:var(--tap);
+  -webkit-user-select:none;user-select:none;
 }
-.btn-back:hover{background:rgba(106,31,208,.45);box-shadow:0 0 14px rgba(106,31,208,.5);}
-.btn-mini{
-  background:linear-gradient(135deg,#6a1fd0,#ff0060);color:#fff;border:none;
-  padding:9px 18px;border-radius:6px;cursor:pointer;font-family:'Courier New',monospace;
-  font-size:13px;margin-top:12px;transition:all .25s;display:inline-block;
+.bback:hover,.bback:active{background:rgba(90,24,192,.4);box-shadow:0 0 12px rgba(90,24,192,.45);}
+.bmini{
+  background:linear-gradient(135deg,#5a18c0,#e0003c);color:#fff;border:none;
+  padding:9px 16px;border-radius:7px;cursor:pointer;
+  font-family:'Courier New',monospace;font-size:clamp(10px,2.3vw,12px);
+  margin-top:11px;transition:all .22s;display:inline-block;min-height:40px;
 }
-.btn-mini:hover{transform:scale(1.03);box-shadow:0 0 18px rgba(255,0,96,.6);}
+.bmini:hover,.bmini:active{transform:scale(1.03);box-shadow:0 0 16px rgba(255,26,94,.55);}
 
 /* ── LOADER ── */
-.loader{
-  text-align:center;color:var(--accent);padding:22px;display:none;
-  font-size:15px;text-shadow:0 0 10px var(--accent);
-}
-.loader.on{display:block;animation:loadPulse 1.2s ease-in-out infinite;}
-@keyframes loadPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
-.loader-bar{
-  height:3px;background:rgba(106,31,208,.2);border-radius:2px;margin-top:10px;
-  overflow:hidden;
-}
-.loader-bar-fill{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,#6a1fd0,#ff0060,#00e5ff);
-  border-radius:2px;animation:barLoad 2s ease-in-out infinite;
-}
-@keyframes barLoad{0%{width:0%;}50%{width:80%;}100%{width:100%;}}
+.loader{text-align:center;color:var(--accent);padding:18px;display:none;font-size:clamp(11px,2.5vw,14px);}
+.loader.on{display:block;animation:lpulse 1.1s ease-in-out infinite;}
+@keyframes lpulse{0%,100%{opacity:.45;}50%{opacity:1;}}
+.lbar{height:2px;background:rgba(90,24,192,.18);border-radius:2px;margin-top:8px;overflow:hidden;}
+.lbar-f{height:100%;background:linear-gradient(90deg,#5a18c0,#ff1a5e,#00d4f0);animation:lb 2s ease-in-out infinite;}
+@keyframes lb{0%{width:0%}50%{width:78%}100%{width:100%}}
 
 /* ── DATA ── */
-.data-wrap{background:rgba(8,0,18,.55);padding:18px;border-radius:10px;margin-top:14px;border:1px solid rgba(106,31,208,.28);}
-.sec{color:var(--accent);font-size:15px;margin:22px 0 12px;padding-bottom:7px;border-bottom:1.5px solid var(--border);letter-spacing:2px;text-shadow:0 0 8px var(--accent);}
-.row{padding:7px 0;border-bottom:1px solid rgba(106,31,208,.15);display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;}
-.lbl{color:var(--label);min-width:210px;font-size:13px;flex-shrink:0;}
-.val{color:var(--val);font-size:13px;word-break:break-all;}
-.val a{color:var(--accent2);text-decoration:none;border-bottom:1px dashed var(--accent2);}
-.val a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+.dw{background:rgba(5,0,12,.5);padding:clamp(12px,3vw,17px);border-radius:10px;margin-top:12px;border:1px solid rgba(90,24,192,.25);}
+.sec{
+  color:var(--accent);font-size:clamp(10px,2.5vw,13px);
+  margin:20px 0 9px;padding-bottom:6px;
+  border-bottom:1px solid rgba(90,24,192,.35);
+  letter-spacing:2px;text-shadow:0 0 7px var(--accent);
+}
+.row{padding:5px 0;border-bottom:1px solid rgba(90,24,192,.1);display:flex;flex-wrap:wrap;gap:2px 6px;align-items:baseline;}
+@media(min-width:500px){.lbl{min-width:195px;}}
+@media(max-width:499px){.lbl{width:100%;font-size:10px;}}
+.lbl{color:var(--label);font-size:clamp(9.5px,2.2vw,12px);flex-shrink:0;}
+.val{color:var(--val);font-size:clamp(10.5px,2.4vw,12.5px);word-break:break-all;flex:1;}
+.val a{color:var(--accent2);text-decoration:none;border-bottom:1px dashed rgba(144,16,224,.4);}
+.val a:hover{color:var(--accent);}
 
-/* ── STAT GRID ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin:14px 0;}
-.stat{background:rgba(8,0,18,.5);padding:11px;border-radius:7px;border:1px solid rgba(106,31,208,.28);text-align:center;}
-.slab{color:var(--label);font-size:11px;margin-bottom:4px;letter-spacing:1px;}
-.sval{color:var(--val);font-size:17px;font-weight:bold;text-shadow:0 0 8px var(--accent);}
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin:11px 0;}
+@media(max-width:380px){.stats{grid-template-columns:repeat(2,1fr);}}
+.stat{background:rgba(5,0,12,.48);padding:10px;border-radius:7px;border:1px solid rgba(90,24,192,.25);text-align:center;}
+.slab{color:var(--label);font-size:clamp(8px,1.8vw,10px);margin-bottom:3px;letter-spacing:1px;}
+.sval{color:var(--val);font-size:clamp(13px,3vw,16px);font-weight:bold;text-shadow:0 0 7px var(--accent);}
 
 /* ── BADGES ── */
-.badge{display:inline-block;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:bold;margin-left:6px;vertical-align:middle;}
-.b-ok  {background:rgba(0,255,136,.12);color:var(--green);border:1px solid var(--green);}
-.b-warn{background:rgba(255,204,0,.12);color:var(--yellow);border:1px solid var(--yellow);}
-.b-bad {background:rgba(255,51,51,.12);color:var(--red);border:1px solid var(--red);}
-.b-info{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid var(--cyan);}
-.b-vip {background:rgba(160,32,240,.2);color:#c070ff;border:1px solid #a020f0;}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:bold;margin-left:5px;vertical-align:middle;}
+.bok  {background:rgba(0,239,128,.1);color:var(--green);border:1px solid var(--green);}
+.bwarn{background:rgba(240,192,0,.1);color:var(--yellow);border:1px solid var(--yellow);}
+.bbad {background:rgba(255,40,40,.1);color:var(--red);border:1px solid var(--red);}
+.binfo{background:rgba(0,212,240,.1);color:var(--cyan);border:1px solid var(--cyan);}
 
 /* ── PLATFORM GRID ── */
-.platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:8px;}
-.plat{
-  background:rgba(8,0,18,.5);border:1px solid rgba(106,31,208,.28);border-radius:7px;
-  padding:9px 13px;display:flex;align-items:center;gap:10px;transition:all .2s;
-}
-.plat:hover{border-color:var(--accent);background:rgba(255,32,96,.07);}
-.pname{color:var(--label);min-width:110px;font-size:12px;}
-.plink a{color:var(--accent2);font-size:11px;text-decoration:none;}
-.plink a:hover{color:var(--accent);}
+.platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:7px;margin-top:7px;}
+@media(max-width:460px){.platgrid{grid-template-columns:1fr;}}
+.plat{background:rgba(5,0,12,.48);border:1px solid rgba(90,24,192,.25);border-radius:7px;padding:8px 11px;display:flex;align-items:center;gap:8px;transition:all .18s;}
+.plat:hover,.plat:active{border-color:var(--accent);background:rgba(255,26,94,.06);}
+.pname{color:var(--label);min-width:95px;font-size:clamp(9.5px,2.2vw,11.5px);}
+.plink a{color:var(--accent2);font-size:clamp(9px,2vw,11px);text-decoration:none;}
 
 /* ── ALERTS ── */
-.alert-warn{color:var(--yellow);padding:13px 16px;background:rgba(255,204,0,.08);border:1.5px solid var(--yellow);border-radius:8px;margin-top:13px;font-size:13px;}
-.alert-info{color:var(--cyan);padding:13px 16px;background:rgba(0,229,255,.08);border:1.5px solid var(--cyan);border-radius:8px;margin-top:13px;font-size:13px;}
-.alert-err {color:var(--red);padding:13px 16px;background:rgba(255,51,51,.12);border:1.5px solid var(--red);border-radius:8px;margin-top:13px;}
-.alert-ok  {color:var(--green);padding:13px 16px;background:rgba(0,255,136,.08);border:1.5px solid var(--green);border-radius:8px;margin-top:13px;font-size:13px;}
+.aw{color:var(--yellow);padding:10px 14px;background:rgba(240,192,0,.07);border:1px solid rgba(240,192,0,.5);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
+.ai{color:var(--cyan);padding:10px 14px;background:rgba(0,212,240,.07);border:1px solid rgba(0,212,240,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
+.ae{color:var(--red);padding:10px 14px;background:rgba(255,40,40,.1);border:1px solid rgba(255,40,40,.5);border-radius:8px;margin-top:10px;}
+.ag{color:var(--green);padding:10px 14px;background:rgba(0,239,128,.07);border:1px solid rgba(0,239,128,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
 
-/* ── AVATAR ── */
-.ava{width:90px;height:90px;border-radius:50%;border:3px solid var(--accent2);display:block;margin:8px 0;box-shadow:0 0 22px rgba(160,32,240,.6);}
+/* ── MAP ── */
+.map-frame{width:100%;height:clamp(150px,35vw,210px);border:1px solid var(--border);border-radius:8px;margin-top:10px;}
 
-/* ── PROGRESS BAR ── */
-.prog-wrap{margin-top:5px;}
-.prog-bar{height:6px;background:rgba(106,31,208,.15);border-radius:3px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#6a1fd0,#ff0060);}
-
-/* ── MAP PREVIEW ── */
-.map-frame{width:100%;height:220px;border:1px solid var(--border);border-radius:8px;margin-top:10px;}
+/* ── AVATAR (discord) ── */
+.ava{width:clamp(60px,15vw,88px);height:clamp(60px,15vw,88px);border-radius:50%;border:2px solid var(--accent2);display:block;margin:8px 0;box-shadow:0 0 20px rgba(144,16,224,.55);}
 
 /* ── FOOTER ── */
 .footer{
-  margin-top:36px;padding:18px 22px;
-  background:rgba(255,32,96,.05);
-  border:1px solid rgba(255,32,96,.25);
-  border-radius:12px;text-align:center;
-  font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.75;
+  margin-top:26px;padding:clamp(13px,3.5vw,17px);
+  background:rgba(255,26,94,.04);
+  border:1px solid rgba(255,26,94,.2);border-radius:12px;
+  text-align:center;font-size:clamp(9.5px,2vw,11px);
+  color:rgba(255,255,255,.38);line-height:1.75;
 }
 .footer strong{color:var(--accent);}
-.footer .ftitle{color:var(--accent);font-size:12.5px;font-weight:bold;margin-bottom:7px;letter-spacing:3px;}
+.ftitle{color:var(--accent);font-size:clamp(10px,2.2vw,12px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
+
+@media(max-width:600px){body{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));}}
 </style>
 </head>
 <body>
+
+<!-- LIVE WALLPAPER CANVAS -->
+<canvas id="cvs"></canvas>
+
 <div class="wrap">
 
 <div class="banner">
-    _____ __             ______                __  
-   / ___// /_____ ______/_  __/________ ______/ /__
-   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
-  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
- /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  
-
-      [ + ]  M A X I M U M  I N T E L  E D I T I O N  v3.0  [ + ]
+<span class="ban-ascii">   _____ __             ______                __  
+  / ___// /_____ ______/_  __/________ ______/ /__
+  \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
+ ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
+/____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  </span>
+<span class="ban-sub">M A X I M U M  I N T E L  v 5 . 0</span>
 </div>
 
-<!-- MAIN MENU -->
+<!-- MENU -->
 <div id="mainMenu" class="menu">
-  <div class="menu-title">◈ STARTRACK SYSTEM ◈</div>
-  <div class="menu-options">
-    <button class="menu-btn" onclick="show('ip')">[ 01 ] IP TRACKER ──── Geo · ASN · Abuse · Threat · Reverse · Maps · ISP</button>
-    <button class="menu-btn" onclick="show('myip')">[ 02 ] MEINE IP ──────── Vollanalyse · Browser · Gerät · Netzwerk · Canvas</button>
-    <button class="menu-btn" onclick="show('username')">[ 03 ] USERNAME ─────── 70+ Plattformen · Live-Check · Google Dorks</button>
-    <button class="menu-btn" onclick="show('phone')">[ 04 ] TELEFON ──────── Carrier · Prefix · Zeitzone · OSINT · Links</button>
-    <button class="menu-btn" onclick="show('email')">[ 05 ] E-MAIL ────────── DNS · MX · SPF/DKIM/DMARC · Breach · Anbieter</button>
-    <button class="menu-btn" onclick="show('discord')">[ 06 ] DISCORD ──────── Snowflake · Badges · Avatar · Nitro · Aktivität</button>
-    <button class="menu-btn" onclick="show('domain')">[ 07 ] DOMAIN ───────── DNS · SSL · Tech · Geo · Shodan · History</button>
+  <div class="menu-title">STARTRACK SYSTEM</div>
+  <div class="menu-grid">
+    <button class="mbtn" onclick="show('ip')">
+      <span class="mbtn-label">[ 01 ] IP TRACKER</span>
+      <span class="mbtn-desc">Geo + ASN + Threat + Adresse + Maps</span>
+    </button>
+    <button class="mbtn" onclick="show('myip')">
+      <span class="mbtn-label">[ 02 ] MEINE IP</span>
+      <span class="mbtn-desc">Browser + Fingerprint + Geraet</span>
+    </button>
+    <button class="mbtn" onclick="show('username')">
+      <span class="mbtn-label">[ 03 ] USERNAME</span>
+      <span class="mbtn-desc">70+ Plattformen + OSINT</span>
+    </button>
+    <button class="mbtn" onclick="show('phone')">
+      <span class="mbtn-label">[ 04 ] TELEFON</span>
+      <span class="mbtn-desc">Carrier + Prefix + Reverse Lookup</span>
+    </button>
+    <button class="mbtn" onclick="show('email')">
+      <span class="mbtn-label">[ 05 ] E-MAIL</span>
+      <span class="mbtn-desc">DNS + MX + SPF/DMARC + Breach</span>
+    </button>
+    <button class="mbtn" onclick="show('discord')">
+      <span class="mbtn-label">[ 06 ] DISCORD</span>
+      <span class="mbtn-desc">Snowflake + Badges + Praesenz</span>
+    </button>
+    <button class="mbtn" onclick="show('domain')">
+      <span class="mbtn-label">[ 07 ] DOMAIN</span>
+      <span class="mbtn-desc">DNS + SSL + Geo + Shodan</span>
+    </button>
+    <button class="mbtn mbtn-new" onclick="show('mac')">
+      <span class="mbtn-label">[ 08 ] MAC / NETZWERK</span>
+      <span class="mbtn-desc">Hersteller + OUI + Geraetetyp + Ports</span>
+    </button>
   </div>
 </div>
 
-<!-- IP -->
+<!-- PANELS -->
 <div id="ip" class="panel">
-  <div class="panel-title">◈ IP TRACKER ◈</div>
-  <div class="igroup"><label>IP-ADRESSE EINGEBEN (IPv4 oder IPv6)</label>
-    <input id="ipInput" placeholder="z.B. 8.8.8.8 oder 2001:4860:4860::8888" onkeydown="if(e=event,e.key==='Enter')trackIP()">
+  <div class="ptitle">IP TRACKER</div>
+  <div class="ig"><label>IP-ADRESSE (IPv4 oder IPv6)</label>
+    <input id="ipInput" placeholder="z.B. 8.8.8.8" autocomplete="off" inputmode="text">
   </div>
-  <button class="btn-run" onclick="trackIP()">▶ TRACKEN</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="ipL">⚡ Analysiere mit 6 APIs...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackIP()">TRACKEN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="ipL">Analysiere mit 6 APIs...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="ipR"></div>
 </div>
 
-<!-- MY IP -->
 <div id="myip" class="panel">
-  <div class="panel-title">◈ MEINE IP ◈</div>
-  <div class="loader on" id="myipL">⚡ Sammle alle Infos...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="ptitle">MEINE IP</div>
+  <div class="loader on" id="myipL">Sammle alle Infos...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="myipR"></div>
-  <button class="btn-back" onclick="back()" style="margin-top:14px">← ZURÜCK</button>
+  <div class="brow" style="margin-top:14px"><button class="bback" onclick="back()">ZURUECK</button></div>
 </div>
 
-<!-- USERNAME -->
 <div id="username" class="panel">
-  <div class="panel-title">◈ USERNAME TRACKER ◈</div>
-  <div class="igroup"><label>BENUTZERNAMEN EINGEBEN</label>
-    <input id="unInput" placeholder="z.B. johndoe123" onkeydown="if(e=event,e.key==='Enter')trackUN()">
+  <div class="ptitle">USERNAME TRACKER</div>
+  <div class="ig"><label>BENUTZERNAME</label>
+    <input id="unInput" placeholder="z.B. johndoe123" autocomplete="off">
   </div>
-  <button class="btn-run" onclick="trackUN()">▶ SUCHEN</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="unL">⚡ Durchsuche 70+ Plattformen...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackUN()">SUCHEN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="unL">Durchsuche 70+ Plattformen...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="unR"></div>
 </div>
 
-<!-- PHONE -->
 <div id="phone" class="panel">
-  <div class="panel-title">◈ TELEFON TRACKER ◈</div>
-  <div class="igroup"><label>TELEFONNUMMER (mit Ländervorwahl)</label>
-    <input id="phInput" placeholder="z.B. +4915112345678" onkeydown="if(e=event,e.key==='Enter')trackPhone()">
+  <div class="ptitle">TELEFON TRACKER</div>
+  <div class="ig"><label>TELEFONNUMMER (mit Laendervorwahl)</label>
+    <input id="phInput" placeholder="z.B. +4915112345678" inputmode="tel" autocomplete="tel">
   </div>
-  <button class="btn-run" onclick="trackPhone()">▶ ANALYSIEREN</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="phL">⚡ Analysiere Nummer...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackPhone()">ANALYSIEREN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="phL">Analysiere...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="phR"></div>
 </div>
 
-<!-- EMAIL -->
 <div id="email" class="panel">
-  <div class="panel-title">◈ E-MAIL TRACKER ◈</div>
-  <div class="igroup"><label>E-MAIL ADRESSE EINGEBEN</label>
-    <input id="emInput" placeholder="z.B. user@example.com" onkeydown="if(e=event,e.key==='Enter')trackEmail()">
+  <div class="ptitle">E-MAIL TRACKER</div>
+  <div class="ig"><label>E-MAIL ADRESSE</label>
+    <input id="emInput" placeholder="user@example.com" inputmode="email" autocomplete="email">
   </div>
-  <button class="btn-run" onclick="trackEmail()">▶ ANALYSIEREN</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="emL">⚡ Prüfe DNS + Sicherheit...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackEmail()">ANALYSIEREN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="emL">Pruefe DNS + Sicherheit...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="emR"></div>
 </div>
 
-<!-- DISCORD -->
 <div id="discord" class="panel">
-  <div class="panel-title">◈ DISCORD LOOKUP ◈</div>
-  <div class="igroup"><label>DISCORD USER ID EINGEBEN</label>
-    <input id="dcInput" placeholder="z.B. 1167475880260550820" onkeydown="if(e=event,e.key==='Enter')trackDC()">
+  <div class="ptitle">DISCORD LOOKUP</div>
+  <div class="ig"><label>DISCORD USER ID</label>
+    <input id="dcInput" placeholder="z.B. 1167475880260550820" inputmode="numeric" autocomplete="off">
   </div>
-  <button class="btn-run" onclick="trackDC()">▶ LOOKUP</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="dcL">⚡ Fetche Discord-Profil...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackDC()">LOOKUP</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="dcL">Fetche Profil...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="dcR"></div>
 </div>
 
-<!-- DOMAIN -->
 <div id="domain" class="panel">
-  <div class="panel-title">◈ DOMAIN TRACKER ◈</div>
-  <div class="igroup"><label>DOMAIN EINGEBEN</label>
-    <input id="dmInput" placeholder="z.B. google.com" onkeydown="if(e=event,e.key==='Enter')trackDomain()">
+  <div class="ptitle">DOMAIN TRACKER</div>
+  <div class="ig"><label>DOMAIN</label>
+    <input id="dmInput" placeholder="z.B. google.com" inputmode="url" autocomplete="off">
   </div>
-  <button class="btn-run" onclick="trackDomain()">▶ ANALYSIEREN</button>
-  <button class="btn-back" onclick="back()">← ZURÜCK</button>
-  <div class="loader" id="dmL">⚡ Analysiere DNS + SSL + Geo...<div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
+  <div class="brow">
+    <button class="brun" onclick="trackDomain()">ANALYSIEREN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="dmL">Analysiere DNS + SSL...<div class="lbar"><div class="lbar-f"></div></div></div>
   <div id="dmR"></div>
 </div>
 
-<!-- FOOTER -->
+<!-- MAC / NETWORK TRACKER -->
+<div id="mac" class="panel">
+  <div class="ptitle">MAC-ADRESSE / NETZWERK TRACKER</div>
+  <div class="ig"><label>MAC-ADRESSE EINGEBEN</label>
+    <input id="macInput" placeholder="z.B. 00:1A:2B:3C:4D:5E oder 001A2B3C4D5E" autocomplete="off" inputmode="text">
+  </div>
+  <div class="ig"><label>ODER: HOSTNAME / IP FUER PORT-SCAN</label>
+    <input id="macHostInput" placeholder="z.B. router.fritz.box oder 192.168.1.1" autocomplete="off">
+  </div>
+  <div class="brow">
+    <button class="brun" onclick="trackMAC()">ANALYSIEREN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="macL">Schlage OUI-Datenbank nach...<div class="lbar"><div class="lbar-f"></div></div></div>
+  <div id="macR"></div>
+</div>
+
 <div class="footer">
-  <div class="ftitle">⚠ HAFTUNGSAUSSCHLUSS — NUTZUNG AUF EIGENE HAFTUNG ⚠</div>
-  <strong>Dieses Tool wird ohne jegliche Gewähr bereitgestellt.</strong> Die Nutzung erfolgt vollständig auf <strong>eigene Haftung und eigenes Risiko</strong> des Nutzers.
-  Jeglicher Missbrauch — insbesondere Stalking, Doxxing, Belästigung, unbefugte Überwachung oder andere illegale Aktivitäten — ist <strong>strengstens untersagt</strong> und kann zivil- und/oder strafrechtlich verfolgt werden.
-  Der Entwickler übernimmt <strong>keinerlei Haftung</strong> für direkte, indirekte oder Folgeschäden. Alle Daten stammen aus öffentlich zugänglichen APIs (Open Source Intelligence).
-  Mit der Nutzung bestätigst du, dass du <strong>volljährig</strong> bist, die geltenden Gesetze kennst und die <strong>alleinige rechtliche Verantwortung</strong> für dein Handeln trägst.
+  <div class="ftitle">HAFTUNGSAUSSCHLUSS -- NUTZUNG AUF EIGENE HAFTUNG</div>
+  <strong>Dieses Tool wird ohne jegliche Gewaehr bereitgestellt.</strong> Die Nutzung erfolgt vollstaendig auf
+  <strong>eigene Haftung und eigenes Risiko</strong> des Nutzers.
+  Jeglicher Missbrauch -- Stalking, Doxxing, Belaestigung, unbefugte Ueberwachung -- ist
+  <strong>strengstens untersagt</strong> und strafbar.
+  Der Entwickler uebernimmt <strong>keinerlei Haftung</strong> fuer Schaeden oder rechtliche Konsequenzen.
+  Alle Daten stammen aus oeffentlich zugaenglichen Quellen (Open Source Intelligence).
+  Mit der Nutzung bestaedigst du, die <strong>alleinige rechtliche Verantwortung</strong> zu tragen.
 </div>
 </div><!-- /wrap -->
 
+<!-- ═══════════════════════════════════════════════════════
+     LIVE WALLPAPER
+═══════════════════════════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════════════
-const $ = id => document.getElementById(id);
+(function(){
+  const cv=document.getElementById('cvs');
+  const ctx=cv.getContext('2d');
+  let W,H,pts,mouse={x:-9999,y:-9999};
+
+  const C={
+    bg:'#05000f',
+    node:'rgba(255,26,94,',
+    node2:'rgba(0,212,240,',
+    line:'rgba(144,16,224,',
+    scan:'rgba(0,212,240,',
+    pulse:'rgba(255,26,94,'
+  };
+
+  function resize(){
+    W=cv.width=window.innerWidth;
+    H=cv.height=window.innerHeight;
+    init();
+  }
+
+  function init(){
+    const N=Math.min(Math.floor((W*H)/12000),120);
+    pts=[];
+    for(let i=0;i<N;i++){
+      pts.push({
+        x:Math.random()*W,
+        y:Math.random()*H,
+        vx:(Math.random()-.5)*.35,
+        vy:(Math.random()-.5)*.35,
+        r:Math.random()*1.6+.5,
+        pulse:Math.random()*Math.PI*2,
+        type:Math.random()>.85?1:0, // 1 = cyan accent node
+        life:Math.random()*100
+      });
+    }
+  }
+
+  // Scanline state
+  let scanY=-20;
+  let frameCount=0;
+  let dataStreams=[];
+  for(let i=0;i<6;i++){
+    dataStreams.push({
+      x:Math.random()*1,
+      chars:'01',
+      y:Math.random(),
+      speed:.002+Math.random()*.004,
+      alpha:Math.random()*.35+.05,
+      col:Math.random()>.5?0:1
+    });
+  }
+
+  function drawHexGrid(){
+    ctx.save();
+    ctx.strokeStyle='rgba(90,24,192,0.045)';
+    ctx.lineWidth=.5;
+    const size=44,h=size*Math.sqrt(3);
+    const cols=Math.ceil(W/(size*1.5))+2;
+    const rows=Math.ceil(H/h)+2;
+    for(let c=-1;c<cols;c++){
+      for(let rr=-1;rr<rows;rr++){
+        const cx=c*size*1.5;
+        const cy=rr*h+(c%2)*h*.5;
+        ctx.beginPath();
+        for(let s=0;s<6;s++){
+          const a=Math.PI/3*s-Math.PI/6;
+          const px=cx+size*.92*Math.cos(a);
+          const py=cy+size*.92*Math.sin(a);
+          s===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+        }
+        ctx.closePath();ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawDataStreams(){
+    ctx.save();
+    ctx.font=`${Math.max(9,W*.009)}px 'Courier New',monospace`;
+    dataStreams.forEach(ds=>{
+      ds.y+=ds.speed;
+      if(ds.y>1.1)ds.y=-0.05;
+      const color=ds.col===0?`rgba(255,26,94,${ds.alpha})`:`rgba(0,212,240,${ds.alpha})`;
+      ctx.fillStyle=color;
+      const x=ds.x*W;
+      const y=ds.y*H;
+      const chars=Math.floor(Math.random()*8+4);
+      for(let i=0;i<chars;i++){
+        const c=ds.chars[Math.floor(Math.random()*ds.chars.length)];
+        ctx.globalAlpha=(1-i/chars)*ds.alpha*1.2;
+        ctx.fillText(c,x,y-i*14);
+      }
+    });
+    ctx.globalAlpha=1;
+    ctx.restore();
+  }
+
+  function drawScanline(){
+    scanY+=.55;
+    if(scanY>H+30)scanY=-30;
+    const grad=ctx.createLinearGradient(0,scanY-12,0,scanY+12);
+    grad.addColorStop(0,'rgba(0,212,240,0)');
+    grad.addColorStop(.5,'rgba(0,212,240,0.04)');
+    grad.addColorStop(1,'rgba(0,212,240,0)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,scanY-12,W,24);
+  }
+
+  function drawNodes(){
+    const DIST=W*.12,DIST2=W*.06;
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.pulse+=.018; p.life++;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      // mouse repel
+      const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){p.vx+=dx/d*.04;p.vy+=dy/d*.04;}
+      // speed cap
+      const spd=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if(spd>.8){p.vx=p.vx/spd*.8;p.vy=p.vy/spd*.8;}
+    });
+
+    // Draw connections
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          const a=(1-d/DIST)*.28;
+          ctx.strokeStyle=`rgba(90,24,192,${a})`;
+          ctx.lineWidth=.6;
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    pts.forEach(p=>{
+      const pAlpha=.45+Math.sin(p.pulse)*.25;
+      const col=p.type===1?C.node2:C.node;
+      // Glow ring
+      const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4.5);
+      grd.addColorStop(0,col+(pAlpha*.8)+')');
+      grd.addColorStop(1,col+'0)');
+      ctx.fillStyle=grd;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*4.5,0,Math.PI*2);ctx.fill();
+      // Core dot
+      ctx.fillStyle=col+(pAlpha)+')';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    });
+  }
+
+  function drawCornerHUD(){
+    ctx.save();
+    ctx.strokeStyle='rgba(0,212,240,0.14)';
+    ctx.lineWidth=1;
+    const s=20;
+    // top-left
+    ctx.beginPath();ctx.moveTo(14,14+s);ctx.lineTo(14,14);ctx.lineTo(14+s,14);ctx.stroke();
+    // top-right
+    ctx.beginPath();ctx.moveTo(W-14-s,14);ctx.lineTo(W-14,14);ctx.lineTo(W-14,14+s);ctx.stroke();
+    // bottom-left
+    ctx.beginPath();ctx.moveTo(14,H-14-s);ctx.lineTo(14,H-14);ctx.lineTo(14+s,H-14);ctx.stroke();
+    // bottom-right
+    ctx.beginPath();ctx.moveTo(W-14-s,H-14);ctx.lineTo(W-14,H-14);ctx.lineTo(W-14,H-14-s);ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPulseRings(){
+    frameCount++;
+    if(frameCount%90===0){
+      pts.forEach(p=>{if(Math.random()>.94)p._ring={r:0,max:60,a:.5};});
+    }
+    pts.forEach(p=>{
+      if(!p._ring)return;
+      p._ring.r+=1.2;
+      const a=p._ring.a*(1-p._ring.r/p._ring.max);
+      if(a<=0){delete p._ring;return;}
+      const col=p.type===1?C.node2:C.pulse;
+      ctx.strokeStyle=col+a+')';
+      ctx.lineWidth=.8;
+      ctx.beginPath();ctx.arc(p.x,p.y,p._ring.r,0,Math.PI*2);ctx.stroke();
+    });
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    drawHexGrid();
+    drawDataStreams();
+    drawScanline();
+    drawNodes();
+    drawPulseRings();
+    drawCornerHUD();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize',resize);
+  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+  window.addEventListener('touchmove',e=>{if(e.touches[0]){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY;}},{passive:true});
+  window.addEventListener('touchend',()=>{mouse.x=-9999;mouse.y=-9999;});
+
+  resize();
+  loop();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     APP LOGIC
+═══════════════════════════════════════════════════════ -->
+<script>
+const $=id=>document.getElementById(id);
 function show(t){
   $('mainMenu').style.display='none';
   $(t).classList.add('active');
-  if(t==='myip') getMyIP();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(t==='myip')getMyIP();
 }
 function back(){
   $('mainMenu').style.display='block';
@@ -350,1207 +649,647 @@ function back(){
     p.classList.remove('active');
     const r=p.querySelector('[id$="R"]');if(r)r.innerHTML='';
   });
-  // reset loaders
-  ['ipL','myipL','unL','phL','emL','dcL','dmL'].forEach(id=>{
-    const el=$(id); if(el){el.classList.remove('on');}
-  });
+  document.querySelectorAll('.loader').forEach(l=>l.classList.remove('on'));
   $('myipL').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function ld(id,on){const el=$(id);if(el)el.classList[on?'add':'remove']('on');}
-function dms(lat,lon){
-  const f=(v,d)=>{const dir=v>=0?d[0]:d[1];v=Math.abs(v);const g=Math.floor(v),m=Math.floor((v-g)*60),s=((v-g-m/60)*3600).toFixed(1);return`${g}°${m}'${s}"${dir}`;};
-  return`${f(lat,'NS')}, ${f(lon,'EW')}`;
-}
-function r(label,value,badge=''){return`<div class="row"><span class="lbl">${label}</span><span class="val">${value}${badge?` <span class="badge ${badge.cls}">${badge.txt}</span>`:''}</span></div>`;}
-function sec(t){return`<div class="sec">▸ ${t}</div>`;}
-function stats(...items){
-  return`<div class="stats">${items.map(([l,v])=>`<div class="stat"><div class="slab">${l}</div><div class="sval">${v}</div></div>`).join('')}</div>`;
-}
-function lnk(text,url){return`<a href="${url}" target="_blank">${text}</a>`;}
-function safeFetch(url,opts){return fetch(url,opts||{}).then(r=>r.json()).catch(()=>null);}
+function ld(id,on){const e=$(id);if(e)e.classList[on?'add':'remove']('on');}
+function row(label,value){return`<div class="row"><span class="lbl">${label}</span><span class="val">${value}</span></div>`;}
+function sec(t){return`<div class="sec">${t}</div>`;}
+function lnk(text,url){return`<a href="${url}" target="_blank" rel="noopener">${text}</a>`;}
+function sf(url,opts){return fetch(url,opts||{}).then(r=>r.json()).catch(()=>null);}
+function dms(lat,lon){const f=(v,d)=>{const dir=v>=0?d[0]:d[1];v=Math.abs(v);const g=Math.floor(v),m=Math.floor((v-g)*60),s=((v-g-m/60)*3600).toFixed(1);return`${g}${String.fromCharCode(176)}${m}'${s}"${dir}`;};return`${f(lat,'NS')}, ${f(lon,'EW')}`;}
+function stats(...items){return`<div class="stats">${items.map(([l,v])=>`<div class="stat"><div class="slab">${l}</div><div class="sval">${v}</div></div>`).join('')}</div>`;}
+function isPrivate(ip){return/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd)/.test(ip);}
+function sunStatus(lat,lon){if(!lat||!lon)return'N/A';const h=new Date().getUTCHours()+(lon/15);const l=((h%24)+24)%24;if(l>=6&&l<8)return'Sonnenaufgang';if(l>=8&&l<18)return'Tag';if(l>=18&&l<20)return'Sonnenuntergang';return'Nacht';}
 
-// ══════════════════════════════════════════════════════════
+['ipInput','unInput','phInput','emInput','dcInput','dmInput','macInput','macHostInput'].forEach(id=>{
+  const el=$(id);if(!el)return;
+  const map={ipInput:'trackIP',unInput:'trackUN',phInput:'trackPhone',emInput:'trackEmail',dcInput:'trackDC',dmInput:'trackDomain',macInput:'trackMAC',macHostInput:'trackMAC'};
+  el.addEventListener('keydown',e=>{if(e.key==='Enter')window[map[id]]&&window[map[id]]();});
+});
+
+// ──────────────────────────────────────────
 // IP TRACKER
-// ══════════════════════════════════════════════════════════
-async function trackIP(prefill){
-  const ip = prefill || $('ipInput').value.trim();
-  if(!ip){$('ipR').innerHTML='<div class="alert-err">Bitte IP eingeben!</div>';return;}
-  if(prefill) $('ipInput').value=prefill;
-  ld('ipL',true); $('ipR').innerHTML='';
-
-  // 6 parallel geo APIs
-  const [r1,r2,r3,r4,r5,r6] = await Promise.allSettled([
-    safeFetch(`https://ipwho.is/${ip}`),
-    safeFetch(`http://ip-api.com/json/${ip}?fields=66846719`),
-    safeFetch(`https://ipapi.co/${ip}/json/`),
-    safeFetch(`https://get.geojs.io/v1/ip/geo/${ip}.json`),
-    safeFetch(`https://freeipapi.com/api/json/${ip}`),
-    safeFetch(`https://api.iplocation.net/?ip=${ip}`)
+// ──────────────────────────────────────────
+async function trackIP(pre){
+  const ip=pre||$('ipInput').value.trim();
+  if(!ip){$('ipR').innerHTML='<div class="ae">Bitte IP eingeben!</div>';return;}
+  if(pre)$('ipInput').value=pre;
+  ld('ipL',true);$('ipR').innerHTML='';
+  const[r1,r2,r3,r4,r5,r6]=await Promise.allSettled([
+    sf(`https://ipwho.is/${ip}`),sf(`http://ip-api.com/json/${ip}?fields=66846719`),
+    sf(`https://ipapi.co/${ip}/json/`),sf(`https://get.geojs.io/v1/ip/geo/${ip}.json`),
+    sf(`https://freeipapi.com/api/json/${ip}`),sf(`https://api.iplocation.net/?ip=${ip}`)
   ]);
-  const d1=r1.value,d2=r2.value,d3=r3.value,d4=r4.value,d5=r5.value,d6=r6.value;
-  if(d1?.success===false&&d2?.status==='fail'){ld('ipL',false);$('ipR').innerHTML='<div class="alert-err">Ungültige IP-Adresse!</div>';return;}
-
-  const lat = d1?.latitude||d2?.lat||d3?.latitude||d5?.latitude||0;
-  const lon = d1?.longitude||d2?.lon||d3?.longitude||d5?.longitude||0;
-  const isV6 = ip.includes(':');
-
-  // Reverse geocode (2 sources)
+  const d1=r1.value,d2=r2.value,d3=r3.value,d5=r5.value,d6=r6.value;
+  if(d1?.success===false&&d2?.status==='fail'){ld('ipL',false);$('ipR').innerHTML='<div class="ae">Ungueltige IP-Adresse!</div>';return;}
+  const lat=d1?.latitude||d2?.lat||d3?.latitude||d5?.latitude||0;
+  const lon=d1?.longitude||d2?.lon||d3?.longitude||d5?.longitude||0;
+  const isV6=ip.includes(':');
   let osm=null,bdc=null;
   if(lat&&lon&&!isV6){
     [osm,bdc]=await Promise.all([
-      safeFetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,{headers:{'User-Agent':'StarTrack/3.0'}}),
-      safeFetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`)
+      sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,{headers:{'User-Agent':'StarTrack/5.0'}}),
+      sf(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`)
     ]);
   }
-
-  // Abuse/threat check via DNS blacklist
-  const reversedIP = ip.split('.').reverse().join('.');
-  const [abuseChk] = await Promise.allSettled([
-    safeFetch(`https://dns.google/resolve?name=${reversedIP}.zen.spamhaus.org&type=A`)
-  ]);
-  const onSpamhaus = abuseChk.value?.Answer?.length > 0;
-
+  const rev=ip.split('.').reverse().join('.');
+  const spamRes=await sf(`https://dns.google/resolve?name=${rev}.zen.spamhaus.org&type=A`);
+  const onSpam=spamRes?.Answer?.length>0;
   ld('ipL',false);
+  const isVPN=d2?.proxy||false,isMobile=d2?.mobile||false,isHosting=d2?.hosting||false;
 
-  const isVPN=d2?.proxy||false, isMobile=d2?.mobile||false, isHosting=d2?.hosting||false;
-  const country = d1?.country||d2?.country||d5?.countryName||d6?.country_name||'N/A';
-  const city = d1?.city||d2?.city||d5?.cityName||'N/A';
-  const isp = d1?.connection?.isp||d2?.isp||d3?.org||'N/A';
-  const asn = d1?.connection?.asn||d2?.as?.split(' ')[0]||d3?.asn||'N/A';
-
-  let html = stats(
-    ['IP Version',isV6?'IPv6':'IPv4'],
-    ['VPN/Proxy',isVPN?'⚠ Ja':'Nein'],
-    ['Hosting/DC',isHosting?'⚠ Ja':'Nein'],
-    ['Mobile',isMobile?'Ja':'Nein'],
-    ['Spamhaus',onSpamhaus?'⚠ LISTED':'Clean'],
-    ['Kontinent',d1?.continent||d5?.continent||'N/A'],
-    ['Land',d1?.country_code||d5?.countryCode||'N/A'],
-    ['PLZ',d1?.postal||d2?.zip||d5?.zipCode||'N/A']
+  let html=stats(
+    ['Version',isV6?'IPv6':'IPv4'],['VPN',isVPN?'Ja':'Nein'],
+    ['Hosting',isHosting?'Ja':'Nein'],['Mobil',isMobile?'Ja':'Nein'],
+    ['Spamhaus',onSpam?'LISTED':'Clean'],['Kontinent',d1?.continent||'N/A'],
+    ['Land',d1?.country_code||d5?.countryCode||'N/A'],['PLZ',d1?.postal||d2?.zip||'N/A']
   );
-
-  html+='<div class="data-wrap">';
-
+  html+='<div class="dw">';
   html+=sec('BASISINFORMATIONEN');
-  html+=r('IP Adresse',ip,(isVPN?{cls:'b-warn',txt:'VPN'}:isHosting?{cls:'b-warn',txt:'HOSTING'}:{cls:'b-ok',txt:'RESIDENTIAL'}));
-  html+=r('IP Version',isV6?'IPv6 (128-bit)':'IPv4 (32-bit)');
-  html+=r('Reverse DNS',d1?.connection?.domain||d2?.reverse||'N/A');
-  html+=r('IP Klasse',!isV6?(parseInt(ip.split('.')[0]))<128?'Klasse A':(parseInt(ip.split('.')[0]))<192?'Klasse B':'Klasse C':'IPv6');
-  html+=r('Privat/Public',isPrivateIP(ip)?'Privat (LAN)':'Öffentlich');
+  html+=row('IP Adresse',ip+(isVPN?' <span class="badge bwarn">VPN</span>':isHosting?' <span class="badge bwarn">HOSTING</span>':' <span class="badge bok">RESIDENTIAL</span>'));
+  html+=row('IP Version',isV6?'IPv6 (128-bit)':'IPv4 (32-bit)');
+  html+=row('Reverse DNS',d1?.connection?.domain||d2?.reverse||'N/A');
+  html+=row('Privat/Oeffentlich',isPrivate(ip)?'Privat (LAN)':'Oeffentlich');
+  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'Sauber');
 
-  // Full address block
   if(osm?.address){
     const a=osm.address;
-    const fullAddr=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village),a.state,a.country].filter(Boolean).join(', ');
-    html+=sec('REVERSE GEOCODING — ADRESSE');
-    if(fullAddr) html+=r('Vollständige Adresse',`<strong>${fullAddr}</strong>`);
-    html+=r('Straße',a.road||a.pedestrian||a.path||a.footway||'N/A');
-    html+=r('Hausnummer',a.house_number||'N/A');
-    html+=r('Stadtteil',a.suburb||a.neighbourhood||bdc?.locality||'N/A');
-    html+=r('Stadtbezirk',a.city_district||a.borough||'N/A');
-    html+=r('Stadt',a.city||a.town||a.village||a.hamlet||'N/A');
-    html+=r('Postleitzahl',a.postcode||'N/A');
-    html+=r('Landkreis',a.county||a.state_district||'N/A');
-    html+=r('Bundesland',a.state||'N/A');
-    html+=r('Land',a.country||'N/A');
-    html+=r('OSM Objekt-ID',osm.osm_id||'N/A');
-    html+=r('OSM Typ',osm.osm_type||'N/A');
-    html+=r('Adress-Typ',osm.type||osm.category||'N/A');
-    if(bdc){
-      html+=r('BigDataCloud Ort',bdc.city||bdc.locality||'N/A');
-      html+=r('BigDataCloud PLZ',bdc.postcode||'N/A');
-      html+=r('Gemeindeschlüssel',bdc.localityInfo?.informative?.[0]?.geonameId||'N/A');
-    }
+    const full=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village),a.state,a.country].filter(Boolean).join(', ');
+    html+=sec('REVERSE GEOCODING');
+    if(full)html+=row('Vollstaendige Adresse',`<strong>${full}</strong>`);
+    html+=row('Strasse',a.road||a.pedestrian||a.path||'N/A');
+    html+=row('Hausnummer',a.house_number||'N/A');
+    html+=row('Stadtteil',a.suburb||a.neighbourhood||bdc?.locality||'N/A');
+    html+=row('Stadt',a.city||a.town||a.village||a.hamlet||'N/A');
+    html+=row('PLZ',a.postcode||'N/A');
+    html+=row('Landkreis',a.county||a.state_district||'N/A');
+    html+=row('Bundesland',a.state||'N/A');
+    html+=row('Land',a.country||'N/A');
+    if(bdc){html+=row('BDC Ort',bdc.city||bdc.locality||'N/A');html+=row('BDC PLZ',bdc.postcode||'N/A');}
   }
-
-  html+=sec('GPS & KARTENDIENSTE');
-  html+=r('Breitengrad',lat);
-  html+=r('Längengrad',lon);
-  html+=r('DMS Format',lat&&lon?dms(lat,lon):'N/A');
-  html+=r('Genauigkeit',d3?.accuracy?(d3.accuracy+' km'):(d4?.accuracy?d4.accuracy+' km':'N/A'));
-  html+=r('Google Maps Street',lnk('Street View',`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`));
-  html+=r('Google Satellit',lnk('Ultra Zoom',`https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3`));
-  html+=r('Google Earth',lnk('3D Ansicht',`https://earth.google.com/web/@${lat},${lon},0a,800d,35y`));
-  html+=r('OpenStreetMap',lnk('OSM Karte',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=17`));
-  html+=r('Bing Aerial',lnk('Bing Maps',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=17&style=a`));
-  html+=r('Wikimapia',lnk('Wikimapia',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=16`));
-  html+=r('Yandex Maps',lnk('Yandex',`https://yandex.com/maps/?ll=${lon},${lat}&z=15`));
-  html+=r('HERE Maps',lnk('HERE',`https://wego.here.com/?map=${lat},${lon},17,normal`));
-  if(lat&&lon){
-    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.005},${lat-0.005},${lon+0.005},${lat+0.005}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
-  }
+  html+=sec('GPS & KARTEN');
+  html+=row('Breitengrad',lat+'');html+=row('Laengengrad',lon+'');
+  html+=row('DMS Format',lat&&lon?dms(lat,lon):'N/A');
+  html+=row('Genauigkeit',d3?.accuracy?d3.accuracy+' km':'N/A');
+  html+=row('Tageszeit dort',sunStatus(lat,lon));
+  html+=row('Google Street View',lnk('Street Level View',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}`));
+  html+=row('Google Satellit',lnk('Zoom 20x',`https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3`));
+  html+=row('Google Earth',lnk('3D Ansicht',`https://earth.google.com/web/@${lat},${lon},0a,800d,35y`));
+  html+=row('OpenStreetMap',lnk('OSM',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=17`));
+  html+=row('Bing Aerial',lnk('Bing Maps',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=17&style=a`));
+  html+=row('Yandex Maps',lnk('Yandex',`https://yandex.com/maps/?ll=${lon},${lat}&z=15`));
+  if(lat&&lon)html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.005},${lat-.005},${lon+.005},${lat+.005}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
 
   html+=sec('STANDORT');
-  html+=r('Land',`${country} ${d1?.flag?.emoji||''}`);
-  html+=r('Ländercode (ISO2)',d1?.country_code||d2?.countryCode||d5?.countryCode||'N/A');
-  html+=r('Ländercode (ISO3)',d6?.country_code3||'N/A');
-  html+=r('Region',d1?.region||d2?.regionName||d5?.regionName||'N/A');
-  html+=r('Region Code',d2?.region||d5?.regionCode||'N/A');
-  html+=r('Stadt',city);
-  html+=r('Stadtbezirk',d2?.district||'N/A');
-  html+=r('Postleitzahl',d1?.postal||d2?.zip||d5?.zipCode||'N/A');
-  html+=r('Kontinent',d1?.continent||d5?.continent||'N/A');
-  html+=r('Hauptstadt',d1?.capital||'N/A');
-  html+=r('EU-Mitglied',(d1?.is_eu||d3?.in_eu)?'Ja':'Nein');
+  html+=row('Land',`${d1?.country||d2?.country||d5?.countryName||'N/A'} (${d1?.flag?.emoji||''})`);
+  html+=row('ISO-Code',d1?.country_code||d2?.countryCode||'N/A');
+  html+=row('Region',d1?.region||d2?.regionName||d5?.regionName||'N/A');
+  html+=row('Stadt',d1?.city||d2?.city||d5?.cityName||'N/A');
+  html+=row('Stadtbezirk',d2?.district||'N/A');
+  html+=row('PLZ',d1?.postal||d2?.zip||d5?.zipCode||'N/A');
+  html+=row('Kontinent',d1?.continent||d5?.continent||'N/A');
+  html+=row('Hauptstadt',d1?.capital||'N/A');
+  html+=row('EU-Mitglied',(d1?.is_eu||d3?.in_eu)?'Ja':'Nein');
 
-  html+=sec('NETZWERK & ASN DETAILS');
-  html+=r('ISP',isp);
-  html+=r('Organisation',d1?.connection?.org||d2?.org||'N/A');
-  html+=r('AS-Nummer',asn);
-  html+=r('AS-Name',d1?.connection?.org||d3?.org||d2?.as||'N/A');
-  html+=r('Netzwerk CIDR',d3?.network||'N/A');
-  html+=r('Verbindungstyp',d3?.connection_type||'N/A');
-  html+=r('IP Version',d1?.type||'IPv4');
-  html+=r('ARIN RDAP',lnk('Registrar-Infos',`https://search.arin.net/rdap/?query=${ip}`));
-  html+=r('Hurricane Electric',lnk('BGP Details',`https://bgp.he.net/ip/${ip}`));
-  html+=r('PeeringDB',lnk('Peering-Infos',`https://www.peeringdb.com/net?asn=${(asn+'').replace('AS','')}`));
-  html+=r('Robtex',lnk('Netzwerkgraph',`https://www.robtex.com/ip-lookup/${ip}`));
+  html+=sec('NETZWERK & ASN');
+  html+=row('ISP',d1?.connection?.isp||d2?.isp||d3?.org||'N/A');
+  html+=row('Organisation',d1?.connection?.org||d2?.org||'N/A');
+  html+=row('AS-Nummer',d1?.connection?.asn||d2?.as?.split(' ')[0]||d3?.asn||'N/A');
+  html+=row('Netzwerk CIDR',d3?.network||'N/A');
+  html+=row('Verbindungstyp',d3?.connection_type||'N/A');
+  html+=row('ARIN RDAP',lnk('Registrar-Infos',`https://search.arin.net/rdap/?query=${ip}`));
+  html+=row('Hurricane Electric',lnk('BGP Details',`https://bgp.he.net/ip/${ip}`));
+  html+=row('Robtex',lnk('Netzwerkgraph',`https://www.robtex.com/ip-lookup/${ip}`));
 
-  html+=sec('SICHERHEIT & BEDROHUNGSANALYSE');
-  html+=r('Mobile Verbindung',isMobile?'Ja':'Nein');
-  html+=r('VPN / Proxy',isVPN?'⚠ Erkannt':'Nein');
-  html+=r('Hosting / Datacenter',isHosting?'⚠ Ja':'Nein');
-  html+=r('Spamhaus ZEN',onSpamhaus?'⚠ GELISTET':'Nicht gelistet');
-  html+=r('AbuseIPDB',lnk('Abuse-Score prüfen',`https://www.abuseipdb.com/check/${ip}`));
-  html+=r('VirusTotal',lnk('Malware/Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
-  html+=r('Shodan',lnk('Offene Ports + Dienste',`https://www.shodan.io/host/${ip}`));
-  html+=r('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts/${ip}`));
-  html+=r('IPVoid Blacklist',lnk('Blacklist-Check',`https://www.ipvoid.com/ip-blacklist-check/?ip=${ip}`));
-  html+=r('GreyNoise',lnk('Internet-Scanning?',`https://viz.greynoise.io/ip/${ip}`));
-  html+=r('ThreatFox',lnk('IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
+  html+=sec('BEDROHUNGSANALYSE');
+  html+=row('VPN / Proxy',isVPN?'<span class="badge bwarn">Erkannt</span>':'Nein');
+  html+=row('Hosting / DC',isHosting?'<span class="badge bwarn">Ja</span>':'Nein');
+  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'Sauber');
+  html+=row('AbuseIPDB',lnk('Abuse-Score pruefen',`https://www.abuseipdb.com/check/${ip}`));
+  html+=row('VirusTotal',lnk('Malware / Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
+  html+=row('Shodan',lnk('Offene Ports + Dienste',`https://www.shodan.io/host/${ip}`));
+  html+=row('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts/${ip}`));
+  html+=row('GreyNoise',lnk('Internet-Scanning?',`https://viz.greynoise.io/ip/${ip}`));
+  html+=row('ThreatFox',lnk('IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
+  html+=row('IPVoid Blacklist',lnk('Blacklist-Check',`https://www.ipvoid.com/ip-blacklist-check/?ip=${ip}`));
 
-  html+=sec('ZEITZONE & LOKALE INFOS');
-  html+=r('Zeitzone ID',d1?.timezone?.id||d2?.timezone||d5?.timeZone||'N/A');
-  html+=r('UTC Offset',d1?.timezone?.offset||d3?.utc_offset||'N/A');
-  html+=r('Zeitzonenkürzel',d1?.timezone?.abbr||'N/A');
-  html+=r('Aktuelle Zeit (dort)',d1?.timezone?.current_time||'N/A');
-  html+=r('DST aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
-  html+=r('DST Abweichung',d1?.timezone?.dst_savings!==undefined?d1.timezone.dst_savings+'h':'N/A');
-  html+=r('Sonnenlicht-Modus',calcSunStatus(lat,lon));
+  html+=sec('ZEITZONE');
+  html+=row('Zeitzone ID',d1?.timezone?.id||d2?.timezone||d5?.timeZone||'N/A');
+  html+=row('UTC Offset',d1?.timezone?.offset||d3?.utc_offset||'N/A');
+  html+=row('Kuerzel',d1?.timezone?.abbr||'N/A');
+  html+=row('Aktuelle Zeit',d1?.timezone?.current_time||'N/A');
+  html+=row('DST aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
 
-  html+=sec('LÄNDERINFORMATIONEN');
-  html+=r('Vorwahl',`+${d1?.calling_code||d3?.country_calling_code||'N/A'}`);
-  html+=r('Währung',`${d3?.currency_name||'N/A'} (${d3?.currency||'N/A'})`);
-  html+=r('Sprachen',d3?.languages||'N/A');
-  html+=r('Fläche',d3?.country_area?d3.country_area.toLocaleString()+' km²':'N/A');
-  html+=r('Bevölkerung',d3?.country_population?Number(d3.country_population).toLocaleString():'N/A');
-
+  html+=sec('LAENDERINFOS');
+  html+=row('Vorwahl',`+${d1?.calling_code||d3?.country_calling_code||'N/A'}`);
+  html+=row('Waehrung',`${d3?.currency_name||'N/A'} (${d3?.currency||'N/A'})`);
+  html+=row('Sprachen',d3?.languages||'N/A');
+  html+=row('Flaeche',d3?.country_area?d3.country_area.toLocaleString()+' km2':'N/A');
+  html+=row('Bevoelkerung',d3?.country_population?Number(d3.country_population).toLocaleString():'N/A');
   html+='</div>';
-  if(isVPN) html+='<div class="alert-warn">⚠ VPN/PROXY erkannt — Standortdaten können stark abweichen!</div>';
-  if(onSpamhaus) html+='<div class="alert-warn">⚠ Diese IP steht auf der Spamhaus-Blockliste!</div>';
-  html+='<div class="alert-info">ℹ Adressen basieren auf ISP-Serverstandort. Genauigkeit 50m–50km je nach ISP.</div>';
+  if(isVPN)html+='<div class="aw">VPN / PROXY erkannt -- Standortdaten koennen stark abweichen!</div>';
+  if(onSpam)html+='<div class="aw">IP steht auf Spamhaus ZEN Blockliste!</div>';
+  html+='<div class="ai">Adressen basieren auf ISP-Serverstandort. Genauigkeit variiert 50m bis 50km.</div>';
   $('ipR').innerHTML=html;
 }
 
-function isPrivateIP(ip){
-  return /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd)/.test(ip);
-}
-
-function calcSunStatus(lat,lon){
-  if(!lat||!lon) return 'N/A';
-  const h=new Date().getUTCHours()+(lon/15);
-  const local=((h%24)+24)%24;
-  if(local>=6&&local<8) return '🌅 Sonnenaufgang';
-  if(local>=8&&local<18) return '☀️ Tag';
-  if(local>=18&&local<20) return '🌇 Sonnenuntergang';
-  return '🌙 Nacht';
-}
-
-// ══════════════════════════════════════════════════════════
-// MY IP — COMPLETE BROWSER FINGERPRINT
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// MY IP
+// ──────────────────────────────────────────
 async function getMyIP(){
-  ld('myipL',true); $('myipR').innerHTML='';
-  const [r1,r2,r3,r4] = await Promise.allSettled([
-    safeFetch('https://api.ipify.org?format=json'),
-    safeFetch('https://api64.ipify.org?format=json'),
-    safeFetch('https://ipwho.is/'),
-    safeFetch('https://ipapi.co/json/')
-  ]);
+  ld('myipL',true);$('myipR').innerHTML='';
+  const[r1,r2,r3]=await Promise.allSettled([sf('https://api.ipify.org?format=json'),sf('https://api64.ipify.org?format=json'),sf('https://ipwho.is/')]);
   const ipv4=r1.value?.ip||r3.value?.ip||'N/A';
-  const ipv6raw=r2.value?.ip;
-  const ipv6=(ipv6raw&&ipv6raw!==ipv4)?ipv6raw:null;
-  const d=r3.value, d2=r4.value;
-  ld('myipL',false);
-
-  // Browser fingerprint
-  const ua=navigator.userAgent;
-  const lang=navigator.language||'N/A';
-  const langs=(navigator.languages||[]).join(', ');
-  const platform=navigator.platform||'N/A';
-  const cores=navigator.hardwareConcurrency||'N/A';
-  const mem=navigator.deviceMemory?navigator.deviceMemory+' GB':'N/A';
-  const screen_r=`${screen.width}×${screen.height}`;
-  const screen_av=`${screen.availWidth}×${screen.availHeight}`;
-  const colorD=screen.colorDepth+'bit';
-  const pixRat=window.devicePixelRatio||1;
+  const ipv6r=r2.value?.ip;const ipv6=(ipv6r&&ipv6r!==ipv4)?ipv6r:null;
+  const d=r3.value;ld('myipL',false);
+  const ua=navigator.userAgent,lang=navigator.language||'N/A';
+  const cores=navigator.hardwareConcurrency||'N/A',mem=navigator.deviceMemory?navigator.deviceMemory+' GB':'N/A';
   const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const tzOff=new Date().getTimezoneOffset();
   const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-  const touch='ontouchstart' in window||navigator.maxTouchPoints>0;
-  const battery=navigator.getBattery?'Unterstützt':'N/A';
-  const vendor=navigator.vendor||'N/A';
-  const product=navigator.product||'N/A';
-  const appVer=(navigator.appVersion||'').substring(0,60);
-  const dnt=navigator.doNotTrack||window.doNotTrack||'N/A';
-  const java=navigator.javaEnabled?.()??false;
-  const pdfView=navigator.pdfViewerEnabled?'Ja':'Nein';
-  const oscpu=navigator.oscpu||'N/A';
-
-  // Canvas fingerprint (just hash indicator)
-  let canvasFP='N/A';
-  try{
-    const cv=document.createElement('canvas'); cv.width=200;cv.height=50;
-    const ctx=cv.getContext('2d');
-    ctx.textBaseline='top'; ctx.font='14px Arial';
-    ctx.fillStyle='#f60'; ctx.fillRect(125,1,62,20);
-    ctx.fillStyle='#069'; ctx.fillText('StarTrack🔍',2,15);
-    ctx.fillStyle='rgba(102,204,0,0.7)'; ctx.fillText('StarTrack🔍',4,17);
-    const data=cv.toDataURL(); let hash=0;
-    for(let i=0;i<data.length;i++) hash=((hash<<5)-hash)+data.charCodeAt(i);
-    canvasFP='0x'+(hash>>>0).toString(16).toUpperCase();
-  }catch(e){}
-
-  // WebGL info
-  let glVendor='N/A',glRenderer='N/A';
-  try{
-    const gl=document.createElement('canvas').getContext('webgl');
-    const ext=gl?.getExtension('WEBGL_debug_renderer_info');
-    if(ext){ glVendor=gl.getParameter(ext.UNMASKED_VENDOR_WEBGL); glRenderer=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL); }
-  }catch(e){}
-
-  // Installed fonts (basic check)
-  const testFonts=['Arial','Times New Roman','Courier New','Georgia','Verdana','Helvetica','Tahoma','Comic Sans MS','Impact','Palatino'];
-  const cv2=document.createElement('canvas');cv2.width=200;cv2.height=30;
-  const ctx2=cv2.getContext('2d');
-  function fontExists(f){ctx2.font=`16px '${f}', serif`;const w1=ctx2.measureText('abcdefghij').width;ctx2.font=`16px serif`;const w2=ctx2.measureText('abcdefghij').width;return w1!==w2;}
-  const presentFonts=testFonts.filter(fontExists);
-
-  let html=`<div class="data-wrap">`;
-
+  let glV='N/A',glR='N/A';
+  try{const gl=document.createElement('canvas').getContext('webgl'),ext=gl?.getExtension('WEBGL_debug_renderer_info');if(ext){glV=gl.getParameter(ext.UNMASKED_VENDOR_WEBGL);glR=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);}}catch(e){}
+  let cvFP='N/A';
+  try{const cv=document.createElement('canvas');cv.width=200;cv.height=50;const ctx=cv.getContext('2d');ctx.textBaseline='top';ctx.font='14px Arial';ctx.fillStyle='#f60';ctx.fillRect(125,1,62,20);ctx.fillStyle='#069';ctx.fillText('StarTrack',2,15);let h=0;const dd=cv.toDataURL();for(let i=0;i<dd.length;i++)h=((h<<5)-h)+dd.charCodeAt(i);cvFP='0x'+(h>>>0).toString(16).toUpperCase();}catch(e){}
+  let html='<div class="dw">';
   html+=sec('DEINE IP-ADRESSEN');
-  html+=r('IPv4',ipv4);
-  if(ipv6) html+=r('IPv6',ipv6);
-  html+=r('Reverse DNS',d?.connection?.domain||'N/A');
-  html+=r('IP Typ',d?.type||'N/A');
-
+  html+=row('IPv4',ipv4);if(ipv6)html+=row('IPv6',ipv6);
+  html+=row('Reverse DNS',d?.connection?.domain||'N/A');html+=row('IP Typ',d?.type||'N/A');
   html+=sec('STANDORT (via IP)');
-  html+=r('Land',`${d?.country||'N/A'} ${d?.flag?.emoji||''}`);
-  html+=r('Region',d?.region||'N/A');
-  html+=r('Stadt',d?.city||'N/A');
-  html+=r('PLZ',d?.postal||'N/A');
-  html+=r('Koordinaten',`${d?.latitude||'N/A'}, ${d?.longitude||'N/A'}`);
-  html+=r('Zeitzone (Server)',d?.timezone?.id||'N/A');
-
+  html+=row('Land',`${d?.country||'N/A'}`);html+=row('Region',d?.region||'N/A');
+  html+=row('Stadt',d?.city||'N/A');html+=row('PLZ',d?.postal||'N/A');
+  html+=row('Koordinaten',`${d?.latitude||'N/A'}, ${d?.longitude||'N/A'}`);
+  html+=row('ISP',d?.connection?.isp||'N/A');html+=row('ASN',d?.connection?.asn||'N/A');
   html+=sec('NETZWERK');
-  html+=r('ISP',d?.connection?.isp||'N/A');
-  html+=r('Organisation',d?.connection?.org||'N/A');
-  html+=r('ASN',d?.connection?.asn||'N/A');
-  if(conn){
-    html+=r('Verbindungstyp',conn.effectiveType||'N/A');
-    html+=r('Downloadgeschwindigkeit',conn.downlink?conn.downlink+' Mbps':'N/A');
-    html+=r('RTT Latenz',conn.rtt?conn.rtt+' ms':'N/A');
-    html+=r('Datensparend',conn.saveData?'Ja':'Nein');
-  }
-
-  html+=sec('BROWSER IDENTIFIKATION');
-  html+=r('User-Agent',ua.substring(0,80)+'...');
-  html+=r('Browser-Anbieter',vendor);
-  html+=r('Produkt',product);
-  html+=r('App-Version',appVer);
-  html+=r('Hauptsprache',lang);
-  html+=r('Alle Sprachen',langs);
-
-  html+=sec('BETRIEBSSYSTEM & GERÄT');
-  html+=r('Plattform',platform);
-  html+=r('OS CPU',oscpu);
-  html+=r('CPU Kerne',cores);
-  html+=r('RAM',mem);
-  html+=r('Touchscreen',touch?'Ja':'Nein');
-  html+=r('Touch-Punkte Max',navigator.maxTouchPoints||0);
-  html+=r('Mobiles Gerät',/Mobi|Android|iPhone|iPad/i.test(ua)?'Ja':'Nein');
-  html+=r('64-Bit Browser',/WOW64|x86_64|Win64/.test(ua)?'Ja':'Unbekannt');
-
-  html+=sec('BILDSCHIRM & DISPLAY');
-  html+=r('Auflösung',screen_r);
-  html+=r('Verfügbare Fläche',screen_av);
-  html+=r('Farbtiefe',colorD);
-  html+=r('Pixel-Ratio (DPI)',pixRat+'x');
-  html+=r('Orientierung',screen?.orientation?.type||'N/A');
-  html+=r('Bildschirmfenster',`${window.innerWidth}×${window.innerHeight} px`);
-
-  html+=sec('DATENSCHUTZ & TRACKING');
-  html+=r('Cookies erlaubt',navigator.cookieEnabled?'Ja':'Nein');
-  html+=r('Do Not Track',dnt==='1'?'Aktiv':'Inaktiv/N/A');
-  html+=r('Java aktiviert',java?'Ja':'Nein');
-  html+=r('PDF-Viewer eingebaut',pdfView);
-  html+=r('Online-Status',navigator.onLine?'Online':'Offline');
-  html+=r('Akku-API',battery);
-  html+=r('Gespeicherte Daten',navigator.storage?'Unterstützt':'N/A');
-
-  html+=sec('BROWSER FINGERPRINT');
-  html+=r('Canvas-Fingerprint',canvasFP);
-  html+=r('Zeitzone Browser',tz);
-  html+=r('UTC-Offset',`${tzOff>0?'-':'+'}${Math.abs(Math.floor(tzOff/60))}:${String(Math.abs(tzOff%60)).padStart(2,'0')}`);
-  html+=r('WebGL Anbieter',glVendor);
-  html+=r('WebGL Renderer',glRenderer.substring(0,60));
-  html+=r('Erkannte Schriften',presentFonts.length>0?presentFonts.join(', '):'Keine erkannt');
-  html+=r('Plugins',Array.from(navigator.plugins||[]).map(p=>p.name).slice(0,5).join(', ')||'N/A');
-
-  html+=`<div style="margin-top:16px"><button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${ipv4}';trackIP('${ipv4}');},200)">▶ Vollanalyse für ${ipv4}</button></div>`;
-  html+=`</div>`;
-  html+='<div class="alert-info">ℹ Diese Seite liest deine öffentlich sichtbaren Browser-Eigenschaften — kein Plugin nötig.</div>';
+  if(conn){html+=row('Verbindungstyp',conn.effectiveType||'N/A');html+=row('Download',conn.downlink?conn.downlink+' Mbps':'N/A');html+=row('Latenz',conn.rtt?conn.rtt+' ms':'N/A');html+=row('Datenspar',conn.saveData?'Aktiv':'Aus');}
+  html+=sec('BROWSER & GERAET');
+  html+=row('User-Agent',ua.substring(0,72)+'...');html+=row('Sprache',lang);
+  html+=row('Platform',navigator.platform||'N/A');html+=row('Mobil',/Mobi|Android|iPhone|iPad/i.test(ua)?'Ja':'Nein');
+  html+=row('Touchscreen','ontouchstart' in window?'Ja':'Nein');html+=row('CPU Kerne',cores+'');html+=row('RAM',mem);
+  html+=row('Bildschirm',`${screen.width}x${screen.height} @ ${screen.colorDepth}bit`);
+  html+=row('Pixel-Ratio',window.devicePixelRatio+'x');html+=row('Viewport',`${window.innerWidth}x${window.innerHeight} px`);
+  html+=sec('FINGERPRINT');
+  html+=row('Zeitzone',tz);html+=row('Canvas-Hash',cvFP);
+  html+=row('WebGL Vendor',glV);html+=row('WebGL Renderer',glR.substring(0,60));
+  html+=row('Cookies',navigator.cookieEnabled?'Aktiv':'Deaktiviert');
+  html+=row('Do Not Track',navigator.doNotTrack==='1'?'Aktiv':'Inaktiv');
+  html+=row('PDF-Viewer eingebaut',navigator.pdfViewerEnabled?'Ja':'N/A');
+  html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${ipv4}'),200)">Vollanalyse fuer ${ipv4}</button>`;
+  html+='</div>';
+  html+='<div class="ai">Diese Seite liest oeffentlich sichtbare Browser-Eigenschaften.</div>';
   $('myipR').innerHTML=html;
 }
 
-// ══════════════════════════════════════════════════════════
-// USERNAME TRACKER
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// USERNAME
+// ──────────────────────────────────────────
 async function trackUN(){
   const u=$('unInput').value.trim();
-  if(!u){$('unR').innerHTML='<div class="alert-err">Bitte Username eingeben!</div>';return;}
+  if(!u){$('unR').innerHTML='<div class="ae">Bitte Username eingeben!</div>';return;}
   ld('unL',true);$('unR').innerHTML='';
-
   const cats={
-    '📘 Social Media':[
-      ['Facebook',`https://facebook.com/${u}`],['Instagram',`https://instagram.com/${u}`],
-      ['Twitter/X',`https://twitter.com/${u}`],['TikTok',`https://tiktok.com/@${u}`],
-      ['Snapchat',`https://snapchat.com/add/${u}`],['Pinterest',`https://pinterest.com/${u}`],
-      ['LinkedIn',`https://linkedin.com/in/${u}`],['XING',`https://xing.com/profile/${u}`],
-      ['VK',`https://vk.com/${u}`],['Tumblr',`https://${u}.tumblr.com`],
-      ['Mastodon',`https://mastodon.social/@${u}`],['Bluesky',`https://bsky.app/profile/${u}`],
-      ['Threads',`https://threads.net/@${u}`],['BeReal',`https://bere.al/${u}`],
-      ['Plurk',`https://plurk.com/${u}`],['MeWe',`https://mewe.com/i/${u}`],
-    ],
-    '🎬 Video & Streaming':[
-      ['YouTube',`https://youtube.com/@${u}`],['Twitch',`https://twitch.tv/${u}`],
-      ['Vimeo',`https://vimeo.com/${u}`],['Dailymotion',`https://dailymotion.com/${u}`],
-      ['Rumble',`https://rumble.com/user/${u}`],['Odysee',`https://odysee.com/@${u}`],
-      ['Kick',`https://kick.com/${u}`],['Trovo',`https://trovo.live/${u}`],
-      ['Caffeine',`https://caffeine.tv/${u}`],
-    ],
-    '💻 Tech & Dev':[
-      ['GitHub',`https://github.com/${u}`],['GitLab',`https://gitlab.com/${u}`],
-      ['Bitbucket',`https://bitbucket.org/${u}`],['Stack Overflow',`https://stackoverflow.com/users/${u}`],
-      ['HackerNews',`https://news.ycombinator.com/user?id=${u}`],['Replit',`https://replit.com/@${u}`],
-      ['CodePen',`https://codepen.io/${u}`],['JSFiddle',`https://jsfiddle.net/user/${u}`],
-      ['npm',`https://npmjs.com/~${u}`],['PyPI',`https://pypi.org/user/${u}`],
-      ['Leetcode',`https://leetcode.com/${u}`],['HackerRank',`https://hackerrank.com/${u}`],
-      ['Kaggle',`https://kaggle.com/${u}`],['Dev.to',`https://dev.to/${u}`],
-    ],
-    '💬 Messaging':[
-      ['Telegram',`https://t.me/${u}`],['Discord',`https://discord.com/users/${u}`],
-      ['Signal',`https://signal.me/#p/${u}`],['Kik',`https://ws.kik.com/u/${u}`],
-      ['Skype',`https://join.skype.com/invite/${u}`],['Line',`https://line.me/ti/p/~${u}`],
-      ['ICQ',`https://icq.com/${u}`],['Matrix',`https://matrix.to/#/@${u}:matrix.org`],
-    ],
-    '🎵 Musik & Audio':[
-      ['Spotify',`https://open.spotify.com/user/${u}`],['SoundCloud',`https://soundcloud.com/${u}`],
-      ['Last.fm',`https://last.fm/user/${u}`],['Bandcamp',`https://${u}.bandcamp.com`],
-      ['Mixcloud',`https://mixcloud.com/${u}`],['Audiomack',`https://audiomack.com/${u}`],
-      ['ReverbNation',`https://reverbnation.com/${u}`],['Musixmatch',`https://musixmatch.com/profile/${u}`],
-    ],
-    '🎨 Kreativ & Design':[
-      ['Behance',`https://behance.net/${u}`],['Dribbble',`https://dribbble.com/${u}`],
-      ['DeviantArt',`https://deviantart.com/${u}`],['Flickr',`https://flickr.com/people/${u}`],
-      ['500px',`https://500px.com/p/${u}`],['ArtStation',`https://artstation.com/${u}`],
-      ['Pixiv',`https://pixiv.net/en/users/${u}`],['Newgrounds',`https://newgrounds.com/${u}`],
-      ['Unsplash',`https://unsplash.com/@${u}`],
-    ],
-    '✍️ Blog & Schreiben':[
-      ['Medium',`https://medium.com/@${u}`],['WordPress',`https://${u}.wordpress.com`],
-      ['Substack',`https://${u}.substack.com`],['Ghost',`https://${u}.ghost.io`],
-      ['Blogger',`https://${u}.blogspot.com`],['Wattpad',`https://wattpad.com/user/${u}`],
-      ['Reddit',`https://reddit.com/user/${u}`],['Quora',`https://quora.com/profile/${u}`],
-    ],
-    '🎮 Gaming':[
-      ['Steam',`https://steamcommunity.com/id/${u}`],['Roblox',`https://roblox.com/users/profile?username=${u}`],
-      ['Xbox',`https://account.xbox.com/profile?gamertag=${u}`],['PSN',`https://psnprofiles.com/${u}`],
-      ['Epic Games',`https://epicgames.com/id/${u}`],['Battle.net',`https://battle.net`],
-      ['Faceit',`https://faceit.com/en/players/${u}`],['ESEA',`https://play.esea.net/users/${u}`],
-      ['Chess.com',`https://chess.com/member/${u}`],['Lichess',`https://lichess.org/@/${u}`],
-    ],
-    '💰 Support & Sonstiges':[
-      ['Patreon',`https://patreon.com/${u}`],['Ko-fi',`https://ko-fi.com/${u}`],
-      ['Buy Me Coffee',`https://buymeacoffee.com/${u}`],['ProductHunt',`https://producthunt.com/@${u}`],
-      ['Gravatar',`https://gravatar.com/${u}`],['About.me',`https://about.me/${u}`],
-      ['Linktree',`https://linktr.ee/${u}`],['Carrd',`https://${u}.carrd.co`],
-      ['Itch.io',`https://${u}.itch.io`],['Gumroad',`https://gumroad.com/${u}`],
-    ]
+    'SOCIAL MEDIA':[['Facebook',`https://facebook.com/${u}`],['Instagram',`https://instagram.com/${u}`],['Twitter/X',`https://twitter.com/${u}`],['TikTok',`https://tiktok.com/@${u}`],['Snapchat',`https://snapchat.com/add/${u}`],['Pinterest',`https://pinterest.com/${u}`],['LinkedIn',`https://linkedin.com/in/${u}`],['XING',`https://xing.com/profile/${u}`],['VK',`https://vk.com/${u}`],['Tumblr',`https://${u}.tumblr.com`],['Mastodon',`https://mastodon.social/@${u}`],['Bluesky',`https://bsky.app/profile/${u}`],['Threads',`https://threads.net/@${u}`],['BeReal',`https://bere.al/${u}`]],
+    'VIDEO & STREAMING':[['YouTube',`https://youtube.com/@${u}`],['Twitch',`https://twitch.tv/${u}`],['Vimeo',`https://vimeo.com/${u}`],['Kick',`https://kick.com/${u}`],['Dailymotion',`https://dailymotion.com/${u}`],['Rumble',`https://rumble.com/user/${u}`],['Odysee',`https://odysee.com/@${u}`]],
+    'TECH & DEV':[['GitHub',`https://github.com/${u}`],['GitLab',`https://gitlab.com/${u}`],['Stack Overflow',`https://stackoverflow.com/users/${u}`],['Replit',`https://replit.com/@${u}`],['CodePen',`https://codepen.io/${u}`],['HackerNews',`https://news.ycombinator.com/user?id=${u}`],['npm',`https://npmjs.com/~${u}`],['Dev.to',`https://dev.to/${u}`],['Leetcode',`https://leetcode.com/${u}`],['Kaggle',`https://kaggle.com/${u}`]],
+    'MESSAGING':[['Telegram',`https://t.me/${u}`],['Discord',`https://discord.com/users/${u}`],['Signal',`https://signal.me/#p/${u}`],['Kik',`https://ws.kik.com/u/${u}`],['ICQ',`https://icq.com/${u}`]],
+    'MUSIK & AUDIO':[['Spotify',`https://open.spotify.com/user/${u}`],['SoundCloud',`https://soundcloud.com/${u}`],['Last.fm',`https://last.fm/user/${u}`],['Bandcamp',`https://${u}.bandcamp.com`],['Mixcloud',`https://mixcloud.com/${u}`],['Audiomack',`https://audiomack.com/${u}`]],
+    'KREATIV & DESIGN':[['Behance',`https://behance.net/${u}`],['Dribbble',`https://dribbble.com/${u}`],['DeviantArt',`https://deviantart.com/${u}`],['Flickr',`https://flickr.com/people/${u}`],['ArtStation',`https://artstation.com/${u}`],['Pixiv',`https://pixiv.net/en/users/${u}`],['500px',`https://500px.com/p/${u}`],['Unsplash',`https://unsplash.com/@${u}`]],
+    'BLOG & SCHREIBEN':[['Medium',`https://medium.com/@${u}`],['Substack',`https://${u}.substack.com`],['Reddit',`https://reddit.com/user/${u}`],['Quora',`https://quora.com/profile/${u}`],['Wattpad',`https://wattpad.com/user/${u}`],['WordPress',`https://${u}.wordpress.com`]],
+    'GAMING':[['Steam',`https://steamcommunity.com/id/${u}`],['Roblox',`https://roblox.com/users/profile?username=${u}`],['Xbox',`https://account.xbox.com/profile?gamertag=${u}`],['PSN',`https://psnprofiles.com/${u}`],['Faceit',`https://faceit.com/en/players/${u}`],['Lichess',`https://lichess.org/@/${u}`],['Chess.com',`https://chess.com/member/${u}`],['Epic Games',`https://epicgames.com/id/${u}`]],
+    'SONSTIGES':[['Patreon',`https://patreon.com/${u}`],['Ko-fi',`https://ko-fi.com/${u}`],['Linktree',`https://linktr.ee/${u}`],['Gravatar',`https://gravatar.com/${u}`],['About.me',`https://about.me/${u}`],['ProductHunt',`https://producthunt.com/@${u}`],['Itch.io',`https://${u}.itch.io`],['Gumroad',`https://gumroad.com/${u}`]]
   };
-
   let total=0;Object.values(cats).forEach(v=>total+=v.length);
-
-  let html=`<div class="data-wrap">`;
+  let html='<div class="dw">';
   html+=sec('SUCHPARAMETER');
-  html+=r('Username',u);
-  html+=r('Gesamte Plattformen',total+'');
-  html+=r('Kategorien',Object.keys(cats).length+'');
-  html+=r('WhatsMyName (Live)',lnk('Echtzeit Username-Check',`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
-  html+=r('Namechk.com',lnk('Verfügbarkeit prüfen',`https://namechk.com/${encodeURIComponent(u)}`));
-  html+=r('Google Dork',lnk(`"${u}" googeln`,`https://google.com/search?q=%22${encodeURIComponent(u)}%22`));
-  html+=r('Bing Dork',lnk(`"${u}" bei Bing`,`https://bing.com/search?q=%22${encodeURIComponent(u)}%22`));
-  html+=r('Yandex',lnk(`Yandex-Suche`,`https://yandex.com/search/?text=${encodeURIComponent(u)}`));
-  html+=r('Sherlock (lokal)',lnk('GitHub — Sherlock Tool',`https://github.com/sherlock-project/sherlock`));
-  html+=r('OSINT Industries',lnk('osint.industries (kostenpflichtig)',`https://osint.industries/`));
-
-  for(const [cat,plats] of Object.entries(cats)){
-    html+=sec(cat);
-    html+='<div class="platgrid">';
-    plats.forEach(([name,url])=>{
-      html+=`<div class="plat"><span class="pname">${name}</span><span class="plink">${lnk(url.replace(/https?:\/\/(www\.)?/,'').substring(0,38)+'…',url)}</span></div>`;
-    });
+  html+=row('Username',u);html+=row('Plattformen gesamt',total+'');
+  html+=row('WhatsMyName Live',lnk('Echtzeit-Check',`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
+  html+=row('Namechk',lnk('Verfuegbarkeit',`https://namechk.com/${encodeURIComponent(u)}`));
+  html+=row('Google Dork',lnk(`"${u}" suchen`,`https://google.com/search?q=%22${encodeURIComponent(u)}%22`));
+  html+=row('Sherlock',lnk('CLI Tool (GitHub)',`https://github.com/sherlock-project/sherlock`));
+  for(const[cat,plats]of Object.entries(cats)){
+    html+=sec(cat);html+='<div class="platgrid">';
+    plats.forEach(([name,url])=>{html+=`<div class="plat"><span class="pname">${name}</span><span class="plink">${lnk(url.replace(/https?:\/\/(www\.)?/,'').substring(0,36)+'...',url)}</span></div>`;});
     html+='</div>';
   }
   html+='</div>';
-  ld('unL',false);
-  $('unR').innerHTML=html;
+  ld('unL',false);$('unR').innerHTML=html;
 }
 
-// ══════════════════════════════════════════════════════════
-// PHONE TRACKER
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// PHONE
+// ──────────────────────────────────────────
 async function trackPhone(){
   const ph=$('phInput').value.trim();
-  if(!ph){$('phR').innerHTML='<div class="alert-err">Bitte Nummer eingeben!</div>';return;}
+  if(!ph){$('phR').innerHTML='<div class="ae">Bitte Nummer eingeben!</div>';return;}
   ld('phL',true);$('phR').innerHTML='';
-
   const clean=ph.replace(/[\s\-().]/g,'');
   let cc='',local=clean;
   if(clean.startsWith('+')){const m=clean.match(/^\+(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+1);}}
   else if(clean.startsWith('00')){const m=clean.match(/^00(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+2);}}
-
-  // Carrier IP lookup via DNS
-  let carrierIP=null,carrierDomain=null;
-
-  const DB={
-    '1':{c:'USA/Kanada',iso:'US',reg:'Nordamerika',tz:'UTC-5 bis -8',currency:'USD',lang:'Englisch',flag:'🇺🇸',
-      carriers:['Verizon','AT&T','T-Mobile','US Cellular','Boost','Cricket'],
-      prefixes:{},emergency:'911'},
-    '44':{c:'Großbritannien',iso:'GB',reg:'Europa',tz:'UTC+0/+1',currency:'GBP',lang:'Englisch',flag:'🇬🇧',
-      carriers:['EE','Vodafone UK','O2 UK','Three UK','Sky Mobile','Virgin Mobile'],
-      prefixes:{'7':'Mobil'},emergency:'999'},
-    '49':{c:'Deutschland',iso:'DE',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Deutsch',flag:'🇩🇪',
-      carriers:['Telekom','Vodafone DE','O2/Telefónica','1&1 Drillisch','congstar','Aldi Talk'],
-      prefixes:{
-        '150':'Telekom','151':'Telekom','152':'Vodafone','153':'O2','155':'Vodafone',
-        '156':'O2','157':'O2','158':'Telekom','159':'O2','160':'Telekom','162':'Vodafone',
-        '163':'O2','170':'Telekom','171':'Telekom','172':'Vodafone','173':'Vodafone',
-        '174':'Vodafone','175':'Telekom','176':'O2','177':'O2','178':'O2','179':'O2',
-        '1511':'Telekom','1512':'Vodafone','1514':'1&1','1515':'O2','1516':'O2',
-        '1517':'O2','1520':'Vodafone','1521':'O2','1522':'Vodafone','1523':'O2',
-        '1570':'O2','1573':'O2','1575':'O2','1577':'O2','1578':'O2','1579':'O2',
-        '800':'Gebührenfrei','900':'Premium (teuer!)'
-      },emergency:'110/112'},
-    '43':{c:'Österreich',iso:'AT',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Deutsch',flag:'🇦🇹',
-      carriers:['A1 Telekom','Magenta AT','Drei AT','HoT','Spusu'],
-      prefixes:{'650':'Drei/3','660':'A1','664':'A1','676':'A1','677':'Magenta','678':'Magenta','680':'Drei','688':'Drei','699':'A1','6[5-9]':'Mobil'},
-      emergency:'112'},
-    '41':{c:'Schweiz',iso:'CH',reg:'Europa',tz:'UTC+1/+2',currency:'CHF',lang:'DE/FR/IT',flag:'🇨🇭',
-      carriers:['Swisscom','Sunrise UPC','Salt Mobile','Coop Mobile'],
-      prefixes:{'74':'Sunrise','75':'Swisscom','76':'Salt','77':'Sunrise','78':'Swisscom','79':'Swisscom/Salt'},
-      emergency:'112'},
-    '33':{c:'Frankreich',iso:'FR',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Französisch',flag:'🇫🇷',
-      carriers:['Orange FR','SFR','Bouygues Telecom','Free Mobile','La Poste Mobile'],
-      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
-    '39':{c:'Italien',iso:'IT',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Italienisch',flag:'🇮🇹',
-      carriers:['TIM','Vodafone IT','Wind Tre','Iliad Italia','PosteMobile'],
-      prefixes:{'3':'Mobil'},emergency:'112'},
-    '34':{c:'Spanien',iso:'ES',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Spanisch',flag:'🇪🇸',
-      carriers:['Movistar','Orange ES','Vodafone ES','MásMóvil','Yoigo'],
-      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
-    '31':{c:'Niederlande',iso:'NL',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'Niederländisch',flag:'🇳🇱',
-      carriers:['KPN','Vodafone NL','T-Mobile NL','Tele2 NL'],
-      prefixes:{'6':'Mobil'},emergency:'112'},
-    '32':{c:'Belgien',iso:'BE',reg:'Europa',tz:'UTC+1/+2',currency:'EUR',lang:'NL/FR/DE',flag:'🇧🇪',
-      carriers:['Proximus','Orange BE','Base/Telenet'],
-      prefixes:{'4':'Mobil'},emergency:'112'},
-    '46':{c:'Schweden',iso:'SE',reg:'Europa',tz:'UTC+1/+2',currency:'SEK',lang:'Schwedisch',flag:'🇸🇪',
-      carriers:['Telia','Tele2 SE','Telenor SE','Three SE'],
-      prefixes:{'7':'Mobil'},emergency:'112'},
-    '47':{c:'Norwegen',iso:'NO',reg:'Europa',tz:'UTC+1/+2',currency:'NOK',lang:'Norwegisch',flag:'🇳🇴',
-      carriers:['Telenor','Telia NO','Ice'],
-      prefixes:{'4':'Mobil','9':'Mobil'},emergency:'112'},
-    '45':{c:'Dänemark',iso:'DK',reg:'Europa',tz:'UTC+1/+2',currency:'DKK',lang:'Dänisch',flag:'🇩🇰',
-      carriers:['TDC','Telenor DK','Telia DK','3 DK'],
-      prefixes:{},emergency:'112'},
-    '48':{c:'Polen',iso:'PL',reg:'Europa',tz:'UTC+1/+2',currency:'PLN',lang:'Polnisch',flag:'🇵🇱',
-      carriers:['Orange PL','Play','Plus','T-Mobile PL'],
-      prefixes:{'5':'Mobil','6':'Mobil','7':'Mobil'},emergency:'112'},
-    '7':{c:'Russland/KZ',iso:'RU',reg:'Eurasien',tz:'UTC+2 bis +12',currency:'RUB',lang:'Russisch',flag:'🇷🇺',
-      carriers:['MTS','MegaFon','VimpelCom/Beeline','Tele2 RU'],
-      prefixes:{'9':'Mobil'},emergency:'112'},
-    '86':{c:'China',iso:'CN',reg:'Asien',tz:'UTC+8',currency:'CNY',lang:'Mandarin',flag:'🇨🇳',
-      carriers:['China Mobile','China Unicom','China Telecom'],
-      prefixes:{'13':'Mobil','14':'Mobil','15':'Mobil','17':'Mobil','18':'Mobil','19':'Mobil'},
-      emergency:'110'},
-    '81':{c:'Japan',iso:'JP',reg:'Asien',tz:'UTC+9',currency:'JPY',lang:'Japanisch',flag:'🇯🇵',
-      carriers:['NTT Docomo','SoftBank','au (KDDI)','Rakuten Mobile'],
-      prefixes:{'7':'Mobil','8':'Mobil','9':'Mobil'},emergency:'110'},
-    '82':{c:'Südkorea',iso:'KR',reg:'Asien',tz:'UTC+9',currency:'KRW',lang:'Koreanisch',flag:'🇰🇷',
-      carriers:['SK Telecom','KT Corporation','LG Uplus'],
-      prefixes:{'1':'Mobil'},emergency:'112'},
-    '91':{c:'Indien',iso:'IN',reg:'Asien',tz:'UTC+5:30',currency:'INR',lang:'Hindi/Englisch',flag:'🇮🇳',
-      carriers:['Jio','Airtel','Vodafone Idea (Vi)','BSNL'],
-      prefixes:{'6':'Mobil','7':'Mobil','8':'Mobil','9':'Mobil'},emergency:'112'},
-    '55':{c:'Brasilien',iso:'BR',reg:'S-Amerika',tz:'UTC-3 bis -5',currency:'BRL',lang:'Portugiesisch',flag:'🇧🇷',
-      carriers:['Claro','TIM BR','Vivo','Oi'],
-      prefixes:{'9':'Mobil'},emergency:'190'},
-    '52':{c:'Mexiko',iso:'MX',reg:'N-Amerika',tz:'UTC-6 bis -8',currency:'MXN',lang:'Spanisch',flag:'🇲🇽',
-      carriers:['Telcel','Movistar MX','AT&T MX'],
-      prefixes:{},emergency:'911'},
-    '27':{c:'Südafrika',iso:'ZA',reg:'Afrika',tz:'UTC+2',currency:'ZAR',lang:'11 Sprachen',flag:'🇿🇦',
-      carriers:['Vodacom','MTN SA','Cell C','Telkom Mobile'],
-      prefixes:{'6':'Mobil','7':'Mobil','8':'Mobil'},emergency:'10111'},
-    '971':{c:'Vereinigte Arab. Emirate',iso:'AE',reg:'Naher Osten',tz:'UTC+4',currency:'AED',lang:'Arabisch',flag:'🇦🇪',
-      carriers:['Etisalat (e&)','du (EITC)'],
-      prefixes:{'5':'Mobil'},emergency:'999'},
-    '966':{c:'Saudi-Arabien',iso:'SA',reg:'Naher Osten',tz:'UTC+3',currency:'SAR',lang:'Arabisch',flag:'🇸🇦',
-      carriers:['STC','Mobily','Zain SA'],
-      prefixes:{'5':'Mobil'},emergency:'911'},
-    '90':{c:'Türkei',iso:'TR',reg:'Eurasien',tz:'UTC+3',currency:'TRY',lang:'Türkisch',flag:'🇹🇷',
-      carriers:['Turkcell','Vodafone TR','Türk Telekom (Türkcell)'],
-      prefixes:{'5':'Mobil'},emergency:'112'},
-    '358':{c:'Finnland',iso:'FI',reg:'Europa',tz:'UTC+2/+3',currency:'EUR',lang:'Finnisch/Schwedisch',flag:'🇫🇮',
-      carriers:['Elisa','Telia FI','DNA'],
-      prefixes:{'4':'Mobil','5':'Mobil'},emergency:'112'},
-    '420':{c:'Tschechien',iso:'CZ',reg:'Europa',tz:'UTC+1/+2',currency:'CZK',lang:'Tschechisch',flag:'🇨🇿',
-      carriers:['T-Mobile CZ','O2 CZ','Vodafone CZ'],
-      prefixes:{'6':'Mobil','7':'Mobil'},emergency:'112'},
-    '36':{c:'Ungarn',iso:'HU',reg:'Europa',tz:'UTC+1/+2',currency:'HUF',lang:'Ungarisch',flag:'🇭🇺',
-      carriers:['Magyar Telekom','Telenor HU','Vodafone HU'],
-      prefixes:{'2':'Mobil','3':'Mobil','7':'Mobil'},emergency:'112'},
-    '61':{c:'Australien',iso:'AU',reg:'Ozeanien',tz:'UTC+8 bis +11',currency:'AUD',lang:'Englisch',flag:'🇦🇺',
-      carriers:['Telstra','Optus','Vodafone AU'],
-      prefixes:{'4':'Mobil'},emergency:'000'},
-  };
-
-  const info=DB[cc]||{c:'Unbekannt',iso:'N/A',reg:'N/A',tz:'N/A',currency:'N/A',lang:'N/A',flag:'🌐',carriers:[],prefixes:{},emergency:'N/A'};
-
-  // Detect carrier from prefix
+  const DB={'1':{c:'USA/Kanada',iso:'US',tz:'UTC-5/-8',cur:'USD',lang:'Englisch',carriers:['Verizon','AT&T','T-Mobile'],em:'911',pfx:{}},'44':{c:'Grossbritannien',iso:'GB',tz:'UTC+0/+1',cur:'GBP',lang:'Englisch',carriers:['EE','Vodafone','O2','Three'],em:'999',pfx:{'7':'Mobil'}},'49':{c:'Deutschland',iso:'DE',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['Telekom','Vodafone','O2','1&1'],em:'110/112',pfx:{'150':'Telekom','151':'Telekom','152':'Vodafone','153':'O2','155':'Vodafone','156':'O2','157':'O2','159':'O2','160':'Telekom','162':'Vodafone','163':'O2','170':'Telekom','171':'Telekom','172':'Vodafone','173':'Vodafone','174':'Vodafone','175':'Telekom','176':'O2','177':'O2','178':'O2','179':'O2','1511':'Telekom','1512':'Vodafone','1514':'1&1','1515':'O2','1520':'Vodafone','1522':'Vodafone','1570':'O2','1573':'O2','1575':'O2','1577':'O2'}},'43':{c:'Oesterreich',iso:'AT',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['A1','Magenta','Drei'],em:'112',pfx:{'650':'Drei','660':'A1','664':'A1','676':'A1','677':'Magenta','699':'A1'}},'41':{c:'Schweiz',iso:'CH',tz:'UTC+1/+2',cur:'CHF',lang:'DE/FR/IT',carriers:['Swisscom','Sunrise','Salt'],em:'112',pfx:{'74':'Sunrise','75':'Swisscom','76':'Salt','77':'Sunrise','78':'Swisscom','79':'Swisscom'}},'33':{c:'Frankreich',iso:'FR',tz:'UTC+1/+2',cur:'EUR',lang:'Franzoesisch',carriers:['Orange','SFR','Bouygues','Free'],em:'112',pfx:{}},'39':{c:'Italien',iso:'IT',tz:'UTC+1/+2',cur:'EUR',lang:'Italienisch',carriers:['TIM','Vodafone IT','Wind Tre'],em:'112',pfx:{}},'34':{c:'Spanien',iso:'ES',tz:'UTC+1/+2',cur:'EUR',lang:'Spanisch',carriers:['Movistar','Orange','Vodafone'],em:'112',pfx:{}},'7':{c:'Russland',iso:'RU',tz:'UTC+2/+12',cur:'RUB',lang:'Russisch',carriers:['MTS','MegaFon','Beeline'],em:'112',pfx:{}},'86':{c:'China',iso:'CN',tz:'UTC+8',cur:'CNY',lang:'Mandarin',carriers:['China Mobile','China Unicom','China Telecom'],em:'110',pfx:{}},'81':{c:'Japan',iso:'JP',tz:'UTC+9',cur:'JPY',lang:'Japanisch',carriers:['Docomo','SoftBank','au'],em:'110',pfx:{}},'91':{c:'Indien',iso:'IN',tz:'UTC+5:30',cur:'INR',lang:'Hindi/Englisch',carriers:['Jio','Airtel','Vi'],em:'112',pfx:{}},'55':{c:'Brasilien',iso:'BR',tz:'UTC-3/-5',cur:'BRL',lang:'Portugiesisch',carriers:['Claro','TIM','Vivo'],em:'190',pfx:{}},'61':{c:'Australien',iso:'AU',tz:'UTC+8/+11',cur:'AUD',lang:'Englisch',carriers:['Telstra','Optus','Vodafone AU'],em:'000',pfx:{}},'90':{c:'Tuerkei',iso:'TR',tz:'UTC+3',cur:'TRY',lang:'Tuerkisch',carriers:['Turkcell','Vodafone TR','Tuerk Telekom'],em:'112',pfx:{}}};
+  const info=DB[cc]||{c:'Unbekannt',iso:'N/A',tz:'N/A',cur:'N/A',lang:'N/A',carriers:[],em:'N/A',pfx:{}};
   let lineType='Unbekannt',carrier='Unbekannt';
   if(cc==='49'){
-    if(/^(15|16|17)/.test(local)){
-      lineType='Mobilfunk';
-      const sorted=Object.entries(info.prefixes).sort((a,b)=>b[0].length-a[0].length);
-      for(const[pre,c]of sorted){if(local.startsWith(pre)){carrier=c;break;}}
-    } else if(/^800/.test(local)){lineType='Gebührenfreie Nummer';carrier='N/A';}
-    else if(/^900/.test(local)){lineType='Premium/Mehrwert';carrier='N/A';}
-    else if(/^0/.test(local)){lineType='Festnetz (Ortsvorwahl)';}
-    else{lineType='Festnetz';}
-  } else {
-    const mobilePrefix=info.prefixes;
-    for(const[pre]of Object.entries(mobilePrefix)){
-      if(local.startsWith(pre)){lineType='Mobilfunk';break;}
-    }
-    if(lineType==='Unbekannt') lineType='Festnetz/Unbekannt';
-  }
-
-  // Carrier domain DNS lookup
-  const cDomains={'Telekom':'telekom.de','Vodafone':'vodafone.de','O2':'o2online.de','1&1':'1und1.de',
-    'AT&T':'att.com','Verizon':'verizon.com','T-Mobile':'t-mobile.com','Orange':'orange.com',
-    'Swisscom':'swisscom.ch','A1':'a1.net','Telia':'telia.com','Telenor':'telenor.com'};
-  for(const[c,dom]of Object.entries(cDomains)){
-    if(carrier.includes(c)||info.carriers[0]?.includes(c)){carrierDomain=dom;break;}
-  }
-  if(carrierDomain){
-    const dns=await safeFetch(`https://dns.google/resolve?name=${carrierDomain}&type=A`);
-    if(dns?.Answer?.[0]) carrierIP=dns.Answer[0].data;
-  }
-
-  // Format validation
-  const validLens={'49':[10,11],'1':[10,10],'44':[9,10],'43':[7,13],'41':[9,10],'33':[9,9],'39':[9,10],'46':[9,9]};
-  const[mn,mx]=validLens[cc]||[7,15];
-  const valid=local.length>=mn&&local.length<=mx;
-
-  // E.164 format
+    if(/^(15|16|17)/.test(local)){lineType='Mobilfunk';const sorted=Object.entries(info.pfx).sort((a,b)=>b[0].length-a[0].length);for(const[p,c]of sorted)if(local.startsWith(p)){carrier=c;break;}}
+    else if(/^800/.test(local))lineType='Gebuehrenfreie Nummer';
+    else if(/^900/.test(local))lineType='Premium/Mehrwert';
+    else lineType='Festnetz';
+  }else{for(const[p]of Object.entries(info.pfx))if(local.startsWith(p)){lineType='Mobilfunk';break;}if(lineType==='Unbekannt')lineType='Festnetz/Unbekannt';}
   const e164=`+${cc}${local}`;
-  // National format
-  const natFormat=cc==='49'?`0${local.substring(0,3)} ${local.substring(3,7)} ${local.substring(7)}`:`+${cc} ${local}`;
-
+  let cIP=null,cDom=null;
+  const cDoms={'Telekom':'telekom.de','Vodafone':'vodafone.de','O2':'o2online.de','1&1':'1und1.de','AT&T':'att.com','Verizon':'verizon.com'};
+  for(const[c,d]of Object.entries(cDoms))if(carrier.includes(c)){cDom=d;break;}
+  if(cDom){const dns=await sf(`https://dns.google/resolve?name=${cDom}&type=A`);if(dns?.Answer?.[0])cIP=dns.Answer[0].data;}
   ld('phL',false);
-
-  let html='<div class="data-wrap">';
+  let html='<div class="dw">';
   html+=sec('NUMMERNANALYSE');
-  html+=r('Eingabe',ph);
-  html+=r('Bereinigt',clean);
-  html+=r('E.164 Format',e164);
-  html+=r('Nationales Format',natFormat);
-  html+=r('Stellenzahl (lokal)',local.length+' Ziffern');
-  html+=r('Format gültig',valid?'✓ Wahrscheinlich gültig':'⚠ Ungewöhnliche Länge');
-  html+=r('Leitungstyp',lineType);
-  html+=r('Erkannter Carrier',carrier);
-
-  html+=sec(`LAND & REGION ${info.flag}`);
-  html+=r('Land',`${info.c} ${info.flag}`);
-  html+=r('Ländervorwahl',`+${cc}`);
-  html+=r('ISO-Code',info.iso);
-  html+=r('Region',info.reg);
-  html+=r('Zeitzone',info.tz);
-  html+=r('Währung',info.currency);
-  html+=r('Sprache(n)',info.lang);
-  html+=r('Notruf',info.emergency);
-
-  html+=sec('CARRIER & NETZ');
-  html+=r('Erkannter Carrier',carrier);
-  html+=r('Bekannte Anbieter',info.carriers.join(', ')||'N/A');
-  html+=r('Carrier-Domain',carrierDomain||'Nicht zugeordnet');
-  if(carrierIP){
-    html+=r('Carrier Server-IP',carrierIP);
-    html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${carrierIP}';trackIP('${carrierIP}');},200)">▶ Carrier-IP tracken</button>`;
-  }
-
-  html+=sec('FORMATVARIANTEN');
-  html+=r('International',e164);
-  html+=r('Mit Klammern',`(+${cc}) ${local.substring(0,3)} ${local.substring(3)}`);
-  html+=r('Mit Bindestrichen',e164.replace(/(\+\d{2})(\d{3})(\d{3,4})(\d{4})/,'$1-$2-$3-$4'));
-  html+=r('Nur Ziffern',clean.replace('+',''));
-  html+=r('Ohne Ländervorwahl',local);
-
-  html+=sec('OSINT & REVERSE LOOKUP');
-  html+=r('Truecaller',lnk('Name + Spam suchen',`https://www.truecaller.com/search/${info.iso.toLowerCase()}/${encodeURIComponent(clean)}`));
-  html+=r('Tellows DE',lnk('Bewertungen prüfen',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
-  html+=r('NumLookup',lnk('Carrier + Name',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
-  html+=r('Should I Answer',lnk('Spam-Reports',`https://www.shouldianswer.com/phone-number/${clean}`));
-  html+=r('WhoCallsMe',lnk('Who Calls Me',`https://whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
-  html+=r('CallFilter',lnk('Deutsche Datenbank',`https://www.callfilter.app/de/phone-number/${clean.replace('+','')}`));
-  html+=r('OSINT Framework',lnk('Telefon-OSINT',`https://osintframework.com/`));
-
-  html+=sec('MESSENGER & KONTAKT');
-  html+=r('WhatsApp',lnk('In WhatsApp öffnen',`https://wa.me/${clean.replace('+','')}`));
-  html+=r('Telegram',lnk('Telegram-Suche',`https://t.me/${clean.replace('+','')}`));
-  html+=r('Signal',lnk('Signal öffnen',`https://signal.me/#p/${e164}`));
-  html+=r('Viber',lnk('Viber öffnen',`viber://contact?number=${encodeURIComponent(e164)}`));
-  html+=r('Skype',lnk('Skype Call',`skype:${e164}?call`));
-  html+=r('FaceTime',lnk('FaceTime (Apple)',`facetime:${e164}`));
-  html+=r('Google Suche',lnk('Nummer googlen',`https://google.com/search?q=${encodeURIComponent(e164)}`));
-  html+=r('Bing',lnk('Bing-Suche',`https://bing.com/search?q=${encodeURIComponent(e164)}`));
-
+  html+=row('Eingabe',ph);html+=row('Bereinigt',clean);html+=row('E.164',e164);
+  html+=row('Laenge lokal',local.length+' Stellen');html+=row('Leitungstyp',lineType);
+  html+=sec('LAND');
+  html+=row('Land',info.c);html+=row('Vorwahl',`+${cc}`);html+=row('ISO',info.iso);
+  html+=row('Zeitzone',info.tz);html+=row('Waehrung',info.cur);html+=row('Sprache',info.lang);html+=row('Notruf',info.em);
+  html+=sec('CARRIER');
+  html+=row('Erkannt',carrier);html+=row('Bekannte Carrier',info.carriers.join(', ')||'N/A');
+  if(cDom)html+=row('Carrier-Domain',cDom);
+  if(cIP){html+=row('Carrier-IP',cIP);html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${cIP}'),200)">Carrier-IP tracken</button>`;}
+  html+=sec('OSINT TOOLS');
+  html+=row('Truecaller',lnk('Name + Spam',`https://www.truecaller.com/search/${info.iso.toLowerCase()}/${encodeURIComponent(clean)}`));
+  html+=row('Tellows',lnk('Bewertungen',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
+  html+=row('NumLookup',lnk('Carrier + Name',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
+  html+=row('Should I Answer',lnk('Spam-Reports',`https://www.shouldianswer.com/phone-number/${clean}`));
+  html+=row('WhoCallsMe',lnk('Who Calls Me',`https://whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
+  html+=row('WhatsApp',lnk('Oeffnen',`https://wa.me/${clean.replace('+','')}`));
+  html+=row('Telegram',lnk('Suchen',`https://t.me/${clean.replace('+','')}`));
+  html+=row('Google',lnk('Googlen',`https://google.com/search?q=${encodeURIComponent(e164)}`));
   html+='</div>';
-  html+='<div class="alert-info">ℹ Carrier-Erkennung zuverlässig für DE/AT/CH. Carrier-IP = Infrastrukturstandort, nicht Nutzerstandort.</div>';
+  html+='<div class="ai">Carrier-Erkennung am zuverlaessigsten fuer DE/AT/CH.</div>';
   $('phR').innerHTML=html;
 }
 
-// ══════════════════════════════════════════════════════════
-// EMAIL TRACKER
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// EMAIL
+// ──────────────────────────────────────────
 async function trackEmail(){
   const em=$('emInput').value.trim();
-  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('emR').innerHTML='<div class="alert-err">Ungültige E-Mail!</div>';return;}
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('emR').innerHTML='<div class="ae">Ungueltige E-Mail!</div>';return;}
   ld('emL',true);$('emR').innerHTML='';
-  const[uname,domain]=em.split('@');
-
-  // DNS queries: A, AAAA, MX, TXT, NS, CAA, CNAME, SOA + subdomain SPF check
-  const [rA,rAAAA,rMX,rTXT,rNS,rCAA,rCNAME,rSOA,rDMARCTXT] = await Promise.allSettled([
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=A`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=AAAA`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=MX`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=TXT`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=NS`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=CAA`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=CNAME`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=SOA`),
-    safeFetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`)
+  const[un,domain]=em.split('@');
+  const[rA,rMX,rTXT,rNS,rCAA,rDMARC]=await Promise.allSettled([
+    sf(`https://dns.google/resolve?name=${domain}&type=A`),sf(`https://dns.google/resolve?name=${domain}&type=MX`),
+    sf(`https://dns.google/resolve?name=${domain}&type=TXT`),sf(`https://dns.google/resolve?name=${domain}&type=NS`),
+    sf(`https://dns.google/resolve?name=${domain}&type=CAA`),sf(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`)
   ]);
-
-  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1],ttl:r.TTL};})??[];
-  const aRecs=rA.value?.Answer?.map(r=>({ip:r.data,ttl:r.TTL}))??[];
-  const aaaaRecs=rAAAA.value?.Answer?.map(r=>r.data)??[];
-  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)??[];
-  const nsRecs=rNS.value?.Answer?.map(r=>r.data)??[];
-  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)??[];
-  const cname=rCNAME.value?.Answer?.[0]?.data??null;
-  const soa=rSOA.value?.Answer?.[0]?.data??null;
-  const dmarcTxt=rDMARCTXT.value?.Answer?.[0]?.data??null;
-
-  let spf='',dmarc='',hasDKIM=false,hasMTASTS=false,hasBimi=false;
-  txtRecs.forEach(t=>{
-    if(t.includes('v=spf1'))spf=t;
-    if(t.includes('v=DMARC1'))dmarc=t;
-    if(t.includes('v=DKIM1'))hasDKIM=true;
-    if(t.includes('v=STSv1'))hasMTASTS=true;
-    if(t.includes('v=BIMI1'))hasBimi=true;
-  });
-  const finalDmarc=dmarcTxt||dmarc;
-  const hasSPF=!!spf, hasDMARC=!!finalDmarc;
-
-  // Detect disposable
-  const dispList=['tempmail','guerrillamail','10minutemail','throwaway','mailinator','trashmail',
-    'temp-mail','fakeinbox','yopmail','getnada','sharklasers','dispostable','mailnull',
-    'spamgourmet','guerrillamailblock','spam4.me','maildrop','throwam','tempinbox'];
-  const isDisp=dispList.some(d=>domain.toLowerCase().includes(d));
-
-  // Provider database
-  const provDB={
-    'gmail.com':{n:'Google Gmail',co:'Google LLC',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
-    'googlemail.com':{n:'Google Gmail',co:'Google LLC',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
-    'outlook.com':{n:'Microsoft Outlook',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
-    'hotmail.com':{n:'Microsoft Hotmail',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
-    'hotmail.de':{n:'Microsoft Hotmail DE',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
-    'live.com':{n:'Microsoft Live',co:'Microsoft Corp.',plan:'Kostenlos',sec:'Hoch',e2e:'Nein',dsgvo:'✓'},
-    'yahoo.com':{n:'Yahoo Mail',co:'Yahoo/Verizon',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'Teilweise'},
-    'yahoo.de':{n:'Yahoo Mail DE',co:'Yahoo',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'Teilweise'},
-    'icloud.com':{n:'Apple iCloud Mail',co:'Apple Inc.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
-    'me.com':{n:'Apple Me Mail',co:'Apple Inc.',plan:'Kostenlos',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
-    'protonmail.com':{n:'ProtonMail',co:'Proton AG (CH)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
-    'proton.me':{n:'Proton Mail',co:'Proton AG (CH)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
-    'tutanota.com':{n:'Tutanota',co:'Tutao GmbH (DE)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
-    'tuta.io':{n:'Tuta',co:'Tutao GmbH (DE)',plan:'Free/Paid',sec:'Maximal',e2e:'Ja (E2E)',dsgvo:'✓'},
-    'gmx.com':{n:'GMX International',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    'gmx.de':{n:'GMX Deutschland',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    'gmx.at':{n:'GMX Österreich',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    'gmx.ch':{n:'GMX Schweiz',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    'web.de':{n:'WEB.DE',co:'1&1 Mail & Media',plan:'Kostenlos',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    't-online.de':{n:'Telekom Mail',co:'Deutsche Telekom',plan:'Kundendienst',sec:'Mittel',e2e:'Nein',dsgvo:'✓'},
-    'posteo.de':{n:'Posteo',co:'Posteo e.K. (DE)',plan:'Bezahlt (1€/Monat)',sec:'Sehr Hoch',e2e:'Nein',dsgvo:'✓'},
-    'mailbox.org':{n:'mailbox.org',co:'Heinlein Support (DE)',plan:'Bezahlt',sec:'Sehr Hoch',e2e:'Ja',dsgvo:'✓'},
-    'fastmail.com':{n:'Fastmail',co:'Fastmail Pty Ltd (AU)',plan:'Bezahlt',sec:'Hoch',e2e:'Nein',dsgvo:'Teilweise'},
-    'zoho.com':{n:'Zoho Mail',co:'Zoho Corporation',plan:'Free/Paid',sec:'Hoch',e2e:'Nein',dsgvo:'Teilweise'},
-    'aol.com':{n:'AOL Mail',co:'Yahoo/Verizon',plan:'Kostenlos',sec:'Niedrig',e2e:'Nein',dsgvo:'Nein'},
-  };
-  const prov=provDB[domain.toLowerCase()]||{n:'Custom/Geschäftlich',co:'Unbekannt',plan:'Unbekannt',sec:'Unbekannt',e2e:'N/A',dsgvo:'N/A'};
-
-  // Geo for first MX IP
+  const aRecs=rA.value?.Answer?.map(r=>r.data)||[];
+  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1]};})||[];
+  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)||[];
+  const nsRecs=rNS.value?.Answer?.map(r=>r.data)||[];
+  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)||[];
+  const dmarcTxt=rDMARC.value?.Answer?.[0]?.data||null;
+  let spf='';txtRecs.forEach(t=>{if(t.includes('v=spf1'))spf=t;});
+  const hasSPF=!!spf,hasDMARC=!!dmarcTxt;
+  let hasDKIM=false;txtRecs.forEach(t=>{if(t.includes('v=DKIM1'))hasDKIM=true;});
+  const sc=(hasSPF?1:0)+(hasDMARC?1:0)+(hasDKIM?1:0);
+  const disp=['tempmail','guerrillamail','10minutemail','throwaway','mailinator','trashmail','temp-mail','fakeinbox','yopmail'].some(d=>domain.includes(d));
+  const provDB={'gmail.com':{n:'Google Gmail',co:'Google LLC',sec:'Sehr Hoch',e2e:'Nein'},'outlook.com':{n:'Microsoft Outlook',co:'Microsoft',sec:'Sehr Hoch',e2e:'Nein'},'hotmail.com':{n:'Hotmail',co:'Microsoft',sec:'Hoch',e2e:'Nein'},'yahoo.com':{n:'Yahoo Mail',co:'Yahoo',sec:'Mittel',e2e:'Nein'},'icloud.com':{n:'Apple iCloud',co:'Apple',sec:'Sehr Hoch',e2e:'Ja'},'protonmail.com':{n:'ProtonMail',co:'Proton AG',sec:'Maximal',e2e:'E2E'},'proton.me':{n:'Proton Mail',co:'Proton AG',sec:'Maximal',e2e:'E2E'},'tutanota.com':{n:'Tutanota',co:'Tutao GmbH',sec:'Maximal',e2e:'E2E'},'gmx.de':{n:'GMX DE',co:'1&1',sec:'Mittel',e2e:'Nein'},'gmx.com':{n:'GMX',co:'1&1',sec:'Mittel',e2e:'Nein'},'web.de':{n:'WEB.DE',co:'1&1',sec:'Mittel',e2e:'Nein'},'t-online.de':{n:'Telekom Mail',co:'Telekom',sec:'Mittel',e2e:'Nein'},'posteo.de':{n:'Posteo',co:'Posteo',sec:'Sehr Hoch',e2e:'Nein'},'mailbox.org':{n:'mailbox.org',co:'Heinlein',sec:'Sehr Hoch',e2e:'Ja'}};
+  const prov=provDB[domain.toLowerCase()]||{n:'Custom/Business',co:'Unbekannt',sec:'Unbekannt',e2e:'N/A'};
   let mxGeo=null;
-  if(mxRecs[0]?.srv){
-    const mxIP=await safeFetch(`https://dns.google/resolve?name=${mxRecs[0].srv}&type=A`);
-    if(mxIP?.Answer?.[0]){
-      mxGeo=await safeFetch(`https://ipwho.is/${mxIP.Answer[0].data}`);
-    }
-  }
-
-  // Security score
-  const secScore=(hasSPF?1:0)+(hasDKIM?1:0)+(hasDMARC?1:0)+(hasMTASTS?1:0);
-  const spoofRisk=secScore<=1?'⚠ Hoch':secScore===2?'Mittel':'Niedrig';
-
+  if(mxRecs[0]?.srv){const mxIP=await sf(`https://dns.google/resolve?name=${mxRecs[0].srv}&type=A`);if(mxIP?.Answer?.[0])mxGeo=await sf(`https://ipwho.is/${mxIP.Answer[0].data}`);}
   ld('emL',false);
-
-  let html='<div class="data-wrap">';
+  let html='<div class="dw">';
   html+=sec('E-MAIL ANALYSE');
-  html+=r('Vollständige E-Mail',em);
-  html+=r('Benutzername',uname);
-  html+=r('Domain',domain);
-  html+=r('Top-Level-Domain','.'+domain.split('.').pop());
-  html+=r('Format',`✓ Gültig`);
-  html+=r('Wegwerf-Mail',isDisp?'⚠ Ja (Temporär)':'Nein');
-  if(cname) html+=r('Domain-CNAME',cname);
-
-  html+=sec('ANBIETER DETAILS');
-  html+=r('Dienst',prov.n);
-  html+=r('Unternehmen',prov.co);
-  html+=r('Kontotyp',prov.plan);
-  html+=r('Sicherheitsniveau',prov.sec);
-  html+=r('Ende-zu-Ende-Verschlüsselung',prov.e2e);
-  html+=r('DSGVO-konform',prov.dsgvo);
-
-  html+=sec('MX-EINTRÄGE (Mailserver)');
-  if(mxRecs.length>0){
-    mxRecs.forEach((mx,i)=>html+=r(`MX ${i+1} (Prio ${mx.prio})`,`${mx.srv} <em style="color:var(--label);font-size:11px">TTL: ${mx.ttl}s</em>`));
-    html+=r('Empfang möglich','✓ Ja');
-    html+=r('Anzahl Mailserver',mxRecs.length+'');
-  } else {
-    html+=r('MX Status','✗ Keine MX-Einträge — kann keine E-Mails empfangen!');
-  }
-
-  html+=sec('DNS EINTRÄGE');
-  aRecs.forEach((a,i)=>html+=r(`A ${i+1} (IPv4)`,`${a.ip} <em style="color:var(--label);font-size:11px">TTL: ${a.ttl}s</em>`));
-  if(aaaaRecs.length>0) aaaaRecs.forEach((a,i)=>html+=r(`AAAA ${i+1} (IPv6)`,a.substring(0,50)));
-  if(nsRecs.length>0) nsRecs.forEach((ns,i)=>html+=r(`NS ${i+1}`,ns));
-  if(soa) html+=r('SOA Record',soa.substring(0,100));
-  if(caaRecs.length>0) caaRecs.forEach((c,i)=>html+=r(`CAA ${i+1}`,c));
-
-  html+=sec('E-MAIL SICHERHEIT (SPF / DKIM / DMARC)');
-  html+=r('SPF Record',hasSPF?`✓ Konfiguriert`:'✗ Fehlt');
-  if(hasSPF) html+=r('SPF Details',spf.substring(0,100));
-  html+=r('SPF Mechanismus',hasSPF?parseSPF(spf):'N/A');
-  html+=r('DKIM',hasDKIM?'✓ Konfiguriert':'✗ Fehlt');
-  html+=r('DMARC',hasDMARC?'✓ Konfiguriert':'✗ Fehlt');
-  if(hasDMARC) html+=r('DMARC Record',finalDmarc.substring(0,100));
-  if(hasDMARC) html+=r('DMARC Policy',parseDMARC(finalDmarc));
-  html+=r('MTA-STS',hasMTASTS?'✓ Konfiguriert':'✗ N/A');
-  html+=r('BIMI',hasBimi?'✓ Logo-Eintrag':'✗ N/A');
-  html+=r('Security Score',`${secScore}/4 — ${secScore===4?'Ausgezeichnet':secScore>=2?'Gut':'Schwach'}`);
-  html+=r('Spoofing-Risiko',spoofRisk);
-  html+=r('Anti-Spoofing',secScore>=2?'✓ Teilweise geschützt':secScore>=3?'✓ Gut geschützt':'⚠ Anfällig');
-
-  if(mxGeo&&mxGeo.success){
-    html+=sec('MAILSERVER STANDORT (MX IP)');
-    html+=r('Mailserver IP',mxGeo.ip||'N/A');
-    html+=r('Land',`${mxGeo.country||'N/A'} ${mxGeo.flag?.emoji||''}`);
-    html+=r('Stadt',mxGeo.city||'N/A');
-    html+=r('ISP/Hosting',mxGeo.connection?.isp||'N/A');
-    html+=r('Organisation',mxGeo.connection?.org||'N/A');
-    html+=r('ASN',mxGeo.connection?.asn||'N/A');
-    if(aRecs[0]){
-      html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${mxGeo.ip}';trackIP('${mxGeo.ip}');},200)">▶ Mailserver-IP tracken</button>`;
-    }
-  }
-
-  html+=sec('BREACH & REPUTATION CHECK');
-  html+=r('Have I Been Pwned',lnk('Datenlecks prüfen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
-  html+=r('Dehashed',lnk('Passwort-Leaks',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
-  html+=r('LeakCheck.io',lnk('Breach-Suche',`https://leakcheck.io/email/${encodeURIComponent(em)}`));
-  html+=r('Intelligence X',lnk('IntelX Suche',`https://intelx.io/?s=${encodeURIComponent(em)}`));
-  html+=r('EmailRep.io',lnk('Reputations-Check',`https://emailrep.io/${encodeURIComponent(em)}`));
-  html+=r('Epieos',lnk('Verbundene Konten',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
-  html+=r('Hunter.io',lnk('E-Mail verifizieren',`https://hunter.io/email-verifier/${encodeURIComponent(em)}`));
-  html+=r('Google',lnk('"'+em+'" googlen',`https://google.com/search?q=%22${encodeURIComponent(em)}%22`));
-
-  html+=sec('DOMAIN TOOLS');
-  html+=r('WHOIS',lnk('Registrierungs-Infos',`https://who.is/whois/${domain}`));
-  html+=r('MXToolbox',lnk('DNS/MX Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
-  html+=r('Google Admin Toolbox',lnk('MX/DNS Checker',`https://toolbox.googleapps.com/apps/checkmx/check?domain=${domain}`));
-  html+=r('DMARC Analyzer',lnk('DMARC testen',`https://dmarcian.com/dmarc-inspector/?domain=${domain}`));
-
-  html+=r('TXT Records',txtRecs.length>0?txtRecs.slice(0,5).map((t,i)=>`<small style="display:block;margin-top:3px;color:var(--label)">[${i+1}] ${t.substring(0,100)}</small>`).join(''):'Keine');
-
+  html+=row('Vollstaendige E-Mail',em);html+=row('Benutzername',un);html+=row('Domain',domain);
+  html+=row('Format','Gueltig');html+=row('Wegwerf-Mail',disp?'<span class="badge bwarn">Ja</span>':'Nein');
+  html+=sec('ANBIETER');
+  html+=row('Dienst',prov.n);html+=row('Unternehmen',prov.co);html+=row('Sicherheit',prov.sec);html+=row('E2E-Verschluesselung',prov.e2e);
+  html+=sec('MX SERVER');
+  if(mxRecs.length>0){mxRecs.forEach((mx,i)=>html+=row(`MX ${i+1} (Prio ${mx.prio})`,mx.srv));html+=row('Empfang','Moeglich');}
+  else html+=row('MX','<span class="badge bbad">Keine MX-Eintraege</span>');
+  html+=sec('DNS EINTRAEGE');
+  aRecs.forEach((a,i)=>html+=row(`A ${i+1}`,a));
+  if(nsRecs.length>0)nsRecs.forEach((n,i)=>html+=row(`NS ${i+1}`,n));
+  if(caaRecs.length>0)caaRecs.forEach((c,i)=>html+=row(`CAA ${i+1}`,c));
+  html+=sec('E-MAIL SICHERHEIT');
+  html+=row('SPF',hasSPF?spf.substring(0,80):'<span class="badge bbad">Fehlt</span>');
+  html+=row('DKIM',hasDKIM?'Konfiguriert':'<span class="badge bbad">Fehlt</span>');
+  html+=row('DMARC',hasDMARC?(dmarcTxt||'').substring(0,80):'<span class="badge bbad">Fehlt</span>');
+  html+=row('Security Score',`${sc}/3 -- ${sc===3?'Ausgezeichnet':sc===2?'Gut':'Schwach'}`);
+  html+=row('Spoofing-Risiko',sc<=1?'<span class="badge bbad">Hoch</span>':sc===2?'Mittel':'Niedrig');
+  if(mxGeo?.success){html+=sec('MAILSERVER STANDORT');html+=row('IP',mxGeo.ip);html+=row('Land',mxGeo.country||'N/A');html+=row('ISP',mxGeo.connection?.isp||'N/A');html+=row('Stadt',mxGeo.city||'N/A');if(mxGeo.ip)html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${mxGeo.ip}'),200)">Mailserver tracken</button>`;}
+  html+=sec('OSINT & TOOLS');
+  html+=row('Have I Been Pwned',lnk('Breaches pruefen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
+  html+=row('Dehashed',lnk('Leaks',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
+  html+=row('Epieos',lnk('Verbundene Konten',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
+  html+=row('IntelX',lnk('Intel X',`https://intelx.io/?s=${encodeURIComponent(em)}`));
+  html+=row('WHOIS Domain',lnk('Registrar',`https://who.is/whois/${domain}`));
+  html+=row('MXToolbox',lnk('MX Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
+  html+=row('Google',lnk('Googlen',`https://google.com/search?q=%22${encodeURIComponent(em)}%22`));
+  if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,6).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
   html+='</div>';
-  if(isDisp) html+='<div class="alert-warn">⚠ WEGWERF-MAIL — Temporärer Dienst, kein echtes Konto!</div>';
-  if(secScore<2) html+='<div class="alert-warn">⚠ SCHLECHTE E-MAIL-SICHERHEIT — Anfällig für Spoofing/Spam!</div>';
-  html+='<div class="alert-info">ℹ IP-Adressen gehören zu Mailservern des Anbieters — nicht zum Absendergerät.</div>';
+  if(disp)html+='<div class="aw">WEGWERF-MAIL erkannt -- Temporaerer Dienst!</div>';
+  if(sc<2)html+='<div class="aw">Schlechte E-Mail-Sicherheit -- Spoofing moeglich!</div>';
+  html+='<div class="ai">IP gehoert zum Mailserver-Anbieter, nicht zum Absender.</div>';
   $('emR').innerHTML=html;
 }
 
-function parseSPF(spf){
-  if(!spf) return 'N/A';
-  const parts=[];
-  if(spf.includes('~all')) parts.push('~all (Softfail)');
-  else if(spf.includes('-all')) parts.push('-all (Hardfail ✓)');
-  else if(spf.includes('+all')) parts.push('+all (⚠ Offen!)');
-  if(spf.includes('include:')) parts.push('includes: '+spf.match(/include:([^\s]+)/g)?.join(', '));
-  if(spf.includes('ip4:')) parts.push('IP4-Ranges vorhanden');
-  if(spf.includes('ip6:')) parts.push('IP6-Ranges vorhanden');
-  return parts.join(' | ')||spf.substring(0,60);
-}
-
-function parseDMARC(d){
-  if(!d) return 'N/A';
-  const p=d.match(/p=(\w+)/)?.[1]||'none';
-  const sp=d.match(/sp=(\w+)/)?.[1]||p;
-  const pct=d.match(/pct=(\d+)/)?.[1]||'100';
-  return`Policy: ${p} | Subdomain: ${sp} | Prozent: ${pct}%`;
-}
-
-// ══════════════════════════════════════════════════════════
-// DISCORD TRACKER
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// DISCORD
+// ──────────────────────────────────────────
 async function trackDC(){
   const uid=$('dcInput').value.trim();
-  if(!uid||!/^\d{17,20}$/.test(uid)){$('dcR').innerHTML='<div class="alert-err">Ungültige Discord User ID (17-20 Ziffern)!</div>';return;}
+  if(!uid||!/^\d{17,20}$/.test(uid)){$('dcR').innerHTML='<div class="ae">Ungueltige Discord User ID!</div>';return;}
   ld('dcL',true);$('dcR').innerHTML='';
-
-  // Snowflake decode
   const big=BigInt(uid);
   const ts=(big>>22n)+1420070400000n;
   const created=new Date(Number(ts));
-  const ageMs=Date.now()-created.getTime();
-  const ageDays=Math.floor(ageMs/86400000);
-  const workerId=Number((big&0x3E0000n)>>17n);
-  const processId=Number((big&0x1F000n)>>12n);
-  const increment=Number(big&0xFFFn);
-
-  // Multiple data sources
-  const [r1,r2,r3] = await Promise.allSettled([
-    safeFetch(`https://discord.com/api/v10/users/${uid}`),
-    safeFetch(`https://api.lanyard.rest/v1/users/${uid}`),
-    safeFetch(`https://discord.id/api/v10/users/${uid}`)
-  ]);
-
-  let ud = r1.value?.username ? r1.value :
-           r2.value?.data?.discord_user ? r2.value.data.discord_user :
-           r3.value?.username ? r3.value : null;
-
-  // Lanyard for presence
-  const presence = r2.value?.data;
-
-  ld('dcL',false);
-
+  const ageD=Math.floor((Date.now()-created.getTime())/86400000);
+  const yr=Math.floor(ageD/365),mo=Math.floor((ageD%365)/30),dy=ageD%30;
+  const wid=Number((big&0x3E0000n)>>17n),pid=Number((big&0x1F000n)>>12n),inc=Number(big&0xFFFn);
+  const[r1,r2]=await Promise.allSettled([sf(`https://discord.com/api/v10/users/${uid}`),sf(`https://api.lanyard.rest/v1/users/${uid}`)]);
+  let ud=r1.value?.username?r1.value:r2.value?.data?.discord_user?r2.value.data.discord_user:null;
+  const pres=r2.value?.data;ld('dcL',false);
   const flags=ud?.public_flags||0;
-  const flagDefs={
-    1:'Discord Staff',2:'Discord Partner',4:'HypeSquad Events Organizer',
-    8:'Bug Hunter Level 1',64:'HypeSquad Bravery',128:'HypeSquad Brilliance',
-    256:'HypeSquad Balance',512:'Early Nitro Supporter',16384:'Bug Hunter Level 2',
-    65536:'Verified Bot',131072:'Verified Bot Developer',262144:'Discord Certified Moderator',
-    1048576:'Bot HTTP Interactions',4194304:'Active Developer'
-  };
-  const badges=Object.entries(flagDefs).filter(([b])=>(flags&Number(b))!==0).map(([,n])=>n);
-
-  // Account age breakdown
-  const years=Math.floor(ageDays/365),months=Math.floor((ageDays%365)/30),days=ageDays%30;
-  const accountTier = ageDays>2000?'Veteran':ageDays>1000?'Erfahren':ageDays>365?'Regular':ageDays>90?'Neu':'Sehr neu';
-
-  let html='<div class="data-wrap">';
-
-  if(ud?.avatar){
-    const ext=ud.avatar.startsWith('a_')?'gif':'png';
-    html+=`<img src="https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=256" class="ava" onerror="this.style.display='none'" alt="Avatar">`;
-  }
-
-  html+=sec('SNOWFLAKE DECODE');
-  html+=r('User ID',uid);
-  html+=r('Konto erstellt',created.toLocaleString('de-DE',{dateStyle:'full',timeStyle:'medium'}));
-  html+=r('Kontoalter',`${years} Jahre, ${months} Monate, ${days} Tage`);
-  html+=r('Kontoalter (Tage)',ageDays.toLocaleString()+' Tage');
-  html+=r('Account-Tier',accountTier);
-  html+=r('Discord Epoch',new Date(Number(ts)).toISOString());
-  html+=r('Snowflake Timestamp',Number(big>>22n)+'');
-  html+=r('Worker ID',workerId+'');
-  html+=r('Process ID',processId+'');
-  html+=r('Inkrement',increment+'');
-  html+=r('Binary',big.toString(2).padStart(64,'0').match(/.{1,8}/g)?.join(' ')||'');
-
+  const fd={1:'Discord Staff',2:'Discord Partner',4:'HypeSquad Events',8:'Bug Hunter Lv1',64:'HypeSquad Bravery',128:'HypeSquad Brilliance',256:'HypeSquad Balance',512:'Early Supporter',16384:'Bug Hunter Lv2',131072:'Verified Bot Dev',4194304:'Active Developer'};
+  const badges=Object.entries(fd).filter(([b])=>(flags&Number(b))!==0).map(([,n])=>n);
+  let html='<div class="dw">';
+  if(ud?.avatar){const ext=ud.avatar.startsWith('a_')?'gif':'png';html+=`<img src="https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=256" class="ava" onerror="this.style.display='none'">`;}
+  html+=sec('SNOWFLAKE ANALYSE');
+  html+=row('User ID',uid);html+=row('Erstellt',created.toLocaleString('de-DE',{dateStyle:'full',timeStyle:'short'}));
+  html+=row('Kontoalter',`${yr} Jahre, ${mo} Monate, ${dy} Tage`);
+  html+=row('Tier',ageD>2000?'Veteran':ageD>1000?'Erfahren':ageD>365?'Regular':'Neu');
+  html+=row('ISO Datum',new Date(Number(ts)).toISOString());
+  html+=row('Worker ID',wid+'');html+=row('Process ID',pid+'');html+=row('Inkrement',inc+'');
   if(ud){
-    html+=sec('PROFIL DATEN');
-    html+=r('Username',ud.username||'N/A');
-    html+=r('Display Name',ud.global_name||ud.username||'N/A');
-    html+=r('Discriminator',ud.discriminator&&ud.discriminator!=='0'?'#'+ud.discriminator:'Neues System (kein #)');
-    html+=r('Bot-Konto',ud.bot?'✓ Ja':'Nein');
-    html+=r('System-Account',ud.system?'✓ Ja':'Nein');
-    html+=r('Verifiziert',ud.verified?'✓ Ja':'Unbekannt');
-
-    if(ud.avatar){
-      const isAnim=ud.avatar.startsWith('a_');
-      const ext=isAnim?'gif':'png';
-      html+=r('Avatar Hash',ud.avatar);
-      html+=r('Avatar Animiert',isAnim?'✓ Ja (Nitro-Indikator)':'Nein');
-      html+=r('Avatar 256px',lnk('Avatar öffnen',`https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=256`));
-      html+=r('Avatar 1024px',lnk('Full HD',`https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=1024`));
-    } else {
-      const defaultAva=`https://cdn.discordapp.com/embed/avatars/${Number(BigInt(uid)%5n)}.png`;
-      html+=r('Avatar','Standard-Avatar (kein benutzerdefinierter)');
-      html+=r('Standard Avatar',lnk('Anzeigen',defaultAva));
-    }
-
-    if(ud.banner){
-      const bExt=ud.banner.startsWith('a_')?'gif':'png';
-      html+=r('Banner',lnk('Banner anzeigen',`https://cdn.discordapp.com/banners/${uid}/${ud.banner}.${bExt}?size=600`));
-      html+=r('Banner Animiert',ud.banner.startsWith('a_')?'✓ Ja':'Nein');
-    }
-
-    if(ud.accent_color!=null) html+=r('Profilfarbe',`#${ud.accent_color.toString(16).padStart(6,'0')}`);
-    if(ud.banner_color) html+=r('Banner-Farbe',ud.banner_color);
-
-    html+=sec('NITRO STATUS');
-    if(ud.premium_type&&ud.premium_type>0){
-      const nt={1:'Nitro Classic',2:'Nitro (voll)',3:'Nitro Basic'};
-      html+=r('Nitro',`✓ ${nt[ud.premium_type]||'Aktiv'}`);
-    } else {
-      html+=r('Nitro','Nicht direkt erkennbar (privat)');
-    }
-    html+=r('Animierter Avatar',ud.avatar?.startsWith('a_')?'→ Nitro-Indikator!':'Kein Hinweis');
-    html+=r('Animiertes Banner',ud.banner?.startsWith('a_')?'→ Nitro-Indikator!':'N/A');
+    html+=sec('PROFIL');
+    html+=row('Username',ud.username||'N/A');html+=row('Display Name',ud.global_name||ud.username||'N/A');
+    html+=row('Discriminator',ud.discriminator&&ud.discriminator!=='0'?'#'+ud.discriminator:'Neues System');
+    html+=row('Bot',ud.bot?'Ja':'Nein');
+    if(ud.avatar){const isA=ud.avatar.startsWith('a_');const ext=isA?'gif':'png';html+=row('Avatar animiert',isA?'Ja (Nitro-Indikator)':'Nein');html+=row('Avatar HD',lnk('Anzeigen',`https://cdn.discordapp.com/avatars/${uid}/${ud.avatar}.${ext}?size=1024`));}
+    if(ud.banner){const bE=ud.banner.startsWith('a_')?'gif':'png';html+=row('Banner',lnk('Banner oeffnen',`https://cdn.discordapp.com/banners/${uid}/${ud.banner}.${bE}?size=600`));}
+    if(ud.accent_color!=null)html+=row('Profilfarbe',`#${ud.accent_color.toString(16).padStart(6,'0')}`);
+    html+=row('Nitro',ud.premium_type>0?{1:'Nitro Classic',2:'Nitro',3:'Nitro Basic'}[ud.premium_type]:'Nicht erkennbar');
   }
-
-  if(badges.length>0){
-    html+=sec(`BADGES (${badges.length} erkannt)`);
-    badges.forEach(b=>html+=r('Badge',`✓ ${b}`));
-    html+=r('Flags-Wert (roh)',flags+'');
-  } else {
-    html+=sec('BADGES');
-    html+=r('Badges','Keine öffentlichen Badges');
+  if(badges.length>0){html+=sec(`BADGES (${badges.length})`);badges.forEach(b=>html+=row('Badge',b));}
+  if(pres){
+    html+=sec('AKTIVITAET (Lanyard)');
+    html+=row('Status',pres.discord_status||'N/A');
+    html+=row('Desktop',pres.active_on_discord_desktop?'Aktiv':'Nein');
+    html+=row('Mobile',pres.active_on_discord_mobile?'Aktiv':'Nein');
+    html+=row('Web',pres.active_on_discord_web?'Aktiv':'Nein');
+    if(pres.listening_to_spotify&&pres.spotify)html+=row('Spotify',`${pres.spotify.song} -- ${pres.spotify.artist}`);
+    if(pres.activities?.length>0)pres.activities.forEach((a,i)=>html+=row(`Aktivitaet ${i+1}`,`${a.name} -- ${a.state||a.details||''}`));
   }
-
-  if(presence){
-    html+=sec('AKTIVITÄTSSTATUS (Lanyard)');
-    html+=r('Online-Status',presence.discord_status||'Unbekannt');
-    html+=r('Aktiv auf Desktop',presence.active_on_discord_desktop?'✓ Ja':'Nein');
-    html+=r('Aktiv auf Mobile',presence.active_on_discord_mobile?'✓ Ja':'Nein');
-    html+=r('Aktiv im Web',presence.active_on_discord_web?'✓ Ja':'Nein');
-    if(presence.activities?.length>0){
-      presence.activities.forEach((act,i)=>{
-        html+=r(`Aktivität ${i+1}`,`${act.name||'N/A'} — ${act.state||act.details||'...'}`);
-      });
-    }
-    if(presence.listening_to_spotify){
-      const sp=presence.spotify;
-      html+=r('Spotify 🎵',`${sp?.song||'N/A'} – ${sp?.artist||'N/A'} (${sp?.album||''})`);
-    }
-    if(presence.kv){
-      const kv=presence.kv;
-      if(kv.location) html+=r('Kustom-Status Ort',kv.location);
-    }
-  }
-
   html+=sec('OSINT TOOLS');
-  html+=r('Discord.id',lnk('Erweiterte Infos',`https://discord.id/?prefill=${uid}`));
-  html+=r('Discord Profil',lnk('Direkt öffnen',`https://discord.com/users/${uid}`));
-  html+=r('Lanyard API',lnk('Live-Aktivität JSON',`https://api.lanyard.rest/v1/users/${uid}`));
-  html+=r('Lookup.guru',lnk('Lookup',`https://lookup.guru/${uid}`));
-  html+=r('Discord History',lnk('Historische Daten',`https://discordhistory.com/user/${uid}`));
-  if(ud?.username){
-    html+=r('Username suchen',lnk(`"${ud.username}" googlen`,`https://google.com/search?q=discord+%22${encodeURIComponent(ud.username)}%22`));
-    html+=r('Sherlock',lnk(`Username auf Plattformen`,`https://whatsmyname.app/?q=${encodeURIComponent(ud.username)}`));
-  }
-
+  html+=row('Discord.id',lnk('Erweiterte Infos',`https://discord.id/?prefill=${uid}`));
+  html+=row('Profil',lnk('Oeffnen',`https://discord.com/users/${uid}`));
+  html+=row('Lanyard',lnk('Live JSON',`https://api.lanyard.rest/v1/users/${uid}`));
+  html+=row('Lookup.guru',lnk('Lookup',`https://lookup.guru/${uid}`));
+  if(ud?.username)html+=row('Username googeln',lnk('Suche',`https://google.com/search?q=discord+%22${encodeURIComponent(ud.username)}%22`));
   html+='</div>';
-  if(!ud) html+='<div class="alert-warn">⚠ Profildaten nicht abrufbar — API-Zugriff begrenzt oder Bot ohne Token.</div>';
-  html+='<div class="alert-info">ℹ Snowflake-Daten sind immer verfügbar. Profilinfos nur wenn öffentlich zugänglich.</div>';
+  if(!ud)html+='<div class="aw">Profil nicht abrufbar -- API-Limit oder privat.</div>';
   $('dcR').innerHTML=html;
 }
 
-// ══════════════════════════════════════════════════════════
-// DOMAIN TRACKER
-// ══════════════════════════════════════════════════════════
+// ──────────────────────────────────────────
+// DOMAIN
+// ──────────────────────────────────────────
 async function trackDomain(){
-  let domain=$('dmInput').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*/,'');
-  if(!domain){$('dmR').innerHTML='<div class="alert-err">Bitte Domain eingeben!</div>';return;}
+  let dm=$('dmInput').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*/,'');
+  if(!dm){$('dmR').innerHTML='<div class="ae">Domain eingeben!</div>';return;}
   ld('dmL',true);$('dmR').innerHTML='';
-
-  // Comprehensive DNS + additional checks
-  const [rA,rAAAA,rMX,rTXT,rNS,rCNAME,rSOA,rCAA,rDMARCTXT,rDKIM,rSTS] = await Promise.allSettled([
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=A`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=AAAA`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=MX`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=TXT`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=NS`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=CNAME`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=SOA`),
-    safeFetch(`https://dns.google/resolve?name=${domain}&type=CAA`),
-    safeFetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`),
-    safeFetch(`https://dns.google/resolve?name=default._domainkey.${domain}&type=TXT`),
-    safeFetch(`https://dns.google/resolve?name=_mta-sts.${domain}&type=TXT`)
+  const[rA,rAAAA,rMX,rTXT,rNS,rCAA,rSOA,rDMARC]=await Promise.allSettled([
+    sf(`https://dns.google/resolve?name=${dm}&type=A`),sf(`https://dns.google/resolve?name=${dm}&type=AAAA`),
+    sf(`https://dns.google/resolve?name=${dm}&type=MX`),sf(`https://dns.google/resolve?name=${dm}&type=TXT`),
+    sf(`https://dns.google/resolve?name=${dm}&type=NS`),sf(`https://dns.google/resolve?name=${dm}&type=CAA`),
+    sf(`https://dns.google/resolve?name=${dm}&type=SOA`),sf(`https://dns.google/resolve?name=_dmarc.${dm}&type=TXT`)
   ]);
-
-  const aRecs=rA.value?.Answer?.map(r=>({ip:r.data,ttl:r.TTL}))??[];
-  const aaaaRecs=rAAAA.value?.Answer?.map(r=>r.data)??[];
-  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1]};})??[];
-  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)??[];
-  const nsRecs=rNS.value?.Answer?.map(r=>r.data)??[];
-  const cname=rCNAME.value?.Answer?.[0]?.data??null;
-  const soa=rSOA.value?.Answer?.[0]?.data??null;
-  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)??[];
-  const dmarcTxt=rDMARCTXT.value?.Answer?.[0]?.data??null;
-  const dkimTxt=rDKIM.value?.Answer?.[0]?.data??null;
-  const stsTxt=rSTS.value?.Answer?.[0]?.data??null;
-
-  let spf=''; txtRecs.forEach(t=>{if(t.includes('v=spf1'))spf=t;});
-  const hasSPF=!!spf,hasDMARC=!!dmarcTxt,hasDKIM=!!dkimTxt,hasMTASTS=!!stsTxt;
-  const secScore=(hasSPF?1:0)+(hasDMARC?1:0)+(hasDKIM?1:0)+(hasMTASTS?1:0);
-
-  // Geo for A records
-  let geoData=null;
-  if(aRecs[0]?.ip){
-    geoData=await safeFetch(`https://ipwho.is/${aRecs[0].ip}`);
-  }
-
-  // Hosting detection
-  let hostingProvider='Unbekannt';
-  const nsStr=nsRecs.join(' ').toLowerCase();
-  const mxStr=mxRecs.map(m=>m.srv).join(' ').toLowerCase();
-  if(nsStr.includes('cloudflare')) hostingProvider='Cloudflare';
-  else if(nsStr.includes('awsdns')) hostingProvider='Amazon AWS/Route53';
-  else if(nsStr.includes('azure')) hostingProvider='Microsoft Azure';
-  else if(nsStr.includes('google')) hostingProvider='Google Cloud';
-  else if(nsStr.includes('hetzner')) hostingProvider='Hetzner Online';
-  else if(nsStr.includes('strato')) hostingProvider='STRATO AG';
-  else if(nsStr.includes('ionos')||nsStr.includes('1und1')) hostingProvider='IONOS/1&1';
-  else if(nsStr.includes('godaddy')) hostingProvider='GoDaddy';
-  if(mxStr.includes('google')) hostingProvider+=' | Gmail';
-  else if(mxStr.includes('outlook')||mxStr.includes('microsoft')) hostingProvider+=' | Microsoft 365';
-  else if(mxStr.includes('proton')) hostingProvider+=' | ProtonMail';
-
+  const aRecs=rA.value?.Answer?.map(r=>r.data)||[];
+  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1]};})||[];
+  const txtRecs=rTXT.value?.Answer?.map(r=>r.data)||[];
+  const nsRecs=rNS.value?.Answer?.map(r=>r.data)||[];
+  const caaRecs=rCAA.value?.Answer?.map(r=>r.data)||[];
+  const soa=rSOA.value?.Answer?.[0]?.data||null;
+  const dmarcT=rDMARC.value?.Answer?.[0]?.data||null;
+  let spf='';txtRecs.forEach(t=>{if(t.includes('v=spf1'))spf=t;});
+  const hasSPF=!!spf,hasDMARC=!!dmarcT;
+  let ns=nsRecs.join(' ').toLowerCase(),host='Unbekannt';
+  if(ns.includes('cloudflare'))host='Cloudflare';else if(ns.includes('awsdns'))host='Amazon AWS';else if(ns.includes('azure'))host='Microsoft Azure';else if(ns.includes('google'))host='Google Cloud';else if(ns.includes('hetzner'))host='Hetzner';else if(ns.includes('strato'))host='STRATO';else if(ns.includes('ionos')||ns.includes('1und1'))host='IONOS/1&1';else if(ns.includes('godaddy'))host='GoDaddy';
+  let geo=null;if(aRecs[0])geo=await sf(`https://ipwho.is/${aRecs[0]}`);
   ld('dmL',false);
-
-  let html=stats(
-    ['A Records',aRecs.length+''],
-    ['AAAA (IPv6)',aaaaRecs.length+''],
-    ['MX Server',mxRecs.length+''],
-    ['Nameserver',nsRecs.length+''],
-    ['SPF',hasSPF?'✓':'✗'],
-    ['DMARC',hasDMARC?'✓':'✗'],
-    ['DKIM',hasDKIM?'✓':'✗'],
-    ['MTA-STS',hasMTASTS?'✓':'✗']
-  );
-
-  html+='<div class="data-wrap">';
-  html+=sec('DOMAIN INFORMATIONEN');
-  html+=r('Domain',domain);
-  html+=r('TLD','.'+domain.split('.').pop());
-  html+=r('Subdomain',domain.split('.').length>2?domain.split('.').slice(0,-2).join('.'):'(Root-Domain)');
-  html+=r('Hosting/Provider',hostingProvider);
-  html+=r('Existiert',aRecs.length>0||mxRecs.length>0?'✓ Ja (DNS vorhanden)':'⚠ Möglicherweise nicht');
-  if(cname) html+=r('CNAME Ziel',cname);
-  if(soa){
-    const soaParts=soa.split(' ');
-    html+=r('SOA Primary NS',soaParts[0]||'N/A');
-    html+=r('SOA Responsible',soaParts[1]||'N/A');
-    html+=r('SOA Serial',soaParts[2]||'N/A');
-    html+=r('SOA Refresh',soaParts[3]?soaParts[3]+'s':'N/A');
-    html+=r('SOA TTL',soaParts[6]?soaParts[6]+'s':'N/A');
-  }
-
-  if(aRecs.length>0){
-    html+=sec('A-EINTRÄGE (IPv4)');
-    aRecs.forEach((a,i)=>html+=r(`A ${i+1}`,`${a.ip} <em style="color:var(--label);font-size:11px">TTL: ${a.ttl}s</em>`));
-  }
-  if(aaaaRecs.length>0){
-    html+=sec('AAAA-EINTRÄGE (IPv6)');
-    aaaaRecs.forEach((a,i)=>html+=r(`AAAA ${i+1}`,a));
-  }
-  if(nsRecs.length>0){
-    html+=sec('NAMESERVER (NS)');
-    nsRecs.forEach((ns,i)=>html+=r(`NS ${i+1}`,ns));
-  }
-  if(mxRecs.length>0){
-    html+=sec('MX-EINTRÄGE (Mailserver)');
-    mxRecs.forEach((mx,i)=>html+=r(`MX ${i+1} (Prio ${mx.prio})`,mx.srv));
-  }
-  if(caaRecs.length>0){
-    html+=sec('CAA-EINTRÄGE (SSL-Aussteller)');
-    caaRecs.forEach((c,i)=>html+=r(`CAA ${i+1}`,c));
-    html+=r('Erlaubte CAs',caaRecs.filter(c=>c.includes('issue')).map(c=>c.split('"')[1]).join(', ')||'Alle');
-  }
-  if(txtRecs.length>0){
-    html+=sec('TXT-EINTRÄGE');
-    txtRecs.slice(0,10).forEach((t,i)=>html+=r(`TXT ${i+1}`,t.substring(0,120)));
-  }
-
+  let html=stats(['A IPv4',aRecs.length+''],['AAAA IPv6',(rAAAA.value?.Answer||[]).length+''],['MX',mxRecs.length+''],['NS',nsRecs.length+''],['SPF',hasSPF?'OK':'Fehlt'],['DMARC',hasDMARC?'OK':'Fehlt']);
+  html+='<div class="dw">';
+  html+=sec('DOMAIN');
+  html+=row('Domain',dm);html+=row('TLD','.'+dm.split('.').pop());html+=row('Provider erkannt',host);
+  html+=row('Existiert',aRecs.length>0?'Ja':'Unklar');
+  if(soa){const s=soa.split(' ');html+=row('SOA Primary NS',s[0]||'N/A');html+=row('SOA Serial',s[2]||'N/A');}
+  if(aRecs.length>0){html+=sec('A EINTRAEGE (IPv4)');aRecs.forEach((a,i)=>html+=row(`A ${i+1}`,a));}
+  if(nsRecs.length>0){html+=sec('NAMESERVER');nsRecs.forEach((n,i)=>html+=row(`NS ${i+1}`,n));}
+  if(mxRecs.length>0){html+=sec('MX EINTRAEGE');mxRecs.forEach((mx,i)=>html+=row(`MX ${i+1} (Prio ${mx.prio})`,mx.srv));}
+  if(caaRecs.length>0){html+=sec('CAA EINTRAEGE (SSL Aussteller)');caaRecs.forEach((c,i)=>html+=row(`CAA ${i+1}`,c));}
   html+=sec('E-MAIL SICHERHEIT');
-  html+=r('SPF',hasSPF?'✓ '+spf.substring(0,80):'✗ Fehlt');
-  if(hasSPF) html+=r('SPF Auswertung',parseSPF(spf));
-  html+=r('DKIM (default)',hasDKIM?`✓ ${(dkimTxt||'').substring(0,70)}`:'✗ Nicht gefunden');
-  html+=r('DMARC',hasDMARC?'✓ '+dmarcTxt.substring(0,80):'✗ Fehlt');
-  if(hasDMARC) html+=r('DMARC Policy',parseDMARC(dmarcTxt));
-  html+=r('MTA-STS',hasMTASTS?'✓ '+stsTxt.substring(0,60):'✗ N/A');
-  html+=r('Security Score',`${secScore}/4`);
+  html+=row('SPF',hasSPF?spf.substring(0,80):'Fehlt');
+  html+=row('DMARC',hasDMARC?(dmarcT||'').substring(0,80):'Fehlt');
+  if(geo?.success){html+=sec('SERVER STANDORT');html+=row('IP',aRecs[0]);html+=row('Land',geo.country||'N/A');html+=row('Stadt',geo.city||'N/A');html+=row('ISP',geo.connection?.isp||'N/A');html+=row('ASN',geo.connection?.asn||'N/A');if(aRecs[0])html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${aRecs[0]}'),200)">Server-IP tracken</button>`;}
+  if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,8).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
+  html+=sec('ANALYSE TOOLS');
+  html+=row('WHOIS',lnk('Registrar + Ablauf',`https://who.is/whois/${dm}`));
+  html+=row('SSL Labs',lnk('SSL Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${dm}`));
+  html+=row('crt.sh',lnk('SSL Zertifikate',`https://crt.sh/?q=${dm}`));
+  html+=row('Shodan',lnk('Offene Ports',`https://shodan.io/search?query=${dm}`));
+  html+=row('VirusTotal',lnk('Bedrohungen',`https://virustotal.com/gui/domain/${dm}`));
+  html+=row('BuiltWith',lnk('Tech-Stack',`https://builtwith.com/${dm}`));
+  html+=row('URLScan',lnk('Screenshot',`https://urlscan.io/search/#domain:${dm}`));
+  html+=row('Wayback Machine',lnk('Snapshots',`https://web.archive.org/web/*/${dm}`));
+  html+=row('SecurityTrails',lnk('DNS History',`https://securitytrails.com/domain/${dm}/dns`));
+  html+=row('Subdomains',lnk('HackerTarget',`https://hackertarget.com/find-dns-host-records/?q=${dm}`));
+  html+='</div>';
+  html+='<div class="ai">DNS via Google DNS-over-HTTPS (8.8.8.8).</div>';
+  $('dmR').innerHTML=html;
+}
 
-  if(geoData&&geoData.success){
-    html+=sec('SERVER STANDORT (IP GEO)');
-    html+=r('Server IP',aRecs[0].ip);
-    html+=r('Land',`${geoData.country||'N/A'} ${geoData.flag?.emoji||''}`);
-    html+=r('Region',geoData.region||'N/A');
-    html+=r('Stadt',geoData.city||'N/A');
-    html+=r('ISP',geoData.connection?.isp||'N/A');
-    html+=r('Organisation',geoData.connection?.org||'N/A');
-    html+=r('ASN',geoData.connection?.asn||'N/A');
-    html+=r('Koordinaten',`${geoData.latitude||'N/A'}, ${geoData.longitude||'N/A'}`);
-    if(geoData.latitude&&geoData.longitude){
-      html+=r('Google Maps',lnk('Server-Standort',`https://maps.google.com/?q=${geoData.latitude},${geoData.longitude}`));
+// ──────────────────────────────────────────
+// MAC / NETZWERK TRACKER
+// ──────────────────────────────────────────
+async function trackMAC(){
+  const macRaw=$('macInput').value.trim();
+  const host=$('macHostInput').value.trim();
+  if(!macRaw&&!host){$('macR').innerHTML='<div class="ae">MAC-Adresse oder Hostname eingeben!</div>';return;}
+  ld('macL',true);$('macR').innerHTML='';
+
+  let html='<div class="dw">';
+
+  // ── MAC ADDRESS ANALYSIS ──
+  if(macRaw){
+    const clean=macRaw.replace(/[:\-\.\s]/g,'').toUpperCase();
+    if(!/^[0-9A-F]{12}$/.test(clean)){ld('macL',false);$('macR').innerHTML='<div class="ae">Ungueltige MAC-Adresse! Bitte 12 Hex-Zeichen eingeben (z.B. 00:1A:2B:3C:4D:5E)</div>';return;}
+    const oui=clean.substring(0,6);
+    const ouiFormatted=`${clean.substring(0,2)}:${clean.substring(2,4)}:${clean.substring(4,6)}`;
+    const macFormatted=`${clean.substring(0,2)}:${clean.substring(2,4)}:${clean.substring(4,6)}:${clean.substring(6,8)}:${clean.substring(8,10)}:${clean.substring(10,12)}`;
+    const macHyphens=macFormatted.replace(/:/g,'-');
+    const macCisco=`${clean.substring(0,4)}.${clean.substring(4,8)}.${clean.substring(8,12)}`;
+
+    // Bit analysis
+    const firstByte=parseInt(clean.substring(0,2),16);
+    const isMulticast=!!(firstByte&0x01);
+    const isLocallyAdmin=!!(firstByte&0x02);
+    const isRandomized=isLocallyAdmin;
+
+    // OUI Lookup via macvendors.com API
+    let vendor='Unbekannt';let vendorData=null;
+    try{
+      const r=await fetch(`https://api.macvendors.com/${oui}`);
+      if(r.ok)vendor=await r.text();
+      else if(r.status===404)vendor='Nicht in Datenbank';
+    }catch(e){vendor='API nicht erreichbar';}
+
+    // Second OUI lookup for more data
+    let vendorExtra=null;
+    try{
+      const r2=await sf(`https://www.macvendorlookup.com/api/v2/${oui}`);
+      if(Array.isArray(r2)&&r2[0])vendorExtra=r2[0];
+    }catch(e){}
+
+    // Device type heuristics based on OUI prefixes
+    const deviceHints={
+      'Apple':['iPhone','iPad','Mac','AirPods','AppleWatch'],
+      'Samsung':['Galaxy Phone','Smart TV','Tablet','Laptop'],
+      'Intel':['Laptop/PC WiFi Karte','NIC'],
+      'Cisco':['Switch','Router','Firewall','Access Point'],
+      'Raspberry':['Raspberry Pi (IoT)'],
+      'TP-Link':['Router','Access Point','Switch'],
+      'FRITZ!':'AVM FRITZ!Box Router',
+      'AVM':'FRITZ!Box Router / Repeater',
+      'Ubiquiti':['Access Point','Router','Netzwerkkamera'],
+      'Espressif':['ESP8266/ESP32 IoT Geraet'],
+      'Texas Instruments':['IoT Modul / Embedded Device'],
+      'Google':['Chromecast','Google Home / Nest'],
+      'Amazon':['Echo / Fire TV / Kindle'],
+      'Huawei':['Smartphone','Router','Laptop'],
+      'Sony':['PlayStation','Smartphone','TV'],
+      'Nintendo':['Switch','3DS / WiiU'],
+      'Xiaomi':['Smartphone','Smart Home'],
+      'Netgear':['Router','Switch','Access Point'],
+      'D-Link':['Router','Kamera','Switch'],
+      'ASUS':['Router','Laptop','Mainboard'],
+    };
+    let devHint='Unbekannt';
+    for(const[brand,types]of Object.entries(deviceHints)){
+      if(vendor.includes(brand)){devHint=Array.isArray(types)?types[0]:types;break;}
     }
-    html+=`<button class="btn-mini" onclick="back();show('ip');setTimeout(()=>{$('ipInput').value='${aRecs[0].ip}';trackIP('${aRecs[0].ip}');},200)">▶ Server-IP vollständig tracken</button>`;
+
+    html+=sec('MAC-ADRESSE ANALYSE');
+    html+=row('Eingabe',macRaw);
+    html+=row('MAC (Standard)',macFormatted);
+    html+=row('MAC (Bindestriche)',macHyphens);
+    html+=row('MAC (Cisco)',macCisco);
+    html+=row('MAC (Ohne Trennzeichen)',clean);
+    html+=row('OUI (Hersteller-ID)',ouiFormatted);
+    html+=row('NIC-Teil',`${clean.substring(6,8)}:${clean.substring(8,10)}:${clean.substring(10,12)}`);
+
+    html+=sec('BIT-ANALYSE');
+    html+=row('Multicast-Bit (Bit 0)',isMulticast?'<span class="badge bwarn">1 -- Multicast/Broadcast</span>':'0 -- Unicast (normal)');
+    html+=row('Lokal-Admin-Bit (Bit 1)',isLocallyAdmin?'<span class="badge bwarn">1 -- Lokal vergeben / Zufalls-MAC</span>':'0 -- Global (fabrikvergeben)');
+    html+=row('MAC-Typ',isRandomized?'Zufaellig / Privatadresse (iOS/Android Datenschutz)':'Echte Hardware-MAC');
+    html+=row('Adressraum',isMulticast?'Multicast':'Unicast');
+
+    html+=sec('HERSTELLER (OUI-LOOKUP)');
+    html+=row('Hersteller',`<strong>${vendor}</strong>`);
+    html+=row('Geraetetyp (Schaetzung)',devHint);
+    if(vendorExtra){
+      html+=row('Adresse',`${vendorExtra.addressL1||''} ${vendorExtra.addressL2||''} ${vendorExtra.addressL3||''}`);
+      html+=row('Land',vendorExtra.country||'N/A');
+    }
+
+    html+=sec('ERWEITERTE OUI SUCHE');
+    html+=row('macvendors.com',lnk('OUI Details',`https://macvendors.com/${oui}`));
+    html+=row('macaddress.io',lnk('Vollstaendige Info',`https://macaddress.io/mac-address-lookup/${macFormatted}`));
+    html+=row('maclookup.app',lnk('Schnellsuche',`https://maclookup.app/search/result?mac=${macFormatted}`));
+    html+=row('wireshark.org OUI',lnk('Wireshark DB',`https://www.wireshark.org/tools/oui-lookup.html`));
+    html+=row('IEEE OUI Registry',lnk('Offizielle IEEE DB',`https://regauth.standards.ieee.org/standards-ra-web/pub/view.html#registries`));
+
+    if(isRandomized){
+      html+='<div class="aw">RANDOMISIERTE MAC erkannt -- Dieses Geraet nutzt Datenschutz-MAC-Adressen (iOS/Android). Kein echter Hersteller bestimmbar.</div>';
+    }
   }
 
-  html+=sec('ANALYSE & TOOLS');
-  html+=r('WHOIS',lnk('Registrar + Ablauf',`https://who.is/whois/${domain}`));
-  html+=r('WHOIS (lookup.icann)',lnk('ICANN Lookup',`https://lookup.icann.org/en/lookup?name=${domain}`));
-  html+=r('MXToolbox',lnk('DNS/MX Deep Scan',`https://mxtoolbox.com/SuperTool.aspx?action=dns:${domain}`));
-  html+=r('SSL Labs',lnk('SSL/TLS Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${domain}`));
-  html+=r('crt.sh (SSL Certs)',lnk('Alle Zertifikate',`https://crt.sh/?q=${domain}`));
-  html+=r('SecurityTrails',lnk('DNS History',`https://securitytrails.com/domain/${domain}/dns`));
-  html+=r('Shodan',lnk('Offene Ports',`https://shodan.io/search?query=${domain}`));
-  html+=r('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts?q=${domain}`));
-  html+=r('VirusTotal',lnk('Bedrohungscheck',`https://virustotal.com/gui/domain/${domain}`));
-  html+=r('BuiltWith',lnk('Tech-Stack erkennen',`https://builtwith.com/${domain}`));
-  html+=r('URLScan.io',lnk('URL Scan + Screenshot',`https://urlscan.io/search/#domain:${domain}`));
-  html+=r('Wayback Machine',lnk('Historische Snapshots',`https://web.archive.org/web/*/${domain}`));
-  html+=r('DNSDumpster',lnk('DNS Mapping',`https://dnsdumpster.com/`));
-  html+=r('HackerTarget',lnk('Subdomains',`https://hackertarget.com/find-dns-host-records/?q=${domain}`));
-  html+=r('RapidDNS',lnk('Subdomain-Suche',`https://rapiddns.io/subdomain/${domain}`));
-  html+=r('ThreatFox',lnk('IOC Check',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${domain}`));
+  // ── HOST / IP ANALYSIS ──
+  if(host){
+    html+=sec('HOSTNAME / IP ANALYSE');
+
+    // DNS Resolve
+    const isDomain=/[a-zA-Z]/.test(host);
+    let resolvedIP=null;
+
+    if(isDomain){
+      const dnsRes=await sf(`https://dns.google/resolve?name=${host}&type=A`);
+      if(dnsRes?.Answer?.[0]){
+        resolvedIP=dnsRes.Answer[0].data;
+        html+=row('Hostname',host);
+        html+=row('Aufgeloeste IP',resolvedIP);
+        // All IPs
+        const allIPs=dnsRes.Answer.map(r=>r.data);
+        if(allIPs.length>1)allIPs.forEach((ip,i)=>html+=row(`IP ${i+1}`,ip));
+      }else{
+        html+=row('Hostname',host);html+=row('DNS Aufloesung','Fehlgeschlagen');
+      }
+      // Reverse DNS
+      const ptrRes=await sf(`https://dns.google/resolve?name=${host}&type=PTR`);
+      if(ptrRes?.Answer?.[0])html+=row('PTR Record',ptrRes.Answer[0].data);
+    }else{
+      resolvedIP=host;
+      html+=row('IP-Adresse',host);
+      // PTR
+      const rev=host.split('.').reverse().join('.')+'.in-addr.arpa';
+      const ptrRes=await sf(`https://dns.google/resolve?name=${rev}&type=PTR`);
+      if(ptrRes?.Answer?.[0])html+=row('Reverse DNS (PTR)',ptrRes.Answer[0].data);
+    }
+
+    if(resolvedIP){
+      // Geo lookup
+      const geo=await sf(`https://ipwho.is/${resolvedIP}`);
+      if(geo?.success){
+        html+=sec('GERAET / HOST STANDORT');
+        html+=row('IP',resolvedIP);
+        html+=row('Hostname/rDNS',geo.connection?.domain||'N/A');
+        html+=row('ISP',geo.connection?.isp||'N/A');
+        html+=row('Organisation',geo.connection?.org||'N/A');
+        html+=row('ASN',geo.connection?.asn||'N/A');
+        html+=row('Land',`${geo.country||'N/A'}`);
+        html+=row('Stadt',geo.city||'N/A');
+        html+=row('Region',geo.region||'N/A');
+        html+=row('Koordinaten',`${geo.latitude||'N/A'}, ${geo.longitude||'N/A'}`);
+        html+=row('Zeitzone',geo.timezone?.id||'N/A');
+        html+=row('Lokale Zeit',geo.timezone?.current_time||'N/A');
+        html+=row('VPN/Proxy',`${resolvedIP} -- pruefen`);
+        html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${resolvedIP}'),200)">IP vollstaendig tracken</button>`;
+      }
+
+      html+=sec('NETZWERK ANALYSE TOOLS');
+      html+=row('Shodan',lnk('Offene Ports + Services',`https://www.shodan.io/host/${resolvedIP}`));
+      html+=row('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts/${resolvedIP}`));
+      html+=row('VirusTotal',lnk('Reputations-Check',`https://www.virustotal.com/gui/ip-address/${resolvedIP}`));
+      html+=row('AbuseIPDB',lnk('Abuse Score',`https://www.abuseipdb.com/check/${resolvedIP}`));
+      html+=row('GreyNoise',lnk('Internet Scanner?',`https://viz.greynoise.io/ip/${resolvedIP}`));
+      if(isDomain){
+        html+=row('SSL Labs',lnk('TLS/SSL Analyse',`https://ssllabs.com/ssltest/analyze.html?d=${host}`));
+        html+=row('SecurityTrails',lnk('DNS History',`https://securitytrails.com/domain/${host}/dns`));
+        html+=row('URLScan',lnk('Screenshot + Headers',`https://urlscan.io/search/#domain:${host}`));
+        html+=row('WHOIS',lnk('Domain-Registrar',`https://who.is/whois/${host}`));
+        html+=row('Subdomains',lnk('HackerTarget',`https://hackertarget.com/find-dns-host-records/?q=${host}`));
+      }
+    }
+
+    html+=sec('PROTOKOLL REFERENZEN');
+    html+=row('Well-Known Ports',lnk('Port-Datenbank (speedguide.net)',`https://www.speedguide.net/ports.php`));
+    html+=row('IANA Port Registry',lnk('Offizielle Port-Liste',`https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml`));
+    html+=row('Nmap Online',lnk('Port-Scanner (Online)',`https://hackertarget.com/nmap-online-port-scanner/`));
+  }
 
   html+='</div>';
-  html+='<div class="alert-info">ℹ Alle DNS-Daten werden live via Google DNS-over-HTTPS (8.8.8.8) abgerufen.</div>';
-  $('dmR').innerHTML=html;
+  if(macRaw)html+='<div class="ai">OUI-Datenbank enthaelt >30.000 registrierte Hersteller-Praefix-Eintraege (IEEE-Standard).</div>';
+  if(host)html+='<div class="ai">Netzwerk-Analyse basiert auf oeffentlichen DNS- und Geolokalisierungs-APIs.</div>';
+  ld('macL',false);
+  $('macR').innerHTML=html;
 }
 </script>
 </body>
