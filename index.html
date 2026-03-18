@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -7,22 +6,22 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>StarTrack v11</title>
+<title>StarTrack v12</title>
 <style>
 :root{
-  --bg:#04000e;
-  --panel:rgba(8,0,20,0.96);
-  --border:#5500bb;
-  --accent:#ff1a5e;
-  --accent2:#9b00ff;
-  --accent3:#00e5cc;
-  --text:#e0c0ff;
-  --label:#8855bb;
-  --val:#ff3377;
-  --cyan:#00e5cc;
-  --green:#00ff88;
-  --yellow:#ffcc00;
-  --red:#ff2222;
+  --bg:#06000f;
+  --panel:rgba(12,0,28,0.97);
+  --border:#7722dd;
+  --accent:#ff2266;
+  --accent2:#bb44ff;
+  --accent3:#00ffcc;
+  --text:#f0ddff;        /* hell — gut lesbar */
+  --label:#cc99ff;       /* helles lila — klar sichtbar */
+  --val:#ff88bb;         /* warmes pink — nicht zu grell */
+  --cyan:#00ffcc;
+  --green:#00ff99;
+  --yellow:#ffdd00;
+  --red:#ff3333;
   --tap:48px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -39,270 +38,261 @@ body{
 /* ── BANNER ── */
 .banner{text-align:center;margin-bottom:18px;}
 .ban-ascii{
-font-size:clamp(5px,1.5vw,13px);white-space:pre;display:block;line-height:1.3;
-color:var(–accent);
-text-shadow:0 0 10px rgba(255,26,94,.8),0 0 24px rgba(155,0,255,.5);
-animation:asciiGlow 3s ease-in-out infinite alternate;
+  font-size:clamp(5px,1.5vw,13px);white-space:pre;display:block;line-height:1.3;
+  color:#ff4488;
+  text-shadow:0 0 12px #ff226699,0 0 28px #bb44ff66;
+  animation:asciiG 3s ease-in-out infinite alternate;
 }
-@keyframes asciiGlow{
-from{text-shadow:0 0 8px rgba(255,26,94,.7),0 0 20px rgba(155,0,255,.4);}
-to  {text-shadow:0 0 18px rgba(255,26,94,1),0 0 38px rgba(155,0,255,.7),0 0 55px rgba(255,26,94,.25);}
+@keyframes asciiG{
+  from{text-shadow:0 0 10px #ff226699,0 0 22px #bb44ff55;}
+  to  {text-shadow:0 0 22px #ff2266cc,0 0 44px #bb44ffaa,0 0 60px #ff226622;}
 }
 .ban-sub{
-font-size:clamp(9px,2.2vw,12px);letter-spacing:clamp(3px,2vw,6px);
-margin-top:8px;color:var(–accent3);
-text-shadow:0 0 10px rgba(0,229,204,.6);
-animation:subGlow 4s ease-in-out infinite alternate;
+  font-size:clamp(9px,2.2vw,12px);letter-spacing:clamp(3px,2vw,6px);
+  margin-top:8px;color:#00ffcc;
+  text-shadow:0 0 12px #00ffcc99;
+  animation:subG 4s ease-in-out infinite alternate;
 }
-@keyframes subGlow{
-from{opacity:.7;text-shadow:0 0 8px rgba(0,229,204,.4);}
-to  {opacity:1;text-shadow:0 0 16px rgba(0,229,204,.9),0 0 30px rgba(0,229,204,.3);}
+@keyframes subG{
+  from{text-shadow:0 0 8px #00ffcc66;}
+  to  {text-shadow:0 0 18px #00ffccdd,0 0 34px #00ffcc44;}
 }
 
 /* ── STATUS BAR ── */
 .statusbar{
-display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
-font-size:clamp(8px,1.8vw,10px);color:var(–label);
-margin-bottom:14px;padding:5px 12px;
-border:1px solid rgba(85,0,187,.35);border-radius:6px;
-background:rgba(8,0,20,.6);letter-spacing:1px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
+  font-size:clamp(8px,1.8vw,10px);color:var(--label);
+  margin-bottom:14px;padding:5px 12px;
+  border:1px solid rgba(119,34,221,.4);border-radius:6px;
+  background:rgba(12,0,28,.7);letter-spacing:1px;
 }
 .sb-dot{
-display:inline-block;width:6px;height:6px;border-radius:50%;
-background:var(–green);box-shadow:0 0 7px var(–green);
-animation:blink 2.2s ease-in-out infinite;margin-right:5px;vertical-align:middle;
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 8px var(--green);
+  animation:blink 2.2s ease-in-out infinite;margin-right:5px;vertical-align:middle;
 }
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
 
 /* ── MENU ── */
 .menu{
-background:var(–panel);border:1.5px solid var(–border);border-radius:12px;
-padding:clamp(16px,4vw,26px);margin-bottom:14px;
-box-shadow:0 0 50px rgba(85,0,187,.35),inset 0 0 30px rgba(255,26,94,.04);
-backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:var(--panel);border:1.5px solid var(--border);border-radius:12px;
+  padding:clamp(16px,4vw,26px);margin-bottom:14px;
+  box-shadow:0 0 60px rgba(119,34,221,.4),inset 0 0 40px rgba(255,34,102,.05);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
 .menu-title{
-text-align:center;color:var(–accent);margin-bottom:20px;
-font-size:clamp(12px,3vw,17px);letter-spacing:clamp(3px,2.5vw,7px);
-text-shadow:0 0 14px var(–accent);
+  text-align:center;color:#ff4488;margin-bottom:20px;
+  font-size:clamp(12px,3vw,17px);letter-spacing:clamp(3px,2.5vw,7px);
+  text-shadow:0 0 16px #ff226688;
 }
 .menu-grid{display:grid;gap:9px;}
 @media(min-width:550px){.menu-grid{grid-template-columns:1fr 1fr;}}
 @media(min-width:870px){.menu-grid{grid-template-columns:repeat(3,1fr);}}
 
 .mbtn{
-background:linear-gradient(135deg,rgba(85,0,187,.14),rgba(255,26,94,.08));
-border:1px solid var(–border);
-padding:clamp(12px,2.8vw,15px) clamp(12px,3vw,17px);
-cursor:pointer;border-radius:8px;
-font-family:‘Courier New’,monospace;
-transition:all .2s;text-align:left;
-position:relative;overflow:hidden;
-min-height:var(–tap);display:flex;flex-direction:column;justify-content:center;
--webkit-user-select:none;user-select:none;
+  background:linear-gradient(135deg,rgba(119,34,221,.18),rgba(255,34,102,.1));
+  border:1px solid rgba(119,34,221,.6);
+  padding:clamp(12px,2.8vw,15px) clamp(12px,3vw,17px);
+  cursor:pointer;border-radius:8px;font-family:'Courier New',monospace;
+  transition:all .2s;text-align:left;position:relative;overflow:hidden;
+  min-height:var(--tap);display:flex;flex-direction:column;justify-content:center;
+  -webkit-user-select:none;user-select:none;
 }
-.mbtn-num{font-size:10px;color:var(–accent);letter-spacing:2px;margin-bottom:2px;opacity:.7;}
-.mbtn-label{font-size:clamp(12px,2.5vw,13.5px);font-weight:bold;color:var(–accent);letter-spacing:1px;}
-.mbtn-desc{font-size:clamp(9px,1.9vw,10.5px);color:var(–label);margin-top:3px;line-height:1.35;}
+.mbtn-num{font-size:10px;color:#ff6699;letter-spacing:2px;margin-bottom:2px;}
+.mbtn-label{font-size:clamp(12px,2.5vw,13.5px);font-weight:bold;color:#ff4488;letter-spacing:1px;}
+.mbtn-desc{font-size:clamp(9px,1.9vw,10.5px);color:#cc99ff;margin-top:3px;line-height:1.35;}
 .mbtn::before{
-content:’’;position:absolute;top:0;left:-100%;width:100%;height:100%;
-background:linear-gradient(90deg,transparent,rgba(255,26,94,.12),transparent);
-transition:left .35s;
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,34,102,.14),transparent);
+  transition:left .35s;
 }
 .mbtn:hover::before,.mbtn:active::before{left:100%;}
 .mbtn:hover,.mbtn:active{
-border-color:var(–accent);
-background:linear-gradient(135deg,rgba(85,0,187,.28),rgba(255,26,94,.18));
-box-shadow:0 0 20px rgba(85,0,187,.45),0 0 32px rgba(255,26,94,.15);
-transform:translateY(-1px);
+  border-color:#ff2266;
+  background:linear-gradient(135deg,rgba(119,34,221,.32),rgba(255,34,102,.2));
+  box-shadow:0 0 24px rgba(119,34,221,.55),0 0 40px rgba(255,34,102,.2);
+  transform:translateY(-1px);
 }
-.mbtn-cyan{border-color:var(–accent3);}
-.mbtn-cyan .mbtn-label{color:var(–accent3);}
-.mbtn-cyan:hover{border-color:var(–cyan);box-shadow:0 0 18px rgba(0,229,204,.35);}
+.mbtn-cyan{border-color:rgba(0,255,204,.5);}
+.mbtn-cyan .mbtn-label{color:#00ffcc;}
+.mbtn-cyan .mbtn-num{color:#00ffcc;}
+.mbtn-cyan:hover{border-color:#00ffcc;box-shadow:0 0 22px rgba(0,255,204,.4);}
 
 /* ── PANELS ── */
 .panel{
-background:var(–panel);border:1.5px solid var(–border);border-radius:12px;
-padding:clamp(14px,4vw,22px);margin-top:14px;
-display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
-box-shadow:0 0 55px rgba(85,0,187,.45),inset 0 0 25px rgba(255,26,94,.04);
-backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
--webkit-overflow-scrolling:touch;
-scrollbar-width:thin;scrollbar-color:var(–accent2) transparent;
+  background:var(--panel);border:1.5px solid var(--border);border-radius:12px;
+  padding:clamp(14px,4vw,22px);margin-top:14px;
+  display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
+  box-shadow:0 0 60px rgba(119,34,221,.5),inset 0 0 30px rgba(255,34,102,.04);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--accent2) transparent;
 }
 .panel::-webkit-scrollbar{width:4px;}
-.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(–accent2),var(–accent));border-radius:3px;}
+.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#bb44ff,#ff2266);border-radius:3px;}
 .panel.active{display:block;animation:panelIn .25s ease-out;}
 @keyframes panelIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 
 .ptitle{
-text-align:center;margin-bottom:18px;
-font-size:clamp(13px,3vw,17px);letter-spacing:clamp(2px,2vw,5px);
-color:var(–accent);text-shadow:0 0 14px var(–accent);
-border-bottom:1px solid rgba(85,0,187,.4);padding-bottom:12px;
+  text-align:center;margin-bottom:18px;
+  font-size:clamp(13px,3vw,17px);letter-spacing:clamp(2px,2vw,5px);
+  color:#ff4488;text-shadow:0 0 16px #ff226688;
+  border-bottom:1px solid rgba(119,34,221,.45);padding-bottom:12px;
 }
 
 /* ── INPUT ── */
 .ig{margin-bottom:13px;}
-.ig label{display:block;margin-bottom:6px;color:var(–label);font-size:clamp(9.5px,2.1vw,11px);letter-spacing:1.5px;}
+.ig label{display:block;margin-bottom:6px;color:#cc99ff;font-size:clamp(9.5px,2.1vw,11px);letter-spacing:1.5px;}
 .ig input,.ig select{
-width:100%;padding:clamp(11px,2.6vw,13px) clamp(12px,3vw,14px);
-background:rgba(4,0,12,.85);border:1.5px solid var(–border);
-color:var(–accent);border-radius:8px;
-font-family:‘Courier New’,monospace;font-size:clamp(12px,2.8vw,14px);
-transition:all .18s;-webkit-appearance:none;appearance:none;
+  width:100%;padding:clamp(11px,2.6vw,13px) clamp(12px,3vw,14px);
+  background:rgba(6,0,15,.9);border:1.5px solid rgba(119,34,221,.7);
+  color:#ff88bb;border-radius:8px;
+  font-family:'Courier New',monospace;font-size:clamp(12px,2.8vw,14px);
+  transition:all .18s;-webkit-appearance:none;appearance:none;
 }
 .ig input:focus,.ig select:focus{
-outline:none;border-color:var(–accent);
-box-shadow:0 0 18px rgba(85,0,187,.5),0 0 5px rgba(255,26,94,.2);
+  outline:none;border-color:#ff2266;
+  box-shadow:0 0 20px rgba(119,34,221,.55),0 0 8px rgba(255,34,102,.25);
+  color:#ffccdd;
 }
-.ig input::placeholder{color:rgba(136,85,187,.45);}
+.ig input::placeholder{color:rgba(204,153,255,.4);}
 
 /* ── BUTTONS ── */
 .brow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:4px;}
 .brun{
-background:linear-gradient(135deg,#5500bb,#cc0044);
-color:#fff;border:none;
-padding:clamp(11px,2.6vw,13px) clamp(20px,5vw,30px);
-border-radius:8px;cursor:pointer;
-font-family:‘Courier New’,monospace;font-size:clamp(12px,2.6vw,14px);
-font-weight:bold;letter-spacing:1px;transition:all .2s;
-box-shadow:0 0 18px rgba(85,0,187,.45);
-min-height:var(–tap);-webkit-user-select:none;user-select:none;
+  background:linear-gradient(135deg,#6611cc,#cc0033);
+  color:#fff;border:none;
+  padding:clamp(11px,2.6vw,13px) clamp(20px,5vw,30px);
+  border-radius:8px;cursor:pointer;
+  font-family:'Courier New',monospace;font-size:clamp(12px,2.6vw,14px);
+  font-weight:bold;letter-spacing:1px;transition:all .2s;
+  box-shadow:0 0 20px rgba(102,17,204,.5);
+  min-height:var(--tap);-webkit-user-select:none;user-select:none;
 }
 .brun:hover,.brun:active{
-transform:scale(1.03);
-box-shadow:0 0 28px rgba(85,0,187,.75),0 0 42px rgba(255,26,94,.4);
+  transform:scale(1.03);
+  box-shadow:0 0 32px rgba(102,17,204,.8),0 0 50px rgba(255,34,102,.45);
 }
 .bback{
-background:rgba(85,0,187,.18);color:var(–text);border:1px solid var(–border);
-padding:clamp(11px,2.6vw,13px) clamp(14px,3.5vw,20px);
-border-radius:8px;cursor:pointer;
-font-family:‘Courier New’,monospace;font-size:clamp(11px,2.4vw,13px);
-transition:all .2s;min-height:var(–tap);-webkit-user-select:none;user-select:none;
+  background:rgba(119,34,221,.2);color:#e8ccff;border:1px solid rgba(119,34,221,.55);
+  padding:clamp(11px,2.6vw,13px) clamp(14px,3.5vw,20px);
+  border-radius:8px;cursor:pointer;
+  font-family:'Courier New',monospace;font-size:clamp(11px,2.4vw,13px);
+  transition:all .2s;min-height:var(--tap);-webkit-user-select:none;user-select:none;
 }
-.bback:hover,.bback:active{background:rgba(85,0,187,.35);}
+.bback:hover,.bback:active{background:rgba(119,34,221,.38);color:#fff;}
 .bmini{
-background:linear-gradient(135deg,#5500bb,#cc0044);color:#fff;border:none;
-padding:9px 16px;border-radius:6px;cursor:pointer;
-font-family:‘Courier New’,monospace;font-size:clamp(10px,2.2vw,12px);
-letter-spacing:.5px;margin-top:10px;transition:all .2s;
-display:inline-block;min-height:38px;
+  background:linear-gradient(135deg,#6611cc,#cc0033);color:#fff;border:none;
+  padding:9px 16px;border-radius:6px;cursor:pointer;
+  font-family:'Courier New',monospace;font-size:clamp(10px,2.2vw,12px);
+  letter-spacing:.5px;margin-top:10px;transition:all .2s;
+  display:inline-block;min-height:38px;
 }
-.bmini:hover,.bmini:active{transform:scale(1.03);box-shadow:0 0 15px rgba(255,26,94,.5);}
+.bmini:hover,.bmini:active{transform:scale(1.03);box-shadow:0 0 18px rgba(255,34,102,.55);}
 
 /* ── LOADER ── */
-.loader{text-align:center;color:var(–accent);padding:20px;display:none;font-size:clamp(11px,2.4vw,13px);letter-spacing:1px;}
+.loader{text-align:center;color:#ff4488;padding:20px;display:none;font-size:clamp(11px,2.4vw,13px);letter-spacing:1px;}
 .loader.on{display:block;}
 .loader.on .ld-txt{animation:ldpulse 1s ease-in-out infinite;}
-@keyframes ldpulse{0%,100%{opacity:.4;}50%{opacity:1;}}
-.lbar{height:2px;background:rgba(85,0,187,.15);margin-top:10px;overflow:hidden;}
-.lbar-f{height:100%;background:linear-gradient(90deg,#5500bb,#ff1a5e,#00e5cc);background-size:200%;animation:lbFlow 1.6s linear infinite;}
+@keyframes ldpulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+.lbar{height:2px;background:rgba(119,34,221,.18);margin-top:10px;overflow:hidden;}
+.lbar-f{height:100%;background:linear-gradient(90deg,#7722dd,#ff2266,#00ffcc);background-size:200%;animation:lbFlow 1.6s linear infinite;}
 @keyframes lbFlow{0%{background-position:0%}100%{background-position:200%}}
 
 /* ── DATA WRAPPER ── */
 .dw{
-background:rgba(4,0,10,.55);padding:clamp(12px,3vw,17px);
-border-radius:9px;margin-top:12px;
-border:1px solid rgba(85,0,187,.22);
+  background:rgba(14,0,30,.6);padding:clamp(12px,3vw,17px);
+  border-radius:9px;margin-top:12px;
+  border:1px solid rgba(119,34,221,.3);
 }
 
 /* ── SECTION HEADERS ── */
 .sec{
-color:var(–accent);font-size:clamp(10px,2.3vw,12.5px);
-margin:20px 0 8px;padding:6px 10px;
-background:linear-gradient(90deg,rgba(255,26,94,.1),rgba(85,0,187,.06),transparent);
-border-left:3px solid var(–accent);
-letter-spacing:2.5px;
-text-shadow:0 0 8px rgba(255,26,94,.6);
+  color:#ff88bb;font-size:clamp(10px,2.3vw,12.5px);
+  margin:20px 0 8px;padding:6px 10px;
+  background:linear-gradient(90deg,rgba(255,34,102,.14),rgba(119,34,221,.08),transparent);
+  border-left:3px solid #ff2266;
+  letter-spacing:2.5px;
+  text-shadow:0 0 10px rgba(255,34,102,.55);
 }
 
 /* ── DATA ROWS ── */
 .row{
-padding:5px 4px;
-border-bottom:1px solid rgba(85,0,187,.1);
-display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;
+  padding:6px 4px;
+  border-bottom:1px solid rgba(119,34,221,.14);
+  display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;
 }
 @media(min-width:500px){.lbl{min-width:200px;}}
-@media(max-width:499px){.lbl{width:100%;font-size:10px;opacity:.75;}}
-.lbl{color:var(–label);font-size:clamp(9.5px,2.1vw,12px);flex-shrink:0;letter-spacing:.3px;}
-.val{color:var(–val);font-size:clamp(10.5px,2.3vw,12.5px);word-break:break-all;flex:1;}
-.val a{color:var(–accent2);text-decoration:none;border-bottom:1px dashed rgba(155,0,255,.35);}
-.val a:hover{color:var(–cyan);border-color:var(–cyan);}
+@media(max-width:499px){.lbl{width:100%;font-size:10.5px;}}
+.lbl{color:#cc99ff;font-size:clamp(10px,2.1vw,12px);flex-shrink:0;letter-spacing:.3px;}
+.val{color:#ffccee;font-size:clamp(11px,2.3vw,13px);word-break:break-all;flex:1;}
+.val a{color:#bb66ff;text-decoration:none;border-bottom:1px dashed rgba(187,102,255,.4);}
+.val a:hover{color:#00ffcc;border-color:#00ffcc;}
 
 /* ── STAT BOXES ── */
 .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px;margin:11px 0;}
 @media(max-width:380px){.stats{grid-template-columns:repeat(2,1fr);}}
 .stat{
-background:rgba(4,0,10,.6);padding:10px 8px;border-radius:7px;
-border:1px solid rgba(85,0,187,.25);border-top:2px solid var(–accent);
-text-align:center;
+  background:rgba(14,0,30,.7);padding:10px 8px;border-radius:7px;
+  border:1px solid rgba(119,34,221,.3);border-top:2px solid #ff2266;
+  text-align:center;
 }
-.slab{color:var(–label);font-size:clamp(8px,1.7vw,10px);margin-bottom:4px;letter-spacing:1.5px;}
-.sval{color:var(–accent);font-size:clamp(13px,2.9vw,16px);font-weight:bold;text-shadow:0 0 7px rgba(255,26,94,.5);}
+.slab{color:#cc99ff;font-size:clamp(8px,1.7vw,10px);margin-bottom:4px;letter-spacing:1.5px;}
+.sval{color:#ff88bb;font-size:clamp(13px,2.9vw,16px);font-weight:bold;text-shadow:0 0 8px rgba(255,34,102,.55);}
 
 /* ── BADGES ── */
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:bold;margin-left:4px;vertical-align:middle;letter-spacing:.5px;}
-.bok  {background:rgba(0,255,136,.08);color:var(–green);border:1px solid rgba(0,255,136,.4);}
-.bwarn{background:rgba(255,204,0,.08);color:var(–yellow);border:1px solid rgba(255,204,0,.4);}
-.bbad {background:rgba(255,34,34,.1);color:var(–red);border:1px solid rgba(255,34,34,.5);}
-.binfo{background:rgba(0,229,204,.08);color:var(–cyan);border:1px solid rgba(0,229,204,.35);}
+.bok  {background:rgba(0,255,153,.12);color:#00ff99;border:1px solid rgba(0,255,153,.5);}
+.bwarn{background:rgba(255,221,0,.1);color:#ffdd00;border:1px solid rgba(255,221,0,.5);}
+.bbad {background:rgba(255,51,51,.14);color:#ff4444;border:1px solid rgba(255,51,51,.6);}
+.binfo{background:rgba(0,255,204,.1);color:#00ffcc;border:1px solid rgba(0,255,204,.45);}
 
 /* ── PLATFORM GRID ── */
 .platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;margin-top:7px;}
 @media(max-width:440px){.platgrid{grid-template-columns:1fr 1fr;}}
 .plat{
-background:rgba(4,0,10,.6);border:1px solid rgba(85,0,187,.22);
-border-radius:6px;padding:7px 10px;display:flex;align-items:center;gap:8px;transition:all .16s;
+  background:rgba(14,0,30,.65);border:1px solid rgba(119,34,221,.3);
+  border-radius:6px;padding:7px 10px;display:flex;align-items:center;gap:8px;transition:all .16s;
 }
-.plat:hover,.plat:active{border-color:var(–accent);background:rgba(255,26,94,.05);}
-.pname{color:var(–label);min-width:90px;font-size:clamp(9.5px,2.1vw,11px);}
-.plink a{color:var(–accent2);font-size:clamp(9px,1.9vw,11px);text-decoration:none;}
-.plat:hover .plink a{color:var(–cyan);}
+.plat:hover,.plat:active{border-color:#ff2266;background:rgba(255,34,102,.07);}
+.pname{color:#cc99ff;min-width:90px;font-size:clamp(9.5px,2.1vw,11px);}
+.plink a{color:#bb66ff;font-size:clamp(9px,1.9vw,11px);text-decoration:none;}
+.plat:hover .plink a{color:#00ffcc;}
 
 /* ── ALERTS ── */
-.aw{color:var(–yellow);padding:10px 14px;background:rgba(255,204,0,.06);border:1px solid rgba(255,204,0,.4);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
-.ai{color:var(–cyan);padding:10px 14px;background:rgba(0,229,204,.06);border:1px solid rgba(0,229,204,.35);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
-.ae{color:var(–red);padding:10px 14px;background:rgba(255,34,34,.09);border:1px solid rgba(255,34,34,.45);border-radius:7px;margin-top:10px;}
-.ag{color:var(–green);padding:10px 14px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.35);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
+.aw{color:#ffdd00;padding:10px 14px;background:rgba(255,221,0,.08);border:1px solid rgba(255,221,0,.45);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
+.ai{color:#00ffcc;padding:10px 14px;background:rgba(0,255,204,.07);border:1px solid rgba(0,255,204,.38);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
+.ae{color:#ff4444;padding:10px 14px;background:rgba(255,51,51,.1);border:1px solid rgba(255,51,51,.5);border-radius:7px;margin-top:10px;}
+.ag{color:#00ff99;padding:10px 14px;background:rgba(0,255,153,.08);border:1px solid rgba(0,255,153,.4);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
 
 /* ── MAP ── */
-.map-frame{width:100%;height:clamp(150px,32vw,210px);border:1px solid var(–border);border-radius:7px;margin-top:10px;}
+.map-frame{width:100%;height:clamp(150px,32vw,210px);border:1px solid rgba(119,34,221,.5);border-radius:7px;margin-top:10px;}
 
 /* ── AVATAR ── */
-.ava{width:clamp(58px,14vw,84px);height:clamp(58px,14vw,84px);border-radius:8px;border:2px solid var(–accent2);display:block;margin:8px 0;box-shadow:0 0 18px rgba(155,0,255,.5);}
+.ava{width:clamp(58px,14vw,84px);height:clamp(58px,14vw,84px);border-radius:8px;border:2px solid #bb44ff;display:block;margin:8px 0;box-shadow:0 0 20px rgba(187,68,255,.55);}
 
 /* ── FOOTER ── */
 .footer{
-margin-top:26px;padding:clamp(13px,3.5vw,17px);
-background:rgba(255,26,94,.04);border:1px solid rgba(255,26,94,.18);border-radius:10px;
-text-align:center;font-size:clamp(9px,1.9vw,11px);color:rgba(255,255,255,.35);line-height:1.75;
+  margin-top:26px;padding:clamp(13px,3.5vw,17px);
+  background:rgba(255,34,102,.05);border:1px solid rgba(255,34,102,.22);border-radius:10px;
+  text-align:center;font-size:clamp(9px,1.9vw,11px);color:rgba(240,221,255,.45);line-height:1.75;
 }
-.footer strong{color:var(–accent);}
-.ftitle{color:var(–accent);font-size:clamp(9.5px,2vw,11.5px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
+.footer strong{color:#ff4488;}
+.ftitle{color:#ff4488;font-size:clamp(9.5px,2vw,11.5px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
 
 /* ── THREAT CARD ── */
-.threat-box{
-background:rgba(4,0,10,.7);border-radius:8px;
-border:1px solid rgba(85,0,187,.25);
-padding:10px 12px;margin:4px 0;
-display:flex;align-items:center;justify-content:space-between;
-flex-wrap:wrap;gap:6px;transition:border-color .16s;
+.tcard{
+  border-radius:8px;padding:14px 16px;margin:6px 0 10px;
+  border:1.5px solid rgba(119,34,221,.35);
+  background:rgba(14,0,30,.75);
 }
-.threat-box:hover{border-color:var(–accent);}
-.threat-name{color:var(–label);font-size:clamp(9.5px,2.1vw,12px);flex:1;min-width:120px;}
-.threat-val{color:var(–cyan);font-size:clamp(10px,2.2vw,12.5px);text-align:right;flex-shrink:0;}
-.threat-val a{color:var(–accent2);text-decoration:none;border-bottom:1px dashed rgba(155,0,255,.35);}
-.threat-val a:hover{color:var(–cyan);}
 
 @media(max-width:600px){body{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));}}
 </style>
-
 </head>
 <body>
 
 <!-- LIVE WALLPAPER -->
-
 <canvas id="cvs"></canvas>
 
 <div class="wrap">
@@ -313,7 +303,7 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
 /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  </span>
-<span class="ban-sub">M A X I M U M  I N T E L  v 1 1 . 0</span>
+<span class="ban-sub">M A X I M U M  I N T E L  v 1 2 . 0</span>
 </div>
 
 <div class="statusbar">
@@ -323,7 +313,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 </div>
 
 <!-- MENU -->
-
 <div id="mainMenu" class="menu">
   <div class="menu-title">STARTRACK INTEL SYSTEM</div>
   <div class="menu-grid">
@@ -376,7 +365,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 </div>
 
 <!-- PANELS -->
-
 <div id="ip" class="panel">
   <div class="ptitle">IP TRACKER</div>
   <div class="ig"><label>IP-ADRESSE (IPv4 oder IPv6)</label>
@@ -463,7 +451,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 </div>
 
 <!-- LICENSE PLATE TRACKER -->
-
 <div id="plate" class="panel">
   <div class="ptitle">LICENSE PLATE TRACKER</div>
   <div class="ig"><label>KENNZEICHEN EINGEBEN</label>
@@ -493,7 +480,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 </div>
 
 <!-- MAC / NETWORK TRACKER -->
-
 <div id="mac" class="panel">
   <div class="ptitle">MAC-ADRESSE / NETZWERK TRACKER</div>
   <div class="ig"><label>MAC-ADRESSE EINGEBEN</label>
@@ -525,7 +511,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 <!-- ═══════════════════════════════════════════════════════
      LIVE WALLPAPER v9
 ═══════════════════════════════════════════════════════ -->
-
 <script>
 (function(){
   const cv=document.getElementById('cvs');
@@ -692,7 +677,6 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
 <!-- ═══════════════════════════════════════════════════════
      APP LOGIC
 ═══════════════════════════════════════════════════════ -->
-
 <script>
 const $=id=>document.getElementById(id);
 function show(t){
@@ -1178,53 +1162,134 @@ async function trackPhone(){
   let cc='',local=clean;
   if(clean.startsWith('+')){const m=clean.match(/^\+(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+1);}}
   else if(clean.startsWith('00')){const m=clean.match(/^00(\d{1,4})/);if(m){cc=m[1];local=clean.substring(cc.length+2);}}
-  const DB={'1':{c:'USA/Kanada',iso:'US',tz:'UTC-5/-8',cur:'USD',lang:'Englisch',carriers:['Verizon','AT&T','T-Mobile'],em:'911',pfx:{}},'44':{c:'Grossbritannien',iso:'GB',tz:'UTC+0/+1',cur:'GBP',lang:'Englisch',carriers:['EE','Vodafone','O2','Three'],em:'999',pfx:{'7':'Mobil'}},'49':{c:'Deutschland',iso:'DE',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['Telekom','Vodafone','O2','1&1'],em:'110/112',pfx:{'150':'Telekom','151':'Telekom','152':'Vodafone','153':'O2','155':'Vodafone','156':'O2','157':'O2','159':'O2','160':'Telekom','162':'Vodafone','163':'O2','170':'Telekom','171':'Telekom','172':'Vodafone','173':'Vodafone','174':'Vodafone','175':'Telekom','176':'O2','177':'O2','178':'O2','179':'O2','1511':'Telekom','1512':'Vodafone','1514':'1&1','1515':'O2','1520':'Vodafone','1522':'Vodafone','1570':'O2','1573':'O2','1575':'O2','1577':'O2'}},'43':{c:'Oesterreich',iso:'AT',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['A1','Magenta','Drei'],em:'112',pfx:{'650':'Drei','660':'A1','664':'A1','676':'A1','677':'Magenta','699':'A1'}},'41':{c:'Schweiz',iso:'CH',tz:'UTC+1/+2',cur:'CHF',lang:'DE/FR/IT',carriers:['Swisscom','Sunrise','Salt'],em:'112',pfx:{'74':'Sunrise','75':'Swisscom','76':'Salt','77':'Sunrise','78':'Swisscom','79':'Swisscom'}},'33':{c:'Frankreich',iso:'FR',tz:'UTC+1/+2',cur:'EUR',lang:'Franzoesisch',carriers:['Orange','SFR','Bouygues','Free'],em:'112',pfx:{}},'39':{c:'Italien',iso:'IT',tz:'UTC+1/+2',cur:'EUR',lang:'Italienisch',carriers:['TIM','Vodafone IT','Wind Tre'],em:'112',pfx:{}},'34':{c:'Spanien',iso:'ES',tz:'UTC+1/+2',cur:'EUR',lang:'Spanisch',carriers:['Movistar','Orange','Vodafone'],em:'112',pfx:{}},'7':{c:'Russland',iso:'RU',tz:'UTC+2/+12',cur:'RUB',lang:'Russisch',carriers:['MTS','MegaFon','Beeline'],em:'112',pfx:{}},'86':{c:'China',iso:'CN',tz:'UTC+8',cur:'CNY',lang:'Mandarin',carriers:['China Mobile','China Unicom','China Telecom'],em:'110',pfx:{}},'81':{c:'Japan',iso:'JP',tz:'UTC+9',cur:'JPY',lang:'Japanisch',carriers:['Docomo','SoftBank','au'],em:'110',pfx:{}},'91':{c:'Indien',iso:'IN',tz:'UTC+5:30',cur:'INR',lang:'Hindi/Englisch',carriers:['Jio','Airtel','Vi'],em:'112',pfx:{}},'55':{c:'Brasilien',iso:'BR',tz:'UTC-3/-5',cur:'BRL',lang:'Portugiesisch',carriers:['Claro','TIM','Vivo'],em:'190',pfx:{}},'61':{c:'Australien',iso:'AU',tz:'UTC+8/+11',cur:'AUD',lang:'Englisch',carriers:['Telstra','Optus','Vodafone AU'],em:'000',pfx:{}},'90':{c:'Tuerkei',iso:'TR',tz:'UTC+3',cur:'TRY',lang:'Tuerkisch',carriers:['Turkcell','Vodafone TR','Tuerk Telekom'],em:'112',pfx:{}}};
-  const info=DB[cc]||{c:'Unbekannt',iso:'N/A',tz:'N/A',cur:'N/A',lang:'N/A',carriers:[],em:'N/A',pfx:{}};
+
+  const DB={
+    '1':{c:'USA/Kanada',iso:'US',tz:'UTC-5/-8',cur:'USD',lang:'Englisch',carriers:['Verizon','AT&T','T-Mobile','Sprint'],em:'911',pfx:{}},
+    '44':{c:'Grossbritannien',iso:'GB',tz:'UTC+0/+1',cur:'GBP',lang:'Englisch',carriers:['EE','Vodafone','O2','Three','BT'],em:'999',pfx:{}},
+    '49':{c:'Deutschland',iso:'DE',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['Telekom','Vodafone','O2','1&1','Drillisch'],em:'110/112',
+      pfx:{'150':'Telekom','151':'Telekom','152':'Vodafone','153':'O2','155':'Vodafone','156':'O2','157':'O2','159':'O2','160':'Telekom','162':'Vodafone','163':'O2','170':'Telekom','171':'Telekom','172':'Vodafone','173':'Vodafone','174':'Vodafone','175':'Telekom','176':'O2','177':'O2','178':'O2','179':'O2','1511':'Telekom','1512':'Vodafone','1514':'1&1','1515':'O2','1520':'Vodafone','1522':'Vodafone','1570':'O2','1573':'O2','1575':'O2','1577':'O2'}},
+    '43':{c:'Oesterreich',iso:'AT',tz:'UTC+1/+2',cur:'EUR',lang:'Deutsch',carriers:['A1','Magenta','Drei'],em:'112',pfx:{'650':'Drei','660':'A1','664':'A1','676':'A1','677':'Magenta','699':'A1'}},
+    '41':{c:'Schweiz',iso:'CH',tz:'UTC+1/+2',cur:'CHF',lang:'DE/FR/IT',carriers:['Swisscom','Sunrise','Salt','UPC'],em:'112',pfx:{'74':'Sunrise','75':'Swisscom','76':'Salt','77':'Sunrise','78':'Swisscom','79':'Swisscom'}},
+    '33':{c:'Frankreich',iso:'FR',tz:'UTC+1/+2',cur:'EUR',lang:'Franzoesisch',carriers:['Orange','SFR','Bouygues','Free'],em:'112',pfx:{}},
+    '39':{c:'Italien',iso:'IT',tz:'UTC+1/+2',cur:'EUR',lang:'Italienisch',carriers:['TIM','Vodafone IT','Wind Tre','Iliad IT'],em:'112',pfx:{}},
+    '34':{c:'Spanien',iso:'ES',tz:'UTC+1/+2',cur:'EUR',lang:'Spanisch',carriers:['Movistar','Orange','Vodafone ES','MasMóvil'],em:'112',pfx:{}},
+    '31':{c:'Niederlande',iso:'NL',tz:'UTC+1/+2',cur:'EUR',lang:'Niederlaendisch',carriers:['KPN','T-Mobile NL','Vodafone NL','Tele2 NL'],em:'112',pfx:{}},
+    '32':{c:'Belgien',iso:'BE',tz:'UTC+1/+2',cur:'EUR',lang:'NL/FR/DE',carriers:['Proximus','Orange BE','Base'],em:'112',pfx:{}},
+    '48':{c:'Polen',iso:'PL',tz:'UTC+1/+2',cur:'PLN',lang:'Polnisch',carriers:['Orange PL','T-Mobile PL','Play','Plus'],em:'112',pfx:{}},
+    '7':{c:'Russland',iso:'RU',tz:'UTC+2/+12',cur:'RUB',lang:'Russisch',carriers:['MTS','MegaFon','Beeline','Tele2 RU'],em:'112',pfx:{}},
+    '86':{c:'China',iso:'CN',tz:'UTC+8',cur:'CNY',lang:'Mandarin',carriers:['China Mobile','China Unicom','China Telecom'],em:'110',pfx:{}},
+    '81':{c:'Japan',iso:'JP',tz:'UTC+9',cur:'JPY',lang:'Japanisch',carriers:['Docomo','SoftBank','au','Rakuten Mobile'],em:'110',pfx:{}},
+    '82':{c:'Suedkorea',iso:'KR',tz:'UTC+9',cur:'KRW',lang:'Koreanisch',carriers:['SK Telecom','KT','LG U+'],em:'112',pfx:{}},
+    '91':{c:'Indien',iso:'IN',tz:'UTC+5:30',cur:'INR',lang:'Hindi/Englisch',carriers:['Jio','Airtel','Vi','BSNL'],em:'112',pfx:{}},
+    '55':{c:'Brasilien',iso:'BR',tz:'UTC-3/-5',cur:'BRL',lang:'Portugiesisch',carriers:['Claro','TIM','Vivo','Oi'],em:'190',pfx:{}},
+    '61':{c:'Australien',iso:'AU',tz:'UTC+8/+11',cur:'AUD',lang:'Englisch',carriers:['Telstra','Optus','Vodafone AU','TPG'],em:'000',pfx:{}},
+    '64':{c:'Neuseeland',iso:'NZ',tz:'UTC+12/+13',cur:'NZD',lang:'Englisch',carriers:['Spark','One NZ','2degrees'],em:'111',pfx:{}},
+    '90':{c:'Tuerkei',iso:'TR',tz:'UTC+3',cur:'TRY',lang:'Tuerkisch',carriers:['Turkcell','Vodafone TR','Tuerk Telekom'],em:'112',pfx:{}},
+    '966':{c:'Saudi-Arabien',iso:'SA',tz:'UTC+3',cur:'SAR',lang:'Arabisch',carriers:['STC','Mobily','Zain SA'],em:'911',pfx:{}},
+    '971':{c:'VAE',iso:'AE',tz:'UTC+4',cur:'AED',lang:'Arabisch',carriers:['Etisalat','du'],em:'999',pfx:{}},
+    '27':{c:'Suedafrika',iso:'ZA',tz:'UTC+2',cur:'ZAR',lang:'11 Amtssprachen',carriers:['Vodacom','MTN','Cell C','Telkom Mobile'],em:'10111',pfx:{}},
+    '52':{c:'Mexiko',iso:'MX',tz:'UTC-6/-8',cur:'MXN',lang:'Spanisch',carriers:['Telcel','AT&T MX','Movistar MX'],em:'911',pfx:{}},
+    '54':{c:'Argentinien',iso:'AR',tz:'UTC-3',cur:'ARS',lang:'Spanisch',carriers:['Claro AR','Personal','Movistar AR'],em:'911',pfx:{}},
+  };
+
+  const info=DB[cc]||{c:'Unbekannt ('+cc+')',iso:'N/A',tz:'N/A',cur:'N/A',lang:'N/A',carriers:[],em:'N/A',pfx:{}};
   let lineType='Unbekannt',carrier='Unbekannt';
   if(cc==='49'){
-    if(/^(15|16|17)/.test(local)){lineType='Mobilfunk';const sorted=Object.entries(info.pfx).sort((a,b)=>b[0].length-a[0].length);for(const[p,c]of sorted)if(local.startsWith(p)){carrier=c;break;}}
-    else if(/^800/.test(local))lineType='Gebuehrenfreie Nummer';
-    else if(/^900/.test(local))lineType='Premium/Mehrwert';
+    if(/^(15|16|17)/.test(local)){
+      lineType='Mobilfunk';
+      const sorted=Object.entries(info.pfx).sort((a,b)=>b[0].length-a[0].length);
+      for(const[p,c]of sorted)if(local.startsWith(p)){carrier=c;break;}
+    } else if(/^800/.test(local)) lineType='Gebuehrenfreie Nummer (0800)';
+    else if(/^900/.test(local)) lineType='Mehrwertdienst (0900)';
+    else if(/^180/.test(local)) lineType='Sonderrufnummer (0180x)';
+    else if(/^700/.test(local)) lineType='Persoenliche Rufnummer (0700)';
     else lineType='Festnetz';
-  }else{for(const[p]of Object.entries(info.pfx))if(local.startsWith(p)){lineType='Mobilfunk';break;}if(lineType==='Unbekannt')lineType='Festnetz/Unbekannt';}
+  } else {
+    for(const[p]of Object.entries(info.pfx||{}))if(local.startsWith(p)){lineType='Mobilfunk';break;}
+    if(lineType==='Unbekannt')lineType='Festnetz/Unbekannt';
+  }
+
   const e164=`+${cc}${local}`;
+  const natFormat=cc==='49'?`0${local}`:local;
+
+  // Carrier IP lookup
   let cIP=null,cDom=null;
-  const cDoms={'Telekom':'telekom.de','Vodafone':'vodafone.de','O2':'o2online.de','1&1':'1und1.de','AT&T':'att.com','Verizon':'verizon.com'};
+  const cDoms={'Telekom':'telekom.de','Vodafone':'vodafone.de','O2':'o2online.de','1&1':'1und1.de','AT&T':'att.com','Verizon':'verizon.com','EE':'ee.co.uk','Orange':'orange.com','SFR':'sfr.fr'};
   for(const[c,d]of Object.entries(cDoms))if(carrier.includes(c)){cDom=d;break;}
   if(cDom){const dns=await sf(`https://dns.google/resolve?name=${cDom}&type=A`);if(dns?.Answer?.[0])cIP=dns.Answer[0].data;}
   ld('phL',false);
+
   let html='<div class="dw">';
   html+=sec('NUMMERNANALYSE');
-  html+=row('Eingabe',ph);html+=row('Bereinigt',clean);html+=row('E.164',e164);
-  html+=row('Laenge lokal',local.length+' Stellen');html+=row('Leitungstyp',lineType);
-  html+=sec('LAND');
-  html+=row('Land',info.c);html+=row('Vorwahl',`+${cc}`);html+=row('ISO',info.iso);
-  html+=row('Zeitzone',info.tz);html+=row('Waehrung',info.cur);html+=row('Sprache',info.lang);html+=row('Notruf',info.em);
-  html+=sec('CARRIER');
-  html+=row('Erkannt',carrier);html+=row('Bekannte Carrier',info.carriers.join(', ')||'N/A');
-  if(cDom)html+=row('Carrier-Domain',cDom);
-  if(cIP){html+=row('Carrier-IP',cIP);html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${cIP}'),200)">Carrier-IP tracken</button>`;}
-  html+=sec('OSINT -- RUFNUMMERN-RECHERCHE');
-  html+=row('Truecaller',lnk('Name + Spam-Score (groesste DB)',`https://www.truecaller.com/search/${info.iso?.toLowerCase()||'de'}/${encodeURIComponent(clean)}`));
-  html+=row('Tellows',lnk('Bewertungen + Kommentare (DE)',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
-  html+=row('NumLookup',lnk('Carrier + Inhaberinfos',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
-  html+=row('Should I Answer',lnk('Spam-Meldungen + Votings',`https://www.shouldianswer.com/phone-number/${clean}`));
-  html+=row('WhoCallsMe',lnk('Erfahrungsberichte DE',`https://www.whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
-  html+=row('CallFilter',lnk('Community-Bewertungen',`https://www.callfilter.app/search/${encodeURIComponent(e164)}`));
-  html+=row('Wer-ruftan.de',lnk('Deutsche Spam-Datenbank',`https://www.wer-ruftan.de/Nummer/${encodeURIComponent(clean)}`));
-  html+=row('Cleverdial',lnk('Klarnamen-Suche',`https://cleverdial.com/phone/${encodeURIComponent(e164)}`));
-  html+=row('Google Dork',lnk(`"${e164}" googlen`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22`));
-  html+=row('Google Varianten',lnk(`${clean} + Name`,`https://www.google.com/search?q=${encodeURIComponent(clean)}+%22name%22+OR+%22heisst%22+OR+%22gehört%22`));
-  html+=row('Bing Suche',lnk(`Bing: ${e164}`,`https://www.bing.com/search?q=%22${encodeURIComponent(e164)}%22`));
-  html+=row('WhatsApp',lnk('Profil oeffnen (falls Konto)',`https://wa.me/${clean.replace(/^\+/,'')}`));
-  html+=row('Telegram',lnk('Username-Suche',`https://t.me/${clean.replace(/^\+/,'')}`));
-  html+=row('Viber',lnk('Viber-Suche',`viber://contact?number=${encodeURIComponent(e164)}`));
-  html+=row('Sync.me',lnk('Social + Kontaktinfos',`https://sync.me/search/?q=${encodeURIComponent(e164)}`));
-  html+=row('Eyecon',lnk('Caller ID Lookup',`https://www.eyecon.me/`));
-  html+=row('IntelX',lnk('Darknet + Leak-Suche',`https://intelx.io/?s=${encodeURIComponent(e164)}`));
-  html+=row('Dehashed',lnk('Datenleck-DB',`https://dehashed.com/search?query=${encodeURIComponent(e164)}`));
+  html+=row('Eingabe (Original)',ph);
+  html+=row('E.164 International',`<strong style="color:#00ffcc">${e164}</strong>`);
+  html+=row('Nationales Format',natFormat);
+  html+=row('Nur Ziffern',clean);
+  html+=row('Laendervorwahl',`+${cc}`);
+  html+=row('Lokaler Teil',local);
+  html+=row('Laenge lokal',local.length+' Stellen');
+  html+=row('Leitungstyp',`<span class="badge ${lineType==='Mobilfunk'?'binfo':'bok'}">${lineType}</span>`);
+
+  html+=sec('LAND & REGION');
+  html+=row('Land',`<strong>${info.c}</strong>`);
+  html+=row('ISO-Code',info.iso);
+  html+=row('Zeitzone',info.tz);
+  html+=row('Waehrung',info.cur);
+  html+=row('Sprache',info.lang);
+  html+=row('Notruf',info.em);
+  html+=row('Alle Carrier',info.carriers.join(' / ')||'N/A');
+
+  html+=sec('CARRIER ANALYSE');
+  html+=row('Erkannter Carrier',carrier==='Unbekannt'?'Nicht bestimmbar':`<strong>${carrier}</strong>`);
+  if(cDom){
+    html+=row('Carrier-Domain',lnk(cDom,`https://${cDom}`));
+    if(cIP){
+      html+=row('Carrier Haupt-IP',cIP);
+      html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${cIP}'),200)">Carrier-IP tracken</button>`;
+    }
+  }
+
+  html+=sec('MESSENGER — DIREKT OEFFNEN');
+  html+=row('WhatsApp',lnk('Profil oeffnen / Nachricht senden',`https://wa.me/${clean.replace(/^\+/,'')}?text=Hallo`));
+  html+=row('Telegram',lnk('Nummer suchen',`https://t.me/+${clean.replace(/^\+/,'')}`));
+  html+=row('Signal',lnk('Signal-Link',`sgnl://signal.me/#p/${clean.replace(/^\+/,'')}`));
+  html+=row('Viber',lnk('Viber anrufen',`viber://chat?number=${encodeURIComponent(e164)}`));
+  html+=row('FaceTime (Apple)',lnk('FaceTime starten',`facetime:${e164}`));
+
+  html+=sec('OSINT — RUFNUMMERN-DATENBANKEN');
+  html+=row('Truecaller',lnk('Klarname + Spam-Score + Carrier',`https://www.truecaller.com/search/${info.iso?.toLowerCase()||'de'}/${encodeURIComponent(clean)}`));
+  html+=row('Tellows DE',lnk('Bewertungen + Kommentare',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
+  html+=row('Tellows COM',lnk('International',`https://www.tellows.com/num/${encodeURIComponent(clean)}`));
+  html+=row('NumLookup',lnk('Carrier + Inhaberinfos + Typ',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
+  html+=row('Should I Answer',lnk('Spam-Score + Community-Votes',`https://www.shouldianswer.com/phone-number/${clean}`));
+  html+=row('WhoCallsMe',lnk('Erfahrungsberichte (DE)',`https://www.whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
+  html+=row('Wer-ruftan.de',lnk('Deutsche Meldungen',`https://www.wer-ruftan.de/Nummer/${encodeURIComponent(clean)}`));
+  html+=row('Wemgehört.de',lnk('Deutschen Inhabersuche',`https://www.wemgehoert.de/nummer/${encodeURIComponent(clean)}`));
+  html+=row('CallFilter',lnk('Community Spam-Bewertungen',`https://www.callfilter.app/search/${encodeURIComponent(e164)}`));
+  html+=row('Sync.me',lnk('Social + Facebook Reverse',`https://sync.me/search/?q=${encodeURIComponent(e164)}`));
+  html+=row('SpAm! (Spam-Archiv)',lnk('Spam-Nummern-Archiv',`https://www.spam.com/phone/${encodeURIComponent(clean)}`));
+
+  html+=sec('OSINT — SUCHMASCHINEN DORKS');
+  html+=row('Google E.164',lnk(`"${e164}" exakt suchen`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22`));
+  html+=row('Google + Name',lnk(`${e164} + Klarname`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22+%22heisst%22+OR+%22name%22+OR+%22ist%22`));
+  html+=row('Google + Adresse',lnk(`${e164} + Wohnanschrift`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22+%22strasse%22+OR+%22wohnhaft%22+OR+%22adresse%22`));
+  html+=row('Google Nationales Format',lnk(`"${natFormat}" suchen`,`https://www.google.com/search?q=%22${encodeURIComponent(natFormat)}%22`));
+  html+=row('Google + Firma/Freelancer',lnk(`${e164} + Unternehmen`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22+%22gmbh%22+OR+%22firma%22+OR+%22inhaber%22`));
+  html+=row('Bing',lnk(`Bing: ${e164}`,`https://www.bing.com/search?q=%22${encodeURIComponent(e164)}%22`));
+  html+=row('Yandex',lnk(`Yandex: ${e164}`,`https://yandex.com/search/?text=%22${encodeURIComponent(e164)}%22`));
+
+  html+=sec('OSINT — LEAKS & BREACH');
+  html+=row('IntelX',lnk('Darknet + Deep Web Archiv',`https://intelx.io/?s=${encodeURIComponent(e164)}`));
+  html+=row('Dehashed',lnk('Datenleck-Datenbank',`https://dehashed.com/search?query=${encodeURIComponent(e164)}`));
+  html+=row('Snusbase',lnk('Breach-Lookup',`https://snusbase.com/`));
+
+  html+=sec('SOZIALE NETZWERKE — DIREKTSUCHE');
+  html+=row('Facebook Suche',lnk('Facebook Nummernsuche',`https://www.facebook.com/search/top?q=${encodeURIComponent(e164)}`));
+  html+=row('TikTok Suche',lnk('TikTok Suche',`https://www.tiktok.com/search?q=${encodeURIComponent(e164)}`));
+  html+=row('LinkedIn Suche',lnk('Profil mit Nummer',`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(e164)}`));
+
   html+='</div>';
-  html+='<div class="ai">Carrier-Erkennung am zuverlaessigsten fuer DE/AT/CH.</div>';
+  html+='<div class="ai">Carrier-Erkennung am praezisesten fuer DE/AT/CH. E.164 fuer internationale Suchen verwenden.</div>';
   $('phR').innerHTML=html;
 }
 
@@ -1566,18 +1631,27 @@ async function trackDC(){
     if(pres.listening_to_spotify&&pres.spotify)html+=row('Spotify',`${pres.spotify.song} -- ${pres.spotify.artist}`);
     if(pres.activities?.length>0)pres.activities.forEach((a,i)=>html+=row(`Aktivitaet ${i+1}`,`${a.name} -- ${a.state||a.details||''}`));
   }
-  html+=sec('OSINT TOOLS');
-  html+=row('Discord.id',lnk('Profilinfos + Timestamps',`https://discord.id/?prefill=${uid}`));
-  html+=row('Profil direkt',lnk('Discord.com Profil oeffnen',`https://discord.com/users/${uid}`));
-  html+=row('Lanyard Live-JSON',lnk('Echtzeit-Praesenz JSON',`https://api.lanyard.rest/v1/users/${uid}`));
-  html+=row('Lookup.guru',lnk('Erweiterte ID-Analyse',`https://lookup.guru/${uid}`));
-  html+=row('DiscoTools.xyz',lnk('Snowflake + Badge Decoder',`https://discordtools.xyz/lookup/${uid}`));
-  html+=row('Discord History Tracker',lnk('Nachrichten-Archiv Tool',`https://dht.chylex.com/`));
-  html+=row('Server-Suche',lnk('Disboard -- Server-Verzeichnis',`https://disboard.org/`));
+  html+=sec('OSINT — DISCORD TOOLS');
+  html+=row('Discord.id',lnk('Profilinfos + exakter Timestamp',`https://discord.id/?prefill=${uid}`));
+  html+=row('Profil direkt',lnk('Discord Profil oeffnen',`https://discord.com/users/${uid}`));
+  html+=row('Lanyard Live JSON',lnk('Echtzeit Praesenz + Aktivitaet',`https://api.lanyard.rest/v1/users/${uid}`));
+  html+=row('Lookup.guru',lnk('Erweiterte ID-Analyse + Mutual Servers',`https://lookup.guru/${uid}`));
+  html+=row('Discord Snowflake Decoder',lnk('Timestamp + Worker + Prozess',`https://discordlookup.com/snowflake/${uid}`));
+  html+=row('DiscordLeaks',lnk('Geleakte Discord-Daten',`https://discordleaks.unicornriot.ninja/discord/`));
+  html+=row('Server-Verzeichnis Disboard',lnk('Server nach Username suchen',`https://disboard.org/search?keyword=${uid}`));
+  html+=row('top.gg',lnk('Bot/Server Profile',`https://top.gg/user/${uid}`));
   if(ud?.username){
-    html+=row('Username googeln',lnk(`"${ud.username}" + Discord`,`https://www.google.com/search?q=%22${encodeURIComponent(ud.username)}%22+discord`));
-    html+=row('Username auf anderen Plattformen',lnk(`WhatsMyName Suche`,`https://whatsmyname.app/?q=${encodeURIComponent(ud.username)}`));
-    html+=row('IntelX Username',lnk('Darknet-Suche',`https://intelx.io/?s=${encodeURIComponent(ud.username)}`));
+    const u=ud.username;
+    html+=sec('OSINT — USERNAME CROSS-SEARCH');
+    html+=row('WhatsMyName',lnk(`${u} auf 750+ Plattformen`,`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
+    html+=row('Google: Username exact',lnk(`"${u}" + Discord`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+discord`));
+    html+=row('Google: Username + Leak',lnk(`${u} in Datenlecks`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22password%22+OR+%22breach%22+OR+%22leaked%22`));
+    html+=row('Google: Username + Adresse',lnk(`${u} + Wohnort`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22wohnt%22+OR+%22aus%22+OR+%22lebt+in%22`));
+    html+=row('Google: Username + Social',lnk(`${u} auf Social Media`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+site%3Ainstagram.com+OR+site%3Atwitter.com+OR+site%3Atiktok.com`));
+    html+=row('GitHub Profile',lnk(`github.com/${u}`,`https://github.com/${u}`));
+    html+=row('IntelX Darknet',lnk('Deep Web Suche',`https://intelx.io/?s=${encodeURIComponent(u)}`));
+    html+=row('Dehashed',lnk('Datenleck mit Username',`https://dehashed.com/search?query=${encodeURIComponent(u)}`));
+    html+=row('IDCrawl',lnk('People Finder',`https://www.idcrawl.com/u/${encodeURIComponent(u)}`));
   }
   html+='</div>';
   if(!ud)html+='<div class="aw">Profil nicht abrufbar -- API-Limit oder privat.</div>';
@@ -1625,32 +1699,50 @@ async function trackDomain(){
   html+=row('DMARC',hasDMARC?(dmarcT||'').substring(0,80):'Fehlt');
   if(geo?.success){html+=sec('SERVER STANDORT');html+=row('IP',aRecs[0]);html+=row('Land',geo.country||'N/A');html+=row('Stadt',geo.city||'N/A');html+=row('ISP',geo.connection?.isp||'N/A');html+=row('ASN',geo.connection?.asn||'N/A');if(aRecs[0])html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${aRecs[0]}'),200)">Server-IP tracken</button>`;}
   if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,8).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
-  html+=sec('RECON & ANALYSE TOOLS');
-  html+=row('WHOIS (who.is)',lnk('Registrar + Ablaufdatum + Kontakt',`https://who.is/whois/${dm}`));
-  html+=row('ICANN Lookup',lnk('Offizielle ICANN-Registrardaten',`https://lookup.icann.org/en/lookup?name=${dm}`));
-  html+=row('SecurityTrails',lnk('DNS-Historie + Subdomain-Historie',`https://securitytrails.com/domain/${dm}/dns`));
-  html+=row('crt.sh (SSL Zertifikate)',lnk('Alle Zertifikate + Subdomains',`https://crt.sh/?q=${dm}`));
-  html+=row('SSL Labs',lnk('TLS-Konfiguration + Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${dm}`));
-  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/search?query=${dm}`));
-  html+=row('Censys',lnk('Volltext-Scan + Zertifikate',`https://search.censys.io/search?resource=hosts&q=${dm}`));
-  html+=row('VirusTotal',lnk('Multi-AV + Reputation + Subdomains',`https://www.virustotal.com/gui/domain/${dm}`));
-  html+=row('URLScan.io',lnk('Screenshot + Netzwerk + DOM',`https://urlscan.io/search/#domain:${dm}`));
-  html+=row('BuiltWith',lnk('Tech-Stack + Analytics + Frameworks',`https://builtwith.com/${dm}`));
-  html+=row('Wayback Machine',lnk('Historische Snapshots',`https://web.archive.org/web/*/${dm}`));
-  html+=row('AlienVault OTX',lnk('Threat Intelligence',`https://otx.alienvault.com/indicator/domain/${dm}`));
-  html+=row('ThreatFox',lnk('Malware IOCs',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${dm}`));
-  html+=row('Pulsedive',lnk('Domain Threat Feed',`https://pulsedive.com/indicator/?ioc=${dm}`));
-  html+=row('DNSDumpster',lnk('DNS-Karte + alle Eintraege',`https://dnsdumpster.com/`));
-  html+=row('HackerTarget Subdomains',lnk('Subdomain-Finder',`https://hackertarget.com/find-dns-host-records/?q=${dm}`));
-  html+=row('Subfinder (ProjectDiscovery)',lnk('Passive Subdomain-Enum',`https://chaos.projectdiscovery.io/#/`));
-  html+=row('Amass / OWASP',lnk('Subdomain Enumeration',`https://github.com/owasp-amass/amass`));
-  html+=row('RapidDNS',lnk('Passive DNS',`https://rapiddns.io/subdomain/${dm}`));
-  html+=row('FOFA (Chinesisches Shodan)',lnk('FOFA Suche',`https://fofa.info/result?qbase64=${btoa('domain="'+dm+'"')}`));
-  html+=row('Zoomeye',lnk('Zoomeye Scan',`https://www.zoomeye.org/searchResult?q=${encodeURIComponent('hostname:'+dm)}`));
-  html+=row('Archive.org CDX API',lnk('Alle gecrawlten URLs',`http://web.archive.org/cdx/search/cdx?url=*.${dm}/*&output=text&limit=20`));
-  html+=row('Google Dork -- Subdomains',lnk(`site:${dm} googlen`,`https://www.google.com/search?q=site%3A${dm}`));
-  html+=row('Google Dork -- Login-Seiten',lnk(`Login/Admin-Seiten`,`https://www.google.com/search?q=site%3A${dm}+intitle%3A%22login%22+OR+intitle%3A%22admin%22`));
-  html+=row('Google Dork -- Dateien',lnk(`PDFs + Dokumente`,`https://www.google.com/search?q=site%3A${dm}+filetype%3Apdf+OR+filetype%3Axls+OR+filetype%3Adoc`));
+  html+=sec('REGISTRAR & WHOIS');
+  html+=row('WHOIS who.is',lnk('Registrar + Ablauf + Kontakt',`https://who.is/whois/${dm}`));
+  html+=row('ICANN Lookup (offiziell)',lnk('Offizielle ICANN-Registrardaten',`https://lookup.icann.org/en/lookup?name=${dm}`));
+  html+=row('DomainTools',lnk('WHOIS History + Ownership',`https://whois.domaintools.com/${dm}`));
+  html+=row('ViewDNS.info',lnk('WHOIS + Reverse IP + mehr',`https://viewdns.info/whois/?domain=${dm}`));
+  html+=row('WhoisXML API',lnk('WHOIS Vollversion',`https://www.whoisxmlapi.com/lookup?domainName=${dm}`));
+
+  html+=sec('RECON — SUBDOMAINS & DNS HISTORY');
+  html+=row('SecurityTrails',lnk('DNS-Historie + alle Subdomains',`https://securitytrails.com/domain/${dm}/dns`));
+  html+=row('crt.sh (SSL)',lnk('Alle Zertifikate → Subdomains ableiten',`https://crt.sh/?q=%.${dm}`));
+  html+=row('HackerTarget',lnk('Subdomain Finder (passiv)',`https://hackertarget.com/find-dns-host-records/?q=${dm}`));
+  html+=row('RapidDNS',lnk('Passive DNS DB',`https://rapiddns.io/subdomain/${dm}`));
+  html+=row('DNSDumpster',lnk('DNS-Visualisierung + alle Records',`https://dnsdumpster.com/`));
+  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/search?query=hostname:${dm}`));
+  html+=row('Censys',lnk('TLS + Services + IP-Mapping',`https://search.censys.io/search?resource=hosts&q=${dm}`));
+  html+=row('FOFA',lnk('Web Fingerprinting DB',`https://fofa.info/result?qbase64=${btoa('domain="'+dm+'"')}`));
+  html+=row('Zoomeye',lnk('Chinas Shodan',`https://www.zoomeye.org/searchResult?q=${encodeURIComponent('hostname:'+dm)}`));
+
+  html+=sec('SICHERHEIT & REPUTATION');
+  html+=row('SSL Labs',lnk('TLS Grade + Konfiguration',`https://ssllabs.com/ssltest/analyze.html?d=${dm}`));
+  html+=row('VirusTotal',lnk('70+ Scanner + Reputation',`https://www.virustotal.com/gui/domain/${dm}`));
+  html+=row('URLScan.io',lnk('Screenshot + HTTP Headers + DOM',`https://urlscan.io/search/#domain:${dm}`));
+  html+=row('AlienVault OTX',lnk('Threat Pulses + IOCs',`https://otx.alienvault.com/indicator/domain/${dm}`));
+  html+=row('ThreatFox',lnk('Malware IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${dm}`));
+  html+=row('Pulsedive',lnk('Risk Score + Feed',`https://pulsedive.com/indicator/?ioc=${dm}`));
+  html+=row('URLVoid',lnk('30+ Blacklist Check',`https://www.urlvoid.com/scan/${dm}/`));
+  html+=row('Sucuri SiteCheck',lnk('Malware + Blacklist + Hack Check',`https://sitecheck.sucuri.net/results/${dm}`));
+
+  html+=sec('CONTENT & TECH INTELLIGENCE');
+  html+=row('BuiltWith',lnk('Tech-Stack + CMS + Analytics + CDN',`https://builtwith.com/${dm}`));
+  html+=row('Wappalyzer',lnk('Technologien live erkennen',`https://www.wappalyzer.com/lookup/${dm}`));
+  html+=row('Wayback Machine',lnk('Historische Snapshots (Archive.org)',`https://web.archive.org/web/*/${dm}`));
+  html+=row('Wayback CDX',lnk('Alle gecrawlten URLs auflisten',`https://web.archive.org/cdx/search/cdx?url=*.${dm}/*&output=text&limit=50&fl=original`));
+  html+=row('SimilarWeb',lnk('Traffic + Herkunft + Keywords',`https://www.similarweb.com/website/${dm}`));
+
+  html+=sec('GOOGLE DORKS — GEZIELTE SUCHE');
+  html+=row('Alle Seiten indexiert',lnk(`site:${dm}`,`https://www.google.com/search?q=site%3A${dm}`));
+  html+=row('Login / Admin Seiten',lnk(`Login + Admin + Dashboard`,`https://www.google.com/search?q=site%3A${dm}+intitle%3A%22login%22+OR+intitle%3A%22admin%22+OR+intitle%3A%22dashboard%22`));
+  html+=row('Dokumente (PDF/XLS/DOC)',lnk(`Dateien auf Domain`,`https://www.google.com/search?q=site%3A${dm}+filetype%3Apdf+OR+filetype%3Axls+OR+filetype%3Adoc+OR+filetype%3Acsv`));
+  html+=row('Konfigurationsdateien',lnk(`Config + Env Dateien`,`https://www.google.com/search?q=site%3A${dm}+ext%3Aenv+OR+ext%3Aconfig+OR+ext%3Ayml+OR+ext%3Ajson`));
+  html+=row('E-Mail Adressen auf Domain',lnk(`E-Mails auf ${dm}`,`https://www.google.com/search?q=site%3A${dm}+%22@${dm}%22`));
+  html+=row('Backup / alte Versionen',lnk(`Backup-Dateien`,`https://www.google.com/search?q=site%3A${dm}+ext%3Abak+OR+ext%3Aold+OR+ext%3Abackup`));
+  html+=row('Subdomains via Google',lnk(`Subdomains finden`,`https://www.google.com/search?q=site%3A*.${dm}+-site%3Awww.${dm}`));
+  html+=row('Bing Dork',lnk(`Bing: site:${dm}`,`https://www.bing.com/search?q=site%3A${dm}`));
   html+='</div>';
   html+='<div class="ai">DNS via Google DNS-over-HTTPS (8.8.8.8).</div>';
   $('dmR').innerHTML=html;
@@ -2219,11 +2311,15 @@ async function trackMAC(){
     }
 
     html+=sec('ERWEITERTE OUI SUCHE');
-    html+=row('macvendors.com',lnk('OUI Details',`https://macvendors.com/${oui}`));
-    html+=row('macaddress.io',lnk('Vollstaendige Info',`https://macaddress.io/mac-address-lookup/${macFormatted}`));
-    html+=row('maclookup.app',lnk('Schnellsuche',`https://maclookup.app/search/result?mac=${macFormatted}`));
-    html+=row('wireshark.org OUI',lnk('Wireshark DB',`https://www.wireshark.org/tools/oui-lookup.html`));
-    html+=row('IEEE OUI Registry',lnk('Offizielle IEEE DB',`https://regauth.standards.ieee.org/standards-ra-web/pub/view.html#registries`));
+    html+=row('macvendors.com (API)',lnk('OUI Hersteller Details',`https://macvendors.com/${oui}`));
+    html+=row('macaddress.io',lnk('Vollstaendige OUI Info + Land',`https://macaddress.io/mac-address-lookup/${macFormatted}`));
+    html+=row('maclookup.app',lnk('Schnelle Hersteller-Suche',`https://maclookup.app/search/result?mac=${macFormatted}`));
+    html+=row('Wireshark OUI DB',lnk('Offizielle Wireshark-Datenbank',`https://www.wireshark.org/tools/oui-lookup.html`));
+    html+=row('IEEE MA-L Registry',lnk('Offizielle IEEE OUI-Registrierung',`https://regauth.standards.ieee.org/standards-ra-web/pub/view.html#registries`));
+    html+=row('coffer.com MAC DB',lnk('Alternative MAC Datenbank',`https://www.coffer.com/mac_find/?string=${oui}`));
+    html+=row('Google: OUI Hersteller',lnk(`"${ouiFormatted}" googeln`,`https://www.google.com/search?q=%22${encodeURIComponent(ouiFormatted)}%22+vendor+manufacturer`));
+    html+=row('Shodan OUI Suche',lnk('Geraete nach OUI in Shodan',`https://www.shodan.io/search?query=mac%3A${oui.toLowerCase()}`));
+    html+=row('F-Secure Router Check',lnk('Router-Schwachstellen pruefen',`https://www.f-secure.com/en/home/products/router-checker`));
 
     if(isRandomized){
       html+='<div class="aw">RANDOMISIERTE MAC erkannt -- Dieses Geraet nutzt Datenschutz-MAC-Adressen (iOS/Android). Kein echter Hersteller bestimmbar.</div>';
@@ -2310,6 +2406,5 @@ async function trackMAC(){
   $('macR').innerHTML=html;
 }
 </script>
-
 </body>
 </html>
