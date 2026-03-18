@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>StarTrack v5</title>
+<title>StarTrack v8</title>
 <style>
 :root{
   --bg:#05000f;
@@ -27,161 +28,161 @@
 html{scroll-behavior:smooth;}
 
 body{
-  font-family:'Courier New',monospace;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  padding:14px;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
+font-family:‘Courier New’,monospace;
+background:var(–bg);
+color:var(–text);
+min-height:100vh;
+padding:14px;
+overflow-x:hidden;
+-webkit-font-smoothing:antialiased;
 }
 
 /* ── LIVE WALLPAPER ── */
 #cvs{
-  position:fixed;inset:0;z-index:0;
-  pointer-events:none;
-  opacity:.85;
+position:fixed;inset:0;z-index:0;
+pointer-events:none;
+opacity:.85;
 }
 
 .wrap{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
 
 /* ── BANNER ── */
 .banner{
-  text-align:center;margin-bottom:20px;
-  color:var(--accent);
-  text-shadow:0 0 14px rgba(255,26,94,.75),0 0 32px rgba(144,16,224,.5);
-  animation:glow 3s ease-in-out infinite alternate;
+text-align:center;margin-bottom:20px;
+color:var(–accent);
+text-shadow:0 0 14px rgba(255,26,94,.75),0 0 32px rgba(144,16,224,.5);
+animation:glow 3s ease-in-out infinite alternate;
 }
 .ban-ascii{
-  font-size:clamp(5.5px,1.55vw,13px);
-  white-space:pre;display:block;line-height:1.3;
+font-size:clamp(5.5px,1.55vw,13px);
+white-space:pre;display:block;line-height:1.3;
 }
 .ban-sub{
-  font-size:clamp(9px,2.2vw,12px);
-  letter-spacing:clamp(2px,1.5vw,5px);
-  margin-top:7px;color:var(--label);
-  text-shadow:0 0 8px rgba(144,16,224,.5);
+font-size:clamp(9px,2.2vw,12px);
+letter-spacing:clamp(2px,1.5vw,5px);
+margin-top:7px;color:var(–label);
+text-shadow:0 0 8px rgba(144,16,224,.5);
 }
 @keyframes glow{
-  from{text-shadow:0 0 10px rgba(255,26,94,.7),0 0 24px rgba(144,16,224,.45);}
-  to  {text-shadow:0 0 22px rgba(255,26,94,.95),0 0 44px rgba(144,16,224,.7),0 0 66px rgba(255,26,94,.25);}
+from{text-shadow:0 0 10px rgba(255,26,94,.7),0 0 24px rgba(144,16,224,.45);}
+to  {text-shadow:0 0 22px rgba(255,26,94,.95),0 0 44px rgba(144,16,224,.7),0 0 66px rgba(255,26,94,.25);}
 }
 
 /* ── MENU ── */
 .menu{
-  background:var(--panel);
-  border:1.5px solid var(--border);
-  border-radius:14px;padding:clamp(14px,4vw,26px);margin-bottom:14px;
-  box-shadow:0 0 44px rgba(90,24,192,.38),inset 0 0 28px rgba(255,26,94,.05);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+background:var(–panel);
+border:1.5px solid var(–border);
+border-radius:14px;padding:clamp(14px,4vw,26px);margin-bottom:14px;
+box-shadow:0 0 44px rgba(90,24,192,.38),inset 0 0 28px rgba(255,26,94,.05);
+backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
 .menu-title{
-  text-align:center;color:var(--accent);margin-bottom:20px;
-  font-size:clamp(13px,3.2vw,18px);letter-spacing:clamp(2px,2vw,5px);
-  text-shadow:0 0 14px var(--accent);
+text-align:center;color:var(–accent);margin-bottom:20px;
+font-size:clamp(13px,3.2vw,18px);letter-spacing:clamp(2px,2vw,5px);
+text-shadow:0 0 14px var(–accent);
 }
 .menu-grid{display:grid;gap:10px;}
 @media(min-width:560px){.menu-grid{grid-template-columns:1fr 1fr;}}
 @media(min-width:860px){.menu-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
 
 .mbtn{
-  background:linear-gradient(135deg,rgba(90,24,192,.16),rgba(255,26,94,.10));
-  border:1px solid var(--border);color:var(--accent);
-  padding:clamp(13px,3vw,15px) clamp(12px,3vw,18px);
-  cursor:pointer;border-radius:10px;font-family:'Courier New',monospace;
-  font-size:clamp(11.5px,2.5vw,13.5px);
-  transition:all .22s;text-align:left;
-  box-shadow:0 0 10px rgba(90,24,192,.22);
-  position:relative;overflow:hidden;
-  min-height:var(--tap);display:flex;flex-direction:column;justify-content:center;
-  -webkit-user-select:none;user-select:none;
+background:linear-gradient(135deg,rgba(90,24,192,.16),rgba(255,26,94,.10));
+border:1px solid var(–border);color:var(–accent);
+padding:clamp(13px,3vw,15px) clamp(12px,3vw,18px);
+cursor:pointer;border-radius:10px;font-family:‘Courier New’,monospace;
+font-size:clamp(11.5px,2.5vw,13.5px);
+transition:all .22s;text-align:left;
+box-shadow:0 0 10px rgba(90,24,192,.22);
+position:relative;overflow:hidden;
+min-height:var(–tap);display:flex;flex-direction:column;justify-content:center;
+-webkit-user-select:none;user-select:none;
 }
 .mbtn-label{font-weight:bold;letter-spacing:1.5px;}
-.mbtn-desc{font-size:clamp(9px,2vw,10.5px);color:var(--label);margin-top:3px;opacity:.85;}
+.mbtn-desc{font-size:clamp(9px,2vw,10.5px);color:var(–label);margin-top:3px;opacity:.85;}
 .mbtn::before{
-  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,26,94,.18),transparent);
-  transition:left .38s;
+content:’’;position:absolute;top:0;left:-100%;width:100%;height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,26,94,.18),transparent);
+transition:left .38s;
 }
 .mbtn:hover::before,.mbtn:active::before{left:100%;}
 .mbtn:hover,.mbtn:active{
-  background:linear-gradient(135deg,rgba(90,24,192,.32),rgba(255,26,94,.22));
-  border-color:var(--accent);
-  box-shadow:0 0 22px rgba(90,24,192,.52),0 0 36px rgba(255,26,94,.22);
-  transform:translateY(-1px);
+background:linear-gradient(135deg,rgba(90,24,192,.32),rgba(255,26,94,.22));
+border-color:var(–accent);
+box-shadow:0 0 22px rgba(90,24,192,.52),0 0 36px rgba(255,26,94,.22);
+transform:translateY(-1px);
 }
-.mbtn-new{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,212,240,.25);}
-.mbtn-new .mbtn-label{color:var(--cyan);}
+.mbtn-new{border-color:var(–cyan);box-shadow:0 0 14px rgba(0,212,240,.25);}
+.mbtn-new .mbtn-label{color:var(–cyan);}
 .mbtn-new .mbtn-desc{color:rgba(0,212,240,.65);}
 
 /* ── PANELS ── */
 .panel{
-  background:var(--panel);border:1.5px solid var(--border);border-radius:14px;
-  padding:clamp(14px,4vw,22px);margin-top:14px;
-  display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
-  box-shadow:0 0 48px rgba(90,24,192,.5),inset 0 0 24px rgba(255,26,94,.06);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:var(--accent2) transparent;
+background:var(–panel);border:1.5px solid var(–border);border-radius:14px;
+padding:clamp(14px,4vw,22px);margin-top:14px;
+display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
+box-shadow:0 0 48px rgba(90,24,192,.5),inset 0 0 24px rgba(255,26,94,.06);
+backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+-webkit-overflow-scrolling:touch;
+scrollbar-width:thin;scrollbar-color:var(–accent2) transparent;
 }
 .panel::-webkit-scrollbar{width:5px;}
-.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:4px;}
+.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(–accent2),var(–accent));border-radius:4px;}
 .panel.active{display:block;animation:slideIn .28s ease-out;}
 @keyframes slideIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
 
 .ptitle{
-  color:var(--accent);text-align:center;margin-bottom:18px;
-  font-size:clamp(13px,3.2vw,18px);
-  border-bottom:1.5px solid var(--border);padding-bottom:12px;
-  letter-spacing:clamp(2px,2vw,4px);text-shadow:0 0 12px var(--accent);
+color:var(–accent);text-align:center;margin-bottom:18px;
+font-size:clamp(13px,3.2vw,18px);
+border-bottom:1.5px solid var(–border);padding-bottom:12px;
+letter-spacing:clamp(2px,2vw,4px);text-shadow:0 0 12px var(–accent);
 }
 
 /* ── INPUT ── */
 .ig{margin-bottom:14px;}
-.ig label{display:block;margin-bottom:6px;color:var(--label);font-size:clamp(9.5px,2.2vw,11.5px);letter-spacing:1.5px;}
+.ig label{display:block;margin-bottom:6px;color:var(–label);font-size:clamp(9.5px,2.2vw,11.5px);letter-spacing:1.5px;}
 .ig input,.ig select{
-  width:100%;padding:clamp(11px,2.8vw,13px) clamp(12px,3vw,15px);
-  background:rgba(5,0,15,.82);border:1.5px solid var(--border);
-  color:var(--accent);border-radius:9px;
-  font-family:'Courier New',monospace;font-size:clamp(12px,2.8vw,14px);
-  transition:border-color .2s,box-shadow .2s;
-  -webkit-appearance:none;appearance:none;
+width:100%;padding:clamp(11px,2.8vw,13px) clamp(12px,3vw,15px);
+background:rgba(5,0,15,.82);border:1.5px solid var(–border);
+color:var(–accent);border-radius:9px;
+font-family:‘Courier New’,monospace;font-size:clamp(12px,2.8vw,14px);
+transition:border-color .2s,box-shadow .2s;
+-webkit-appearance:none;appearance:none;
 }
 .ig input:focus,.ig select:focus{
-  outline:none;border-color:var(--accent);
-  box-shadow:0 0 16px rgba(90,24,192,.5);
+outline:none;border-color:var(–accent);
+box-shadow:0 0 16px rgba(90,24,192,.5);
 }
 
 /* ── BUTTONS ── */
 .brow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:2px;}
 .brun{
-  background:linear-gradient(135deg,#5a18c0,#e0003c);
-  color:#fff;border:none;
-  padding:clamp(11px,2.8vw,13px) clamp(18px,4.5vw,30px);
-  border-radius:9px;cursor:pointer;font-family:'Courier New',monospace;
-  font-size:clamp(12px,2.8vw,14px);font-weight:bold;transition:all .22s;
-  box-shadow:0 0 16px rgba(90,24,192,.5);
-  min-height:var(--tap);-webkit-user-select:none;user-select:none;
+background:linear-gradient(135deg,#5a18c0,#e0003c);
+color:#fff;border:none;
+padding:clamp(11px,2.8vw,13px) clamp(18px,4.5vw,30px);
+border-radius:9px;cursor:pointer;font-family:‘Courier New’,monospace;
+font-size:clamp(12px,2.8vw,14px);font-weight:bold;transition:all .22s;
+box-shadow:0 0 16px rgba(90,24,192,.5);
+min-height:var(–tap);-webkit-user-select:none;user-select:none;
 }
 .brun:hover,.brun:active{transform:scale(1.04);box-shadow:0 0 26px rgba(90,24,192,.8),0 0 38px rgba(255,26,94,.45);}
 .bback{
-  background:rgba(90,24,192,.2);color:var(--text);border:1px solid var(--border);
-  padding:clamp(11px,2.8vw,13px) clamp(14px,3.5vw,20px);
-  border-radius:9px;cursor:pointer;font-family:'Courier New',monospace;
-  font-size:clamp(11px,2.5vw,13px);transition:all .22s;min-height:var(--tap);
-  -webkit-user-select:none;user-select:none;
+background:rgba(90,24,192,.2);color:var(–text);border:1px solid var(–border);
+padding:clamp(11px,2.8vw,13px) clamp(14px,3.5vw,20px);
+border-radius:9px;cursor:pointer;font-family:‘Courier New’,monospace;
+font-size:clamp(11px,2.5vw,13px);transition:all .22s;min-height:var(–tap);
+-webkit-user-select:none;user-select:none;
 }
 .bback:hover,.bback:active{background:rgba(90,24,192,.4);box-shadow:0 0 12px rgba(90,24,192,.45);}
 .bmini{
-  background:linear-gradient(135deg,#5a18c0,#e0003c);color:#fff;border:none;
-  padding:9px 16px;border-radius:7px;cursor:pointer;
-  font-family:'Courier New',monospace;font-size:clamp(10px,2.3vw,12px);
-  margin-top:11px;transition:all .22s;display:inline-block;min-height:40px;
+background:linear-gradient(135deg,#5a18c0,#e0003c);color:#fff;border:none;
+padding:9px 16px;border-radius:7px;cursor:pointer;
+font-family:‘Courier New’,monospace;font-size:clamp(10px,2.3vw,12px);
+margin-top:11px;transition:all .22s;display:inline-block;min-height:40px;
 }
 .bmini:hover,.bmini:active{transform:scale(1.03);box-shadow:0 0 16px rgba(255,26,94,.55);}
 
 /* ── LOADER ── */
-.loader{text-align:center;color:var(--accent);padding:18px;display:none;font-size:clamp(11px,2.5vw,14px);}
+.loader{text-align:center;color:var(–accent);padding:18px;display:none;font-size:clamp(11px,2.5vw,14px);}
 .loader.on{display:block;animation:lpulse 1.1s ease-in-out infinite;}
 @keyframes lpulse{0%,100%{opacity:.45;}50%{opacity:1;}}
 .lbar{height:2px;background:rgba(90,24,192,.18);border-radius:2px;margin-top:8px;overflow:hidden;}
@@ -191,70 +192,72 @@ body{
 /* ── DATA ── */
 .dw{background:rgba(5,0,12,.5);padding:clamp(12px,3vw,17px);border-radius:10px;margin-top:12px;border:1px solid rgba(90,24,192,.25);}
 .sec{
-  color:var(--accent);font-size:clamp(10px,2.5vw,13px);
-  margin:20px 0 9px;padding-bottom:6px;
-  border-bottom:1px solid rgba(90,24,192,.35);
-  letter-spacing:2px;text-shadow:0 0 7px var(--accent);
+color:var(–accent);font-size:clamp(10px,2.5vw,13px);
+margin:20px 0 9px;padding-bottom:6px;
+border-bottom:1px solid rgba(90,24,192,.35);
+letter-spacing:2px;text-shadow:0 0 7px var(–accent);
 }
 .row{padding:5px 0;border-bottom:1px solid rgba(90,24,192,.1);display:flex;flex-wrap:wrap;gap:2px 6px;align-items:baseline;}
 @media(min-width:500px){.lbl{min-width:195px;}}
 @media(max-width:499px){.lbl{width:100%;font-size:10px;}}
-.lbl{color:var(--label);font-size:clamp(9.5px,2.2vw,12px);flex-shrink:0;}
-.val{color:var(--val);font-size:clamp(10.5px,2.4vw,12.5px);word-break:break-all;flex:1;}
-.val a{color:var(--accent2);text-decoration:none;border-bottom:1px dashed rgba(144,16,224,.4);}
-.val a:hover{color:var(--accent);}
+.lbl{color:var(–label);font-size:clamp(9.5px,2.2vw,12px);flex-shrink:0;}
+.val{color:var(–val);font-size:clamp(10.5px,2.4vw,12.5px);word-break:break-all;flex:1;}
+.val a{color:var(–accent2);text-decoration:none;border-bottom:1px dashed rgba(144,16,224,.4);}
+.val a:hover{color:var(–accent);}
 
 /* ── STATS ── */
 .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin:11px 0;}
 @media(max-width:380px){.stats{grid-template-columns:repeat(2,1fr);}}
 .stat{background:rgba(5,0,12,.48);padding:10px;border-radius:7px;border:1px solid rgba(90,24,192,.25);text-align:center;}
-.slab{color:var(--label);font-size:clamp(8px,1.8vw,10px);margin-bottom:3px;letter-spacing:1px;}
-.sval{color:var(--val);font-size:clamp(13px,3vw,16px);font-weight:bold;text-shadow:0 0 7px var(--accent);}
+.slab{color:var(–label);font-size:clamp(8px,1.8vw,10px);margin-bottom:3px;letter-spacing:1px;}
+.sval{color:var(–val);font-size:clamp(13px,3vw,16px);font-weight:bold;text-shadow:0 0 7px var(–accent);}
 
 /* ── BADGES ── */
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:bold;margin-left:5px;vertical-align:middle;}
-.bok  {background:rgba(0,239,128,.1);color:var(--green);border:1px solid var(--green);}
-.bwarn{background:rgba(240,192,0,.1);color:var(--yellow);border:1px solid var(--yellow);}
-.bbad {background:rgba(255,40,40,.1);color:var(--red);border:1px solid var(--red);}
-.binfo{background:rgba(0,212,240,.1);color:var(--cyan);border:1px solid var(--cyan);}
+.bok  {background:rgba(0,239,128,.1);color:var(–green);border:1px solid var(–green);}
+.bwarn{background:rgba(240,192,0,.1);color:var(–yellow);border:1px solid var(–yellow);}
+.bbad {background:rgba(255,40,40,.1);color:var(–red);border:1px solid var(–red);}
+.binfo{background:rgba(0,212,240,.1);color:var(–cyan);border:1px solid var(–cyan);}
 
 /* ── PLATFORM GRID ── */
 .platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:7px;margin-top:7px;}
 @media(max-width:460px){.platgrid{grid-template-columns:1fr;}}
 .plat{background:rgba(5,0,12,.48);border:1px solid rgba(90,24,192,.25);border-radius:7px;padding:8px 11px;display:flex;align-items:center;gap:8px;transition:all .18s;}
-.plat:hover,.plat:active{border-color:var(--accent);background:rgba(255,26,94,.06);}
-.pname{color:var(--label);min-width:95px;font-size:clamp(9.5px,2.2vw,11.5px);}
-.plink a{color:var(--accent2);font-size:clamp(9px,2vw,11px);text-decoration:none;}
+.plat:hover,.plat:active{border-color:var(–accent);background:rgba(255,26,94,.06);}
+.pname{color:var(–label);min-width:95px;font-size:clamp(9.5px,2.2vw,11.5px);}
+.plink a{color:var(–accent2);font-size:clamp(9px,2vw,11px);text-decoration:none;}
 
 /* ── ALERTS ── */
-.aw{color:var(--yellow);padding:10px 14px;background:rgba(240,192,0,.07);border:1px solid rgba(240,192,0,.5);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
-.ai{color:var(--cyan);padding:10px 14px;background:rgba(0,212,240,.07);border:1px solid rgba(0,212,240,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
-.ae{color:var(--red);padding:10px 14px;background:rgba(255,40,40,.1);border:1px solid rgba(255,40,40,.5);border-radius:8px;margin-top:10px;}
-.ag{color:var(--green);padding:10px 14px;background:rgba(0,239,128,.07);border:1px solid rgba(0,239,128,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
+.aw{color:var(–yellow);padding:10px 14px;background:rgba(240,192,0,.07);border:1px solid rgba(240,192,0,.5);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
+.ai{color:var(–cyan);padding:10px 14px;background:rgba(0,212,240,.07);border:1px solid rgba(0,212,240,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
+.ae{color:var(–red);padding:10px 14px;background:rgba(255,40,40,.1);border:1px solid rgba(255,40,40,.5);border-radius:8px;margin-top:10px;}
+.ag{color:var(–green);padding:10px 14px;background:rgba(0,239,128,.07);border:1px solid rgba(0,239,128,.4);border-radius:8px;margin-top:10px;font-size:clamp(9.5px,2.2vw,12px);}
 
 /* ── MAP ── */
-.map-frame{width:100%;height:clamp(150px,35vw,210px);border:1px solid var(--border);border-radius:8px;margin-top:10px;}
+.map-frame{width:100%;height:clamp(150px,35vw,210px);border:1px solid var(–border);border-radius:8px;margin-top:10px;}
 
 /* ── AVATAR (discord) ── */
-.ava{width:clamp(60px,15vw,88px);height:clamp(60px,15vw,88px);border-radius:50%;border:2px solid var(--accent2);display:block;margin:8px 0;box-shadow:0 0 20px rgba(144,16,224,.55);}
+.ava{width:clamp(60px,15vw,88px);height:clamp(60px,15vw,88px);border-radius:50%;border:2px solid var(–accent2);display:block;margin:8px 0;box-shadow:0 0 20px rgba(144,16,224,.55);}
 
 /* ── FOOTER ── */
 .footer{
-  margin-top:26px;padding:clamp(13px,3.5vw,17px);
-  background:rgba(255,26,94,.04);
-  border:1px solid rgba(255,26,94,.2);border-radius:12px;
-  text-align:center;font-size:clamp(9.5px,2vw,11px);
-  color:rgba(255,255,255,.38);line-height:1.75;
+margin-top:26px;padding:clamp(13px,3.5vw,17px);
+background:rgba(255,26,94,.04);
+border:1px solid rgba(255,26,94,.2);border-radius:12px;
+text-align:center;font-size:clamp(9.5px,2vw,11px);
+color:rgba(255,255,255,.38);line-height:1.75;
 }
-.footer strong{color:var(--accent);}
-.ftitle{color:var(--accent);font-size:clamp(10px,2.2vw,12px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
+.footer strong{color:var(–accent);}
+.ftitle{color:var(–accent);font-size:clamp(10px,2.2vw,12px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
 
 @media(max-width:600px){body{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));}}
 </style>
+
 </head>
 <body>
 
 <!-- LIVE WALLPAPER CANVAS -->
+
 <canvas id="cvs"></canvas>
 
 <div class="wrap">
@@ -265,10 +268,11 @@ body{
   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
 /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  </span>
-<span class="ban-sub">M A X I M U M  I N T E L  v 5 . 0</span>
+<span class="ban-sub">M A X I M U M  I N T E L  v 8 . 0</span>
 </div>
 
 <!-- MENU -->
+
 <div id="mainMenu" class="menu">
   <div class="menu-title">STARTRACK SYSTEM</div>
   <div class="menu-grid">
@@ -300,14 +304,19 @@ body{
       <span class="mbtn-label">[ 07 ] DOMAIN</span>
       <span class="mbtn-desc">DNS + SSL + Geo + Shodan</span>
     </button>
-    <button class="mbtn mbtn-new" onclick="show('mac')">
-      <span class="mbtn-label">[ 08 ] MAC / NETZWERK</span>
+    <button class="mbtn mbtn-new" onclick="show('plate')">
+      <span class="mbtn-label">[ 08 ] LICENSE PLATE</span>
+      <span class="mbtn-desc">KFZ-Kennzeichen + Land + Region + Fahrzeuginfos</span>
+    </button>
+    <button class="mbtn" onclick="show('mac')">
+      <span class="mbtn-label">[ 09 ] MAC / NETZWERK</span>
       <span class="mbtn-desc">Hersteller + OUI + Geraetetyp + Ports</span>
     </button>
   </div>
 </div>
 
 <!-- PANELS -->
+
 <div id="ip" class="panel">
   <div class="ptitle">IP TRACKER</div>
   <div class="ig"><label>IP-ADRESSE (IPv4 oder IPv6)</label>
@@ -393,7 +402,38 @@ body{
   <div id="dmR"></div>
 </div>
 
+<!-- LICENSE PLATE TRACKER -->
+
+<div id="plate" class="panel">
+  <div class="ptitle">LICENSE PLATE TRACKER</div>
+  <div class="ig"><label>KENNZEICHEN EINGEBEN</label>
+    <input id="plateInput" placeholder="z.B. B-AB 1234 oder MUC-XY 999" autocomplete="off" style="text-transform:uppercase">
+  </div>
+  <div class="ig"><label>LAND / SYSTEM</label>
+    <select id="plateCountry">
+      <option value="de">Deutschland (DE)</option>
+      <option value="at">Oesterreich (AT)</option>
+      <option value="ch">Schweiz (CH)</option>
+      <option value="us">USA</option>
+      <option value="gb">Grossbritannien (GB)</option>
+      <option value="fr">Frankreich (FR)</option>
+      <option value="it">Italien (IT)</option>
+      <option value="es">Spanien (ES)</option>
+      <option value="nl">Niederlande (NL)</option>
+      <option value="pl">Polen (PL)</option>
+      <option value="eu">EU-Allgemein</option>
+    </select>
+  </div>
+  <div class="brow">
+    <button class="brun" onclick="trackPlate()">ANALYSIEREN</button>
+    <button class="bback" onclick="back()">ZURUECK</button>
+  </div>
+  <div class="loader" id="plateL">Analysiere Kennzeichen...<div class="lbar"><div class="lbar-f"></div></div></div>
+  <div id="plateR"></div>
+</div>
+
 <!-- MAC / NETWORK TRACKER -->
+
 <div id="mac" class="panel">
   <div class="ptitle">MAC-ADRESSE / NETZWERK TRACKER</div>
   <div class="ig"><label>MAC-ADRESSE EINGEBEN</label>
@@ -425,6 +465,7 @@ body{
 <!-- ═══════════════════════════════════════════════════════
      LIVE WALLPAPER
 ═══════════════════════════════════════════════════════ -->
+
 <script>
 (function(){
   const cv=document.getElementById('cvs');
@@ -635,6 +676,7 @@ body{
 <!-- ═══════════════════════════════════════════════════════
      APP LOGIC
 ═══════════════════════════════════════════════════════ -->
+
 <script>
 const $=id=>document.getElementById(id);
 function show(t){
@@ -663,9 +705,9 @@ function stats(...items){return`<div class="stats">${items.map(([l,v])=>`<div cl
 function isPrivate(ip){return/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd)/.test(ip);}
 function sunStatus(lat,lon){if(!lat||!lon)return'N/A';const h=new Date().getUTCHours()+(lon/15);const l=((h%24)+24)%24;if(l>=6&&l<8)return'Sonnenaufgang';if(l>=8&&l<18)return'Tag';if(l>=18&&l<20)return'Sonnenuntergang';return'Nacht';}
 
-['ipInput','unInput','phInput','emInput','dcInput','dmInput','macInput','macHostInput'].forEach(id=>{
+['ipInput','unInput','phInput','emInput','dcInput','dmInput','macInput','macHostInput','plateInput'].forEach(id=>{
   const el=$(id);if(!el)return;
-  const map={ipInput:'trackIP',unInput:'trackUN',phInput:'trackPhone',emInput:'trackEmail',dcInput:'trackDC',dmInput:'trackDomain',macInput:'trackMAC',macHostInput:'trackMAC'};
+  const map={ipInput:'trackIP',unInput:'trackUN',phInput:'trackPhone',emInput:'trackEmail',dcInput:'trackDC',dmInput:'trackDomain',macInput:'trackMAC',macHostInput:'trackMAC',plateInput:'trackPlate'};
   el.addEventListener('keydown',e=>{if(e.key==='Enter')window[map[id]]&&window[map[id]]();});
 });
 
@@ -677,121 +719,169 @@ async function trackIP(pre){
   if(!ip){$('ipR').innerHTML='<div class="ae">Bitte IP eingeben!</div>';return;}
   if(pre)$('ipInput').value=pre;
   ld('ipL',true);$('ipR').innerHTML='';
-  const[r1,r2,r3,r4,r5,r6]=await Promise.allSettled([
-    sf(`https://ipwho.is/${ip}`),sf(`http://ip-api.com/json/${ip}?fields=66846719`),
-    sf(`https://ipapi.co/${ip}/json/`),sf(`https://get.geojs.io/v1/ip/geo/${ip}.json`),
-    sf(`https://freeipapi.com/api/json/${ip}`),sf(`https://api.iplocation.net/?ip=${ip}`)
+
+  // GUTE APIs: ipwho.is (zuverlaessig, kein Limit), ip-api.com (beste Threat-Daten, HTTPS via proxy), freeipapi.com (backup)
+  // ENTFERNT: ipapi.co (agressives Rate-Limit), geojs.io (kaum Daten), iplocation.net (unzuverlaessig)
+  const[r1,r2,r3]=await Promise.allSettled([
+    sf(`https://ipwho.is/${ip}`),
+    sf(`https://freeipapi.com/api/json/${ip}`),
+    sf(`https://ipapi.co/${ip}/json/`)  // als dritter Fallback, wenige Felder genutzt
   ]);
-  const d1=r1.value,d2=r2.value,d3=r3.value,d5=r5.value,d6=r6.value;
-  if(d1?.success===false&&d2?.status==='fail'){ld('ipL',false);$('ipR').innerHTML='<div class="ae">Ungueltige IP-Adresse!</div>';return;}
-  const lat=d1?.latitude||d2?.lat||d3?.latitude||d5?.latitude||0;
-  const lon=d1?.longitude||d2?.lon||d3?.longitude||d5?.longitude||0;
-  const isV6=ip.includes(':');
-  let osm=null,bdc=null;
-  if(lat&&lon&&!isV6){
-    [osm,bdc]=await Promise.all([
-      sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,{headers:{'User-Agent':'StarTrack/5.0'}}),
-      sf(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=de`)
-    ]);
+  const d1=r1.value,d2=r2.value,d3=r3.value;
+
+  if(d1?.success===false&&!d2?.ipVersion){
+    ld('ipL',false);$('ipR').innerHTML='<div class="ae">Ungueltige oder nicht oeffentliche IP-Adresse!</div>';return;
   }
-  const rev=ip.split('.').reverse().join('.');
-  const spamRes=await sf(`https://dns.google/resolve?name=${rev}.zen.spamhaus.org&type=A`);
+
+  const lat=parseFloat(d1?.latitude||d2?.latitude||0);
+  const lon=parseFloat(d1?.longitude||d2?.longitude||0);
+  const isV6=ip.includes(':');
+  const isPrivIP=isPrivate(ip);
+
+  // Reverse Geocoding + ASN parallel - nur wenn echte Koordinaten
+  let osm=null,rdap=null,spamRes=null,ptrRes=null;
+  const revIP=!isV6&&!isPrivIP?ip.split('.').reverse().join('.'):null;
+
+  await Promise.allSettled([
+    lat&&lon&&!isV6?(async()=>{
+      osm=await sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16&addressdetails=1`,{headers:{'User-Agent':'StarTrack/8.0'}});
+    })():Promise.resolve(),
+    revIP?(async()=>{
+      spamRes=await sf(`https://dns.google/resolve?name=${revIP}.zen.spamhaus.org&type=A`);
+      ptrRes=await sf(`https://dns.google/resolve?name=${revIP}.in-addr.arpa&type=PTR`);
+    })():Promise.resolve(),
+  ]);
+
   const onSpam=spamRes?.Answer?.length>0;
+  const ptrRecord=ptrRes?.Answer?.[0]?.data||d1?.connection?.domain||'N/A';
+  const isHosting=d1?.connection?.type==='hosting'||false;
+  const isMobile=d1?.connection?.type==='cellular'||false;
+
   ld('ipL',false);
-  const isVPN=d2?.proxy||false,isMobile=d2?.mobile||false,isHosting=d2?.hosting||false;
+
+  const isp=d1?.connection?.isp||d2?.ipRegistryName||'N/A';
+  const org=d1?.connection?.org||'N/A';
+  const asn=d1?.connection?.asn||d2?.ipRegistryName||'N/A';
+  const country=d1?.country||d2?.countryName||'N/A';
+  const countryCode=d1?.country_code||d2?.countryCode||'N/A';
+  const city=d1?.city||d2?.cityName||'N/A';
+  const region=d1?.region||d2?.regionName||'N/A';
+  const postal=d1?.postal||d2?.zipCode||'N/A';
+  const tz=d1?.timezone?.id||d2?.timeZone||'N/A';
+
+  // IP-Klasse bestimmen
+  const oct=parseInt(ip.split('.')[0]);
+  const ipClass=oct<128?'A (0-127)':oct<192?'B (128-191)':oct<224?'C (192-223)':oct<240?'D/Multicast (224-239)':'E/Reserved (240-255)';
 
   let html=stats(
-    ['Version',isV6?'IPv6':'IPv4'],['VPN',isVPN?'Ja':'Nein'],
-    ['Hosting',isHosting?'Ja':'Nein'],['Mobil',isMobile?'Ja':'Nein'],
-    ['Spamhaus',onSpam?'LISTED':'Clean'],['Kontinent',d1?.continent||'N/A'],
-    ['Land',d1?.country_code||d5?.countryCode||'N/A'],['PLZ',d1?.postal||d2?.zip||'N/A']
+    ['Version',isV6?'IPv6':'('+'IPv4'+')'],
+    ['Land',countryCode],
+    ['ISP',isp.substring(0,14)],
+    ['Spamhaus',onSpam?'LISTED':'Clean'],
+    ['Hosting',isHosting?'Ja':'Nein'],
+    ['Koordinaten',lat?lat.toFixed(2)+','+lon.toFixed(2):'N/A']
   );
   html+='<div class="dw">';
-  html+=sec('BASISINFORMATIONEN');
-  html+=row('IP Adresse',ip+(isVPN?' <span class="badge bwarn">VPN</span>':isHosting?' <span class="badge bwarn">HOSTING</span>':' <span class="badge bok">RESIDENTIAL</span>'));
-  html+=row('IP Version',isV6?'IPv6 (128-bit)':'IPv4 (32-bit)');
-  html+=row('Reverse DNS',d1?.connection?.domain||d2?.reverse||'N/A');
-  html+=row('Privat/Oeffentlich',isPrivate(ip)?'Privat (LAN)':'Oeffentlich');
-  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'Sauber');
+
+  html+=sec('BASIS');
+  html+=row('IP-Adresse',`<strong>${ip}</strong>`+(isPrivIP?' <span class="badge binfo">PRIVAT</span>':isHosting?' <span class="badge bwarn">HOSTING/DC</span>':' <span class="badge bok">RESIDENTIAL</span>'));
+  html+=row('IP-Version',isV6?'IPv6 (128-bit, 8 Hextets)':'IPv4 (32-bit, 4 Oktette)');
+  html+=row('IP-Klasse',isV6?'N/A (IPv6)':ipClass);
+  html+=row('Privat / Oeffentlich',isPrivIP?'<span class="badge binfo">Privates Netz (LAN/Loopback)</span>':'Oeffentlich routbar');
+  html+=row('PTR / rDNS',ptrRecord);
+  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET (Spam/Malware)</span>':'<span class="badge bok">Sauber</span>');
+
+  html+=sec('STANDORT');
+  html+=row('Land',`${country} (${countryCode})`);
+  html+=row('Kontinent',d1?.continent||'N/A');
+  html+=row('Region / Bundesstaat',region);
+  html+=row('Stadt',city);
+  html+=row('PLZ / Postleitzahl',postal);
+  html+=row('EU-Mitglied',d1?.is_eu?'Ja':'Nein');
+  html+=row('Hauptstadt',d1?.capital||'N/A');
+  html+=row('Vorwahl',d1?.calling_code?`+${d1.calling_code}`:'N/A');
+  html+=row('Waehrung',d1?.currency?.name?`${d1.currency.name} (${d1.currency.code})`:'N/A');
 
   if(osm?.address){
     const a=osm.address;
-    const full=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village),a.state,a.country].filter(Boolean).join(', ');
-    html+=sec('REVERSE GEOCODING');
-    if(full)html+=row('Vollstaendige Adresse',`<strong>${full}</strong>`);
-    html+=row('Strasse',a.road||a.pedestrian||a.path||'N/A');
-    html+=row('Hausnummer',a.house_number||'N/A');
-    html+=row('Stadtteil',a.suburb||a.neighbourhood||bdc?.locality||'N/A');
-    html+=row('Stadt',a.city||a.town||a.village||a.hamlet||'N/A');
-    html+=row('PLZ',a.postcode||'N/A');
+    const full=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village||a.municipality),a.state,a.country].filter(Boolean).join(', ');
+    html+=sec('REVERSE GEOCODING (OpenStreetMap)');
+    if(full)html+=row('Naechste Adresse',`<strong>${full}</strong>`);
+    html+=row('Strasse / Weg',a.road||a.pedestrian||a.path||a.residential||'N/A');
+    html+=row('Stadtteil',a.suburb||a.neighbourhood||a.quarter||'N/A');
+    html+=row('Gemeinde',a.municipality||a.village||a.town||'N/A');
+    html+=row('Stadt',a.city||a.town||a.village||'N/A');
     html+=row('Landkreis',a.county||a.state_district||'N/A');
-    html+=row('Bundesland',a.state||'N/A');
+    html+=row('PLZ',a.postcode||'N/A');
+    html+=row('Bundesland / Region',a.state||'N/A');
     html+=row('Land',a.country||'N/A');
-    if(bdc){html+=row('BDC Ort',bdc.city||bdc.locality||'N/A');html+=row('BDC PLZ',bdc.postcode||'N/A');}
+    html+=row('OSM ID',osm.osm_id||'N/A');
+    html+=row('OSM Typ',osm.type||osm.class||'N/A');
   }
-  html+=sec('GPS & KARTEN');
-  html+=row('Breitengrad',lat+'');html+=row('Laengengrad',lon+'');
-  html+=row('DMS Format',lat&&lon?dms(lat,lon):'N/A');
-  html+=row('Genauigkeit',d3?.accuracy?d3.accuracy+' km':'N/A');
-  html+=row('Tageszeit dort',sunStatus(lat,lon));
-  html+=row('Google Street View',lnk('Street Level View',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}`));
-  html+=row('Google Satellit',lnk('Zoom 20x',`https://www.google.com/maps/@${lat},${lon},20z/data=!3m1!1e3`));
-  html+=row('Google Earth',lnk('3D Ansicht',`https://earth.google.com/web/@${lat},${lon},0a,800d,35y`));
-  html+=row('OpenStreetMap',lnk('OSM',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=17`));
-  html+=row('Bing Aerial',lnk('Bing Maps',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=17&style=a`));
-  html+=row('Yandex Maps',lnk('Yandex',`https://yandex.com/maps/?ll=${lon},${lat}&z=15`));
-  if(lat&&lon)html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.005},${lat-.005},${lon+.005},${lat+.005}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
 
-  html+=sec('STANDORT');
-  html+=row('Land',`${d1?.country||d2?.country||d5?.countryName||'N/A'} (${d1?.flag?.emoji||''})`);
-  html+=row('ISO-Code',d1?.country_code||d2?.countryCode||'N/A');
-  html+=row('Region',d1?.region||d2?.regionName||d5?.regionName||'N/A');
-  html+=row('Stadt',d1?.city||d2?.city||d5?.cityName||'N/A');
-  html+=row('Stadtbezirk',d2?.district||'N/A');
-  html+=row('PLZ',d1?.postal||d2?.zip||d5?.zipCode||'N/A');
-  html+=row('Kontinent',d1?.continent||d5?.continent||'N/A');
-  html+=row('Hauptstadt',d1?.capital||'N/A');
-  html+=row('EU-Mitglied',(d1?.is_eu||d3?.in_eu)?'Ja':'Nein');
+  html+=sec('GPS & KARTEN');
+  html+=row('Koordinaten (Dezimal)',lat&&lon?`${lat}, ${lon}`:'N/A');
+  html+=row('Koordinaten (DMS)',lat&&lon?dms(lat,lon):'N/A');
+  html+=row('Tageszeit am Standort',sunStatus(lat,lon));
+  html+=row('Zeitzone',tz);
+  html+=row('Aktuelle Zeit dort',d1?.timezone?.current_time||'N/A');
+  html+=row('UTC-Offset',d1?.timezone?.offset||'N/A');
+  html+=row('Sommerzeit aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
+  if(lat&&lon){
+    html+=row('Google Maps',lnk('Marker setzen',`https://www.google.com/maps/place/${lat},${lon}`));
+    html+=row('Google Street View',lnk('Strassenpanorama',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0`));
+    html+=row('Google Earth 3D',lnk('Satellitenansicht',`https://earth.google.com/web/@${lat},${lon},0a,1200d,35y`));
+    html+=row('OpenStreetMap',lnk('OSM Karte',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`));
+    html+=row('Bing Luftbild',lnk('Bing Aerial',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=15&style=a`));
+    html+=row('Wikimapia',lnk('Ortsinfos',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=14`));
+    html+=row('Mapillary (Strassenfoto)',lnk('Strassenfotos',`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=14`));
+    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.008},${lat-.006},${lon+.008},${lat+.006}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
+  }
 
   html+=sec('NETZWERK & ASN');
-  html+=row('ISP',d1?.connection?.isp||d2?.isp||d3?.org||'N/A');
-  html+=row('Organisation',d1?.connection?.org||d2?.org||'N/A');
-  html+=row('AS-Nummer',d1?.connection?.asn||d2?.as?.split(' ')[0]||d3?.asn||'N/A');
+  html+=row('ISP / Provider',isp);
+  html+=row('Organisation',org);
+  html+=row('AS-Nummer',asn?`AS${asn}`:'N/A');
   html+=row('Netzwerk CIDR',d3?.network||'N/A');
-  html+=row('Verbindungstyp',d3?.connection_type||'N/A');
-  html+=row('ARIN RDAP',lnk('Registrar-Infos',`https://search.arin.net/rdap/?query=${ip}`));
-  html+=row('Hurricane Electric',lnk('BGP Details',`https://bgp.he.net/ip/${ip}`));
-  html+=row('Robtex',lnk('Netzwerkgraph',`https://www.robtex.com/ip-lookup/${ip}`));
+  html+=row('Verbindungstyp',d1?.connection?.type||'N/A');
+  html+=row('Domain',d1?.connection?.domain||'N/A');
+  // BGP/ASN Deep-Dive
+  html+=row('BGP-Routenanalyse',lnk('Hurricane Electric BGP',`https://bgp.he.net/ip/${ip}`));
+  html+=row('ASN Details',asn?lnk(`AS${asn} bei RIPEstat`,`https://stat.ripe.net/widget/routing-status#w.resource=AS${asn}`):'N/A');
+  html+=row('RIPE NCC Datenbank',lnk('RIPE Whois',`https://apps.db.ripe.net/db-web-ui/query?searchtext=${ip}`));
+  html+=row('ARIN RDAP',lnk('Registrierungsinfos',`https://search.arin.net/rdap/?query=${ip}`));
+  html+=row('APNIC Lookup',lnk('APNIC Whois',`https://wq.apnic.net/query?searchtext=${ip}`));
+  html+=row('Robtex Netzgraph',lnk('Routing + DNS',`https://www.robtex.com/ip-lookup/${ip}`));
+  html+=row('PeeringDB',asn?lnk('Peering-Infos',`https://www.peeringdb.com/asn/${asn}`):'N/A');
 
   html+=sec('BEDROHUNGSANALYSE');
-  html+=row('VPN / Proxy',isVPN?'<span class="badge bwarn">Erkannt</span>':'Nein');
-  html+=row('Hosting / DC',isHosting?'<span class="badge bwarn">Ja</span>':'Nein');
-  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'Sauber');
-  html+=row('AbuseIPDB',lnk('Abuse-Score pruefen',`https://www.abuseipdb.com/check/${ip}`));
-  html+=row('VirusTotal',lnk('Malware / Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
-  html+=row('Shodan',lnk('Offene Ports + Dienste',`https://www.shodan.io/host/${ip}`));
-  html+=row('Censys',lnk('Host-Analyse',`https://search.censys.io/hosts/${ip}`));
-  html+=row('GreyNoise',lnk('Internet-Scanning?',`https://viz.greynoise.io/ip/${ip}`));
-  html+=row('ThreatFox',lnk('IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
-  html+=row('IPVoid Blacklist',lnk('Blacklist-Check',`https://www.ipvoid.com/ip-blacklist-check/?ip=${ip}`));
-
-  html+=sec('ZEITZONE');
-  html+=row('Zeitzone ID',d1?.timezone?.id||d2?.timezone||d5?.timeZone||'N/A');
-  html+=row('UTC Offset',d1?.timezone?.offset||d3?.utc_offset||'N/A');
-  html+=row('Kuerzel',d1?.timezone?.abbr||'N/A');
-  html+=row('Aktuelle Zeit',d1?.timezone?.current_time||'N/A');
-  html+=row('DST aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
-
-  html+=sec('LAENDERINFOS');
-  html+=row('Vorwahl',`+${d1?.calling_code||d3?.country_calling_code||'N/A'}`);
-  html+=row('Waehrung',`${d3?.currency_name||'N/A'} (${d3?.currency||'N/A'})`);
-  html+=row('Sprachen',d3?.languages||'N/A');
-  html+=row('Flaeche',d3?.country_area?d3.country_area.toLocaleString()+' km2':'N/A');
-  html+=row('Bevoelkerung',d3?.country_population?Number(d3.country_population).toLocaleString():'N/A');
+  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+  html+=row('Hosting / Rechenzentrum',isHosting?'<span class="badge bwarn">Ja (DC/Cloud)</span>':'Nein');
+  html+=row('Mobilfunk-IP',isMobile?'<span class="badge binfo">Ja</span>':'Nein');
+  // Top-Tier Threat Intelligence
+  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/host/${ip}`));
+  html+=row('Censys',lnk('Full-Text Scan + Zertifikate',`https://search.censys.io/hosts/${ip}`));
+  html+=row('GreyNoise',lnk('Internet-Scanning Aktivitaet',`https://viz.greynoise.io/ip/${ip}`));
+  html+=row('AbuseIPDB',lnk('Missbrauchsmeldungen + Score',`https://www.abuseipdb.com/check/${ip}`));
+  html+=row('VirusTotal',lnk('Multi-AV Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
+  html+=row('ThreatFox (Abuse.ch)',lnk('Malware IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
+  html+=row('MalwareBazaar',lnk('Malware-Samples von IP',`https://bazaar.abuse.ch/browse.php?search=tag%3A${ip}`));
+  html+=row('URLhaus',lnk('Malware-URLs von IP',`https://urlhaus.abuse.ch/browse.php?search=${ip}`));
+  html+=row('CIRCL Passive DNS',lnk('Passive DNS Historie',`https://www.circl.lu/services/passive-dns/#${ip}`));
+  html+=row('Pulsedive',lnk('Threat Intelligence Feed',`https://pulsedive.com/indicator/?ioc=${ip}`));
+  html+=row('AlienVault OTX',lnk('Open Threat Exchange',`https://otx.alienvault.com/indicator/ip/${ip}`));
+  html+=row('IBM X-Force Exchange',lnk('X-Force Reputation',`https://exchange.xforce.ibmcloud.com/ip/${ip}`));
+  html+=row('Spamhaus Check',lnk('Spamhaus Lookup',`https://check.spamhaus.org/listed/?searchterm=${ip}`));
+  html+=row('MXToolbox Blacklist',lnk('25+ Blacklists pruefen',`https://mxtoolbox.com/blacklists.aspx`));
+  html+=row('IPQualityScore',lnk('Fraud + Proxy Detection',`https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/lookup/${ip}`));
+  html+=row('Fraudguard.io',lnk('Risk Score',`https://fraudguard.io/?ip=${ip}`));
+  html+=row('Project Honey Pot',lnk('Spam/Bot-Aktivitaet',`https://www.projecthoneypot.org/ip_${ip}`));
+  html+=row('Talos Intelligence',lnk('Cisco Talos Reputation',`https://talosintelligence.com/reputation_center/lookup?search=${ip}`));
+  html+=row('FortiGuard (Fortinet)',lnk('IP Reputation',`https://www.fortiguard.com/iprep?data=${ip}`));
   html+='</div>';
-  if(isVPN)html+='<div class="aw">VPN / PROXY erkannt -- Standortdaten koennen stark abweichen!</div>';
-  if(onSpam)html+='<div class="aw">IP steht auf Spamhaus ZEN Blockliste!</div>';
-  html+='<div class="ai">Adressen basieren auf ISP-Serverstandort. Genauigkeit variiert 50m bis 50km.</div>';
+  if(onSpam)html+='<div class="aw">IP auf Spamhaus ZEN gelistet -- aktiv genutzter Spam/Malware-Verteiler!</div>';
+  if(isPrivIP)html+='<div class="ai">Private IP-Adresse -- keine oeffentliche Geolokalisierung moeglich.</div>';
+  else html+='<div class="ai">Geolokalisierung basiert auf ISP-Registrierungsort. Genauigkeit: 50m (Ballungsraum) bis 200km (laendlich).</div>';
   $('ipR').innerHTML=html;
 }
 
@@ -848,32 +938,98 @@ async function trackUN(){
   const u=$('unInput').value.trim();
   if(!u){$('unR').innerHTML='<div class="ae">Bitte Username eingeben!</div>';return;}
   ld('unL',true);$('unR').innerHTML='';
+
+  // Live-API: GitHub (oeffentlich, kein Key noetig)
+  const[ghRes,ghRepos]=await Promise.allSettled([
+    sf(`https://api.github.com/users/${u}`),
+    sf(`https://api.github.com/users/${u}/repos?per_page=5&sort=updated`)
+  ]);
+  const gh=ghRes.value?.login?ghRes.value:null;
+  const repos=Array.isArray(ghRepos.value)?ghRepos.value:[];
+
+  ld('unL',false);
+  let html='<div class="dw">';
+
+  // GitHub Live-Daten
+  if(gh){
+    html+=sec('GITHUB -- LIVE PROFILDATEN');
+    if(gh.avatar_url)html+=`<img src="${gh.avatar_url}" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--accent2);margin:6px 0;box-shadow:0 0 16px rgba(144,16,224,.5);display:block">`;
+    html+=row('Login',gh.login||'N/A');
+    html+=row('Name',gh.name||'N/A');
+    html+=row('Bio',gh.bio||'N/A');
+    html+=row('Ort',gh.location||'N/A');
+    html+=row('Webseite',gh.blog?lnk(gh.blog,gh.blog.startsWith('http')?gh.blog:'https://'+gh.blog):'N/A');
+    html+=row('Unternehmen',gh.company||'N/A');
+    html+=row('Twitter / X',gh.twitter_username?lnk('@'+gh.twitter_username,`https://twitter.com/${gh.twitter_username}`):'N/A');
+    html+=row('E-Mail (oeffentlich)',gh.email||'N/A');
+    html+=row('Erstellt am',gh.created_at?new Date(gh.created_at).toLocaleDateString('de-DE',{dateStyle:'long'}):'N/A');
+    html+=row('Letzter Push',gh.updated_at?new Date(gh.updated_at).toLocaleDateString('de-DE'):'N/A');
+    html+=row('Public Repos',gh.public_repos||0);
+    html+=row('Public Gists',gh.public_gists||0);
+    html+=row('Follower',gh.followers||0);
+    html+=row('Folgt',gh.following||0);
+    html+=row('GitHub-Profil',lnk('Direkt oeffnen',`https://github.com/${u}`));
+    html+=row('Hireable',gh.hireable?'<span class="badge bok">Offen fuer Jobs</span>':'N/A');
+    if(repos.length>0){
+      html+=sec('GITHUB -- LETZTE REPOS');
+      repos.forEach(r=>{
+        html+=row(r.name,`${lnk('Repo oeffnen',r.html_url)} | ${r.language||'N/A'} | Stars: ${r.stargazers_count} | ${r.description?r.description.substring(0,60):'keine Beschreibung'}`);
+      });
+    }
+  } else {
+    html+=sec('GITHUB -- KEIN PROFIL GEFUNDEN');
+    html+=row('Status','Kein oeffentliches GitHub-Profil fuer diesen Username');
+  }
+
+  html+=sec('OSINT -- SUCHMASCHINEN DORKS');
+  html+=row('Google Exact',lnk(`"${u}" exakt`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22`));
+  html+=row('Google + E-Mail',lnk(`${u} + E-Mail`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22@%22`));
+  html+=row('Google + Telefon',lnk(`${u} + Telefon`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22+49%22+OR+%22+43%22`));
+  html+=row('Google + Adresse',lnk(`${u} + Wohnort`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22wohnt%22+OR+%22lebt+in%22+OR+%22aus%22`));
+  html+=row('Google + Discord',lnk(`${u} Discord`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+site%3Adiscord.gg+OR+site%3Adiscord.com`));
+  html+=row('Google + Leak',lnk(`${u} Datenleck`,`https://www.google.com/search?q=%22${encodeURIComponent(u)}%22+%22password%22+OR+%22leak%22+OR+%22breach%22`));
+  html+=row('Bing',lnk(`Bing: ${u}`,`https://www.bing.com/search?q=%22${encodeURIComponent(u)}%22`));
+  html+=row('Yandex',lnk(`Yandex: ${u}`,`https://yandex.com/search/?text=%22${encodeURIComponent(u)}%22`));
+  html+=row('DuckDuckGo',lnk(`DDG: ${u}`,`https://duckduckgo.com/?q=%22${encodeURIComponent(u)}%22`));
+  html+=row('Startpage (anonym)',lnk(`Startpage: ${u}`,`https://www.startpage.com/search?q=%22${encodeURIComponent(u)}%22`));
+
+  html+=sec('OSINT -- SPEZIALISIERTE TOOLS');
+  html+=row('WhatsMyName (Echtzeit)',lnk('750+ Plattformen pruefen',`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
+  html+=row('Namechk',lnk('Verfuegbarkeit aller Plattformen',`https://namechk.com/${encodeURIComponent(u)}`));
+  html+=row('Instant Username Search',lnk('Echtzeit-Checker',`https://instantusername.com/#${encodeURIComponent(u)}`));
+  html+=row('Username Finder (IDCrawl)',lnk('IDCrawl Suche',`https://www.idcrawl.com/u/${encodeURIComponent(u)}`));
+  html+=row('Epieos',lnk('E-Mail + Username Reverse',`https://epieos.com/?q=${encodeURIComponent(u)}&t=username`));
+  html+=row('OSINT Industries',lnk('Multi-Source Lookup',`https://osint.industries/`));
+  html+=row('IntelX (Intelligence X)',lnk('Darknet + Leaks',`https://intelx.io/?s=${encodeURIComponent(u)}`));
+  html+=row('Dehashed',lnk('Datenleck-Datenbank',`https://dehashed.com/search?query=${encodeURIComponent(u)}`));
+  html+=row('Snusbase',lnk('Leak-Datenbank',`https://snusbase.com/`));
+  html+=row('LeakCheck',lnk('Breach-Lookup',`https://leakcheck.io/`));
+  html+=row('Have I Been Pwned',lnk('E-Mail + Username',`https://haveibeenpwned.com/`));
+  html+=row('Gravatar',lnk('Profilbild + Infos',`https://www.gravatar.com/${u}`));
+  html+=row('Keybase.io',lnk('Krypto-Identitaeten',`https://keybase.io/${u}`));
+
   const cats={
-    'SOCIAL MEDIA':[['Facebook',`https://facebook.com/${u}`],['Instagram',`https://instagram.com/${u}`],['Twitter/X',`https://twitter.com/${u}`],['TikTok',`https://tiktok.com/@${u}`],['Snapchat',`https://snapchat.com/add/${u}`],['Pinterest',`https://pinterest.com/${u}`],['LinkedIn',`https://linkedin.com/in/${u}`],['XING',`https://xing.com/profile/${u}`],['VK',`https://vk.com/${u}`],['Tumblr',`https://${u}.tumblr.com`],['Mastodon',`https://mastodon.social/@${u}`],['Bluesky',`https://bsky.app/profile/${u}`],['Threads',`https://threads.net/@${u}`],['BeReal',`https://bere.al/${u}`]],
-    'VIDEO & STREAMING':[['YouTube',`https://youtube.com/@${u}`],['Twitch',`https://twitch.tv/${u}`],['Vimeo',`https://vimeo.com/${u}`],['Kick',`https://kick.com/${u}`],['Dailymotion',`https://dailymotion.com/${u}`],['Rumble',`https://rumble.com/user/${u}`],['Odysee',`https://odysee.com/@${u}`]],
-    'TECH & DEV':[['GitHub',`https://github.com/${u}`],['GitLab',`https://gitlab.com/${u}`],['Stack Overflow',`https://stackoverflow.com/users/${u}`],['Replit',`https://replit.com/@${u}`],['CodePen',`https://codepen.io/${u}`],['HackerNews',`https://news.ycombinator.com/user?id=${u}`],['npm',`https://npmjs.com/~${u}`],['Dev.to',`https://dev.to/${u}`],['Leetcode',`https://leetcode.com/${u}`],['Kaggle',`https://kaggle.com/${u}`]],
-    'MESSAGING':[['Telegram',`https://t.me/${u}`],['Discord',`https://discord.com/users/${u}`],['Signal',`https://signal.me/#p/${u}`],['Kik',`https://ws.kik.com/u/${u}`],['ICQ',`https://icq.com/${u}`]],
-    'MUSIK & AUDIO':[['Spotify',`https://open.spotify.com/user/${u}`],['SoundCloud',`https://soundcloud.com/${u}`],['Last.fm',`https://last.fm/user/${u}`],['Bandcamp',`https://${u}.bandcamp.com`],['Mixcloud',`https://mixcloud.com/${u}`],['Audiomack',`https://audiomack.com/${u}`]],
-    'KREATIV & DESIGN':[['Behance',`https://behance.net/${u}`],['Dribbble',`https://dribbble.com/${u}`],['DeviantArt',`https://deviantart.com/${u}`],['Flickr',`https://flickr.com/people/${u}`],['ArtStation',`https://artstation.com/${u}`],['Pixiv',`https://pixiv.net/en/users/${u}`],['500px',`https://500px.com/p/${u}`],['Unsplash',`https://unsplash.com/@${u}`]],
-    'BLOG & SCHREIBEN':[['Medium',`https://medium.com/@${u}`],['Substack',`https://${u}.substack.com`],['Reddit',`https://reddit.com/user/${u}`],['Quora',`https://quora.com/profile/${u}`],['Wattpad',`https://wattpad.com/user/${u}`],['WordPress',`https://${u}.wordpress.com`]],
-    'GAMING':[['Steam',`https://steamcommunity.com/id/${u}`],['Roblox',`https://roblox.com/users/profile?username=${u}`],['Xbox',`https://account.xbox.com/profile?gamertag=${u}`],['PSN',`https://psnprofiles.com/${u}`],['Faceit',`https://faceit.com/en/players/${u}`],['Lichess',`https://lichess.org/@/${u}`],['Chess.com',`https://chess.com/member/${u}`],['Epic Games',`https://epicgames.com/id/${u}`]],
-    'SONSTIGES':[['Patreon',`https://patreon.com/${u}`],['Ko-fi',`https://ko-fi.com/${u}`],['Linktree',`https://linktr.ee/${u}`],['Gravatar',`https://gravatar.com/${u}`],['About.me',`https://about.me/${u}`],['ProductHunt',`https://producthunt.com/@${u}`],['Itch.io',`https://${u}.itch.io`],['Gumroad',`https://gumroad.com/${u}`]]
+    'SOCIAL MEDIA':[['Facebook',`https://facebook.com/${u}`],['Instagram',`https://instagram.com/${u}`],['Twitter/X',`https://twitter.com/${u}`],['TikTok',`https://tiktok.com/@${u}`],['Snapchat',`https://snapchat.com/add/${u}`],['Pinterest',`https://pinterest.com/${u}`],['LinkedIn',`https://linkedin.com/in/${u}`],['XING',`https://xing.com/profile/${u}`],['VK',`https://vk.com/${u}`],['Tumblr',`https://${u}.tumblr.com`],['Mastodon',`https://mastodon.social/@${u}`],['Bluesky',`https://bsky.app/profile/${u}`],['Threads',`https://threads.net/@${u}`],['BeReal',`https://bere.al/${u}`],['Livejournal',`https://${u}.livejournal.com`],['Ask.fm',`https://ask.fm/${u}`]],
+    'VIDEO & STREAMING':[['YouTube',`https://youtube.com/@${u}`],['Twitch',`https://twitch.tv/${u}`],['Vimeo',`https://vimeo.com/${u}`],['Kick',`https://kick.com/${u}`],['Dailymotion',`https://dailymotion.com/${u}`],['Rumble',`https://rumble.com/user/${u}`],['Odysee',`https://odysee.com/@${u}`],['Trovo',`https://trovo.live/${u}`],['Bilibili',`https://space.bilibili.com/search?keyword=${u}`]],
+    'TECH & DEV':[['GitHub',`https://github.com/${u}`],['GitLab',`https://gitlab.com/${u}`],['Bitbucket',`https://bitbucket.org/${u}`],['Stack Overflow',`https://stackoverflow.com/users?tab=default&search=${u}`],['Replit',`https://replit.com/@${u}`],['CodePen',`https://codepen.io/${u}`],['HackerNews',`https://news.ycombinator.com/user?id=${u}`],['npm',`https://npmjs.com/~${u}`],['Dev.to',`https://dev.to/${u}`],['Leetcode',`https://leetcode.com/${u}`],['Kaggle',`https://kaggle.com/${u}`],['Dockerhub',`https://hub.docker.com/u/${u}`],['PyPI',`https://pypi.org/user/${u}/`]],
+    'MESSAGING':[['Telegram',`https://t.me/${u}`],['Discord',`https://discord.com/users/${u}`],['Signal',`https://signal.me/#p/${u}`],['Kik',`https://ws.kik.com/u/${u}`],['ICQ',`https://icq.com/${u}`],['Skype',`https://www.skype.com/en/profile/${u}`],['Wire',`https://wire.com/`]],
+    'MUSIK & AUDIO':[['Spotify',`https://open.spotify.com/user/${u}`],['SoundCloud',`https://soundcloud.com/${u}`],['Last.fm',`https://last.fm/user/${u}`],['Bandcamp',`https://${u}.bandcamp.com`],['Mixcloud',`https://mixcloud.com/${u}`],['Audiomack',`https://audiomack.com/${u}`],['ReverbNation',`https://www.reverbnation.com/${u}`]],
+    'KREATIV & DESIGN':[['Behance',`https://behance.net/${u}`],['Dribbble',`https://dribbble.com/${u}`],['DeviantArt',`https://deviantart.com/${u}`],['Flickr',`https://flickr.com/people/${u}`],['ArtStation',`https://artstation.com/${u}`],['Pixiv',`https://pixiv.net/en/users/${u}`],['500px',`https://500px.com/p/${u}`],['Unsplash',`https://unsplash.com/@${u}`],['Adobe Portfolio',`https://${u}.myportfolio.com`]],
+    'BLOG & SCHREIBEN':[['Medium',`https://medium.com/@${u}`],['Substack',`https://${u}.substack.com`],['Reddit',`https://reddit.com/user/${u}`],['Quora',`https://quora.com/profile/${u}`],['Wattpad',`https://wattpad.com/user/${u}`],['WordPress',`https://${u}.wordpress.com`],['Ghost',`https://${u}.ghost.io`],['Hashnode',`https://hashnode.com/@${u}`]],
+    'GAMING':[['Steam',`https://steamcommunity.com/id/${u}`],['Roblox',`https://roblox.com/users/profile?username=${u}`],['Xbox',`https://account.xbox.com/profile?gamertag=${u}`],['PSN',`https://psnprofiles.com/${u}`],['Faceit',`https://faceit.com/en/players/${u}`],['Lichess',`https://lichess.org/@/${u}`],['Chess.com',`https://chess.com/member/${u}`],['Epic Games',`https://epicgames.com/id/${u}`],['Battlenet',`https://www.bnet.app/profile/${u}`],['Minecraft',`https://namemc.com/profile/${u}`],['Nintendo',`https://www.nintendo.com/de-de/`]],
+    'FINANZEN & KRYPTO':[['PayPal.me',`https://paypal.me/${u}`],['Venmo',`https://venmo.com/${u}`],['Cash App',`https://cash.app/$${u}`],['Ko-fi',`https://ko-fi.com/${u}`],['Patreon',`https://patreon.com/${u}`],['Gofundme',`https://www.gofundme.com/f/${u}`]],
+    'SONSTIGES':[['Linktree',`https://linktr.ee/${u}`],['About.me',`https://about.me/${u}`],['ProductHunt',`https://producthunt.com/@${u}`],['Itch.io',`https://${u}.itch.io`],['Gumroad',`https://gumroad.com/${u}`],['Fiverr',`https://fiverr.com/${u}`],['Upwork',`https://www.upwork.com/freelancers/${u}`],['Etsy',`https://www.etsy.com/shop/${u}`],['Ebay',`https://www.ebay.de/sch/${u}`],['Amazon',`https://www.amazon.de/s?me=${u}`]]
   };
   let total=0;Object.values(cats).forEach(v=>total+=v.length);
-  let html='<div class="dw">';
-  html+=sec('SUCHPARAMETER');
-  html+=row('Username',u);html+=row('Plattformen gesamt',total+'');
-  html+=row('WhatsMyName Live',lnk('Echtzeit-Check',`https://whatsmyname.app/?q=${encodeURIComponent(u)}`));
-  html+=row('Namechk',lnk('Verfuegbarkeit',`https://namechk.com/${encodeURIComponent(u)}`));
-  html+=row('Google Dork',lnk(`"${u}" suchen`,`https://google.com/search?q=%22${encodeURIComponent(u)}%22`));
-  html+=row('Sherlock',lnk('CLI Tool (GitHub)',`https://github.com/sherlock-project/sherlock`));
+  html+=sec(`PLATTFORM-LINKS (${total} gesamt)`);
+  html+=row('Gesamt-Plattformen',total+'');
   for(const[cat,plats]of Object.entries(cats)){
     html+=sec(cat);html+='<div class="platgrid">';
-    plats.forEach(([name,url])=>{html+=`<div class="plat"><span class="pname">${name}</span><span class="plink">${lnk(url.replace(/https?:\/\/(www\.)?/,'').substring(0,36)+'...',url)}</span></div>`;});
+    plats.forEach(([name,url])=>{html+=`<div class="plat"><span class="pname">${name}</span><span class="plink">${lnk(url.replace(/https?:\/\/(www\.)?/,'').substring(0,34)+'...',url)}</span></div>`;});
     html+='</div>';
   }
   html+='</div>';
-  ld('unL',false);$('unR').innerHTML=html;
+  $('unR').innerHTML=html;
 }
 
 // ──────────────────────────────────────────
@@ -913,15 +1069,25 @@ async function trackPhone(){
   html+=row('Erkannt',carrier);html+=row('Bekannte Carrier',info.carriers.join(', ')||'N/A');
   if(cDom)html+=row('Carrier-Domain',cDom);
   if(cIP){html+=row('Carrier-IP',cIP);html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${cIP}'),200)">Carrier-IP tracken</button>`;}
-  html+=sec('OSINT TOOLS');
-  html+=row('Truecaller',lnk('Name + Spam',`https://www.truecaller.com/search/${info.iso.toLowerCase()}/${encodeURIComponent(clean)}`));
-  html+=row('Tellows',lnk('Bewertungen',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
-  html+=row('NumLookup',lnk('Carrier + Name',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
-  html+=row('Should I Answer',lnk('Spam-Reports',`https://www.shouldianswer.com/phone-number/${clean}`));
-  html+=row('WhoCallsMe',lnk('Who Calls Me',`https://whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
-  html+=row('WhatsApp',lnk('Oeffnen',`https://wa.me/${clean.replace('+','')}`));
-  html+=row('Telegram',lnk('Suchen',`https://t.me/${clean.replace('+','')}`));
-  html+=row('Google',lnk('Googlen',`https://google.com/search?q=${encodeURIComponent(e164)}`));
+  html+=sec('OSINT -- RUFNUMMERN-RECHERCHE');
+  html+=row('Truecaller',lnk('Name + Spam-Score (groesste DB)',`https://www.truecaller.com/search/${info.iso?.toLowerCase()||'de'}/${encodeURIComponent(clean)}`));
+  html+=row('Tellows',lnk('Bewertungen + Kommentare (DE)',`https://www.tellows.de/num/${encodeURIComponent(clean)}`));
+  html+=row('NumLookup',lnk('Carrier + Inhaberinfos',`https://www.numlookup.com/?number=${encodeURIComponent(e164)}`));
+  html+=row('Should I Answer',lnk('Spam-Meldungen + Votings',`https://www.shouldianswer.com/phone-number/${clean}`));
+  html+=row('WhoCallsMe',lnk('Erfahrungsberichte DE',`https://www.whocallsme.com/Phone-Number.aspx/${clean.replace('+','')}`));
+  html+=row('CallFilter',lnk('Community-Bewertungen',`https://www.callfilter.app/search/${encodeURIComponent(e164)}`));
+  html+=row('Wer-ruftan.de',lnk('Deutsche Spam-Datenbank',`https://www.wer-ruftan.de/Nummer/${encodeURIComponent(clean)}`));
+  html+=row('Cleverdial',lnk('Klarnamen-Suche',`https://cleverdial.com/phone/${encodeURIComponent(e164)}`));
+  html+=row('Google Dork',lnk(`"${e164}" googlen`,`https://www.google.com/search?q=%22${encodeURIComponent(e164)}%22`));
+  html+=row('Google Varianten',lnk(`${clean} + Name`,`https://www.google.com/search?q=${encodeURIComponent(clean)}+%22name%22+OR+%22heisst%22+OR+%22gehört%22`));
+  html+=row('Bing Suche',lnk(`Bing: ${e164}`,`https://www.bing.com/search?q=%22${encodeURIComponent(e164)}%22`));
+  html+=row('WhatsApp',lnk('Profil oeffnen (falls Konto)',`https://wa.me/${clean.replace(/^\+/,'')}`));
+  html+=row('Telegram',lnk('Username-Suche',`https://t.me/${clean.replace(/^\+/,'')}`));
+  html+=row('Viber',lnk('Viber-Suche',`viber://contact?number=${encodeURIComponent(e164)}`));
+  html+=row('Sync.me',lnk('Social + Kontaktinfos',`https://sync.me/search/?q=${encodeURIComponent(e164)}`));
+  html+=row('Eyecon',lnk('Caller ID Lookup',`https://www.eyecon.me/`));
+  html+=row('IntelX',lnk('Darknet + Leak-Suche',`https://intelx.io/?s=${encodeURIComponent(e164)}`));
+  html+=row('Dehashed',lnk('Datenleck-DB',`https://dehashed.com/search?query=${encodeURIComponent(e164)}`));
   html+='</div>';
   html+='<div class="ai">Carrier-Erkennung am zuverlaessigsten fuer DE/AT/CH.</div>';
   $('phR').innerHTML=html;
@@ -976,14 +1142,26 @@ async function trackEmail(){
   html+=row('Security Score',`${sc}/3 -- ${sc===3?'Ausgezeichnet':sc===2?'Gut':'Schwach'}`);
   html+=row('Spoofing-Risiko',sc<=1?'<span class="badge bbad">Hoch</span>':sc===2?'Mittel':'Niedrig');
   if(mxGeo?.success){html+=sec('MAILSERVER STANDORT');html+=row('IP',mxGeo.ip);html+=row('Land',mxGeo.country||'N/A');html+=row('ISP',mxGeo.connection?.isp||'N/A');html+=row('Stadt',mxGeo.city||'N/A');if(mxGeo.ip)html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${mxGeo.ip}'),200)">Mailserver tracken</button>`;}
-  html+=sec('OSINT & TOOLS');
-  html+=row('Have I Been Pwned',lnk('Breaches pruefen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
-  html+=row('Dehashed',lnk('Leaks',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
-  html+=row('Epieos',lnk('Verbundene Konten',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
-  html+=row('IntelX',lnk('Intel X',`https://intelx.io/?s=${encodeURIComponent(em)}`));
-  html+=row('WHOIS Domain',lnk('Registrar',`https://who.is/whois/${domain}`));
-  html+=row('MXToolbox',lnk('MX Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
-  html+=row('Google',lnk('Googlen',`https://google.com/search?q=%22${encodeURIComponent(em)}%22`));
+  html+=sec('OSINT & BREACH TOOLS');
+  html+=row('Have I Been Pwned',lnk('Datenlecks pruefen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
+  html+=row('Dehashed',lnk('Passwort-Leaks + Klarnamen',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
+  html+=row('Snusbase',lnk('Leak-Datenbank',`https://snusbase.com/`));
+  html+=row('LeakCheck.io',lnk('Breach-Lookup',`https://leakcheck.io/`));
+  html+=row('IntelX (Intelligence X)',lnk('Darknet + Leak-Archive',`https://intelx.io/?s=${encodeURIComponent(em)}`));
+  html+=row('Epieos',lnk('Google + Apple Account Reverse',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
+  html+=row('Hunter.io',lnk('E-Mail Verifikation + Firma',`https://hunter.io/email-verifier/${encodeURIComponent(em)}`));
+  html+=row('EmailRep.io',lnk('Reputation + Aktivitaet',`https://emailrep.io/${encodeURIComponent(em)}`));
+  html+=row('OSINT Industries',lnk('Konten-Finder',`https://osint.industries/`));
+  html+=row('GHunt (Google)',lnk('Google-Konto analysieren',`https://github.com/mxrch/GHunt`));
+  html+=row('Google-Konto',lnk('Profilsuche',`https://accounts.google.com/SignIn?Email=${encodeURIComponent(em)}`));
+  html+=row('Gravatar',lnk('Profilbild + verbundene Konten',`https://www.gravatar.com/search/?query=${encodeURIComponent(em)}`));
+  html+=row('Google Dork E-Mail',lnk(`"${em}" googlen`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22`));
+  html+=row('Google + Social',lnk(`${em} + Profile`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+site%3Alinkedin.com+OR+site%3Afacebook.com+OR+site%3Atwitter.com`));
+  html+=row('Google + Docs/PDFs',lnk(`${em} in Dokumenten`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+filetype%3Apdf+OR+filetype%3Adoc`));
+  html+=row('Bing Suche',lnk(`Bing: ${em}`,`https://www.bing.com/search?q=%22${encodeURIComponent(em)}%22`));
+  html+=row('WHOIS Domain',lnk('Domain-Registrar pruefen',`https://who.is/whois/${domain}`));
+  html+=row('MXToolbox',lnk('MX + Blacklist + Header Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
+  html+=row('Wayback Machine',lnk('Archiv-Snapshots',`https://web.archive.org/web/*/${domain}`));
   if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,6).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
   html+='</div>';
   if(disp)html+='<div class="aw">WEGWERF-MAIL erkannt -- Temporaerer Dienst!</div>';
@@ -1040,11 +1218,18 @@ async function trackDC(){
     if(pres.activities?.length>0)pres.activities.forEach((a,i)=>html+=row(`Aktivitaet ${i+1}`,`${a.name} -- ${a.state||a.details||''}`));
   }
   html+=sec('OSINT TOOLS');
-  html+=row('Discord.id',lnk('Erweiterte Infos',`https://discord.id/?prefill=${uid}`));
-  html+=row('Profil',lnk('Oeffnen',`https://discord.com/users/${uid}`));
-  html+=row('Lanyard',lnk('Live JSON',`https://api.lanyard.rest/v1/users/${uid}`));
-  html+=row('Lookup.guru',lnk('Lookup',`https://lookup.guru/${uid}`));
-  if(ud?.username)html+=row('Username googeln',lnk('Suche',`https://google.com/search?q=discord+%22${encodeURIComponent(ud.username)}%22`));
+  html+=row('Discord.id',lnk('Profilinfos + Timestamps',`https://discord.id/?prefill=${uid}`));
+  html+=row('Profil direkt',lnk('Discord.com Profil oeffnen',`https://discord.com/users/${uid}`));
+  html+=row('Lanyard Live-JSON',lnk('Echtzeit-Praesenz JSON',`https://api.lanyard.rest/v1/users/${uid}`));
+  html+=row('Lookup.guru',lnk('Erweiterte ID-Analyse',`https://lookup.guru/${uid}`));
+  html+=row('DiscoTools.xyz',lnk('Snowflake + Badge Decoder',`https://discordtools.xyz/lookup/${uid}`));
+  html+=row('Discord History Tracker',lnk('Nachrichten-Archiv Tool',`https://dht.chylex.com/`));
+  html+=row('Server-Suche',lnk('Disboard -- Server-Verzeichnis',`https://disboard.org/`));
+  if(ud?.username){
+    html+=row('Username googeln',lnk(`"${ud.username}" + Discord`,`https://www.google.com/search?q=%22${encodeURIComponent(ud.username)}%22+discord`));
+    html+=row('Username auf anderen Plattformen',lnk(`WhatsMyName Suche`,`https://whatsmyname.app/?q=${encodeURIComponent(ud.username)}`));
+    html+=row('IntelX Username',lnk('Darknet-Suche',`https://intelx.io/?s=${encodeURIComponent(ud.username)}`));
+  }
   html+='</div>';
   if(!ud)html+='<div class="aw">Profil nicht abrufbar -- API-Limit oder privat.</div>';
   $('dcR').innerHTML=html;
@@ -1091,21 +1276,505 @@ async function trackDomain(){
   html+=row('DMARC',hasDMARC?(dmarcT||'').substring(0,80):'Fehlt');
   if(geo?.success){html+=sec('SERVER STANDORT');html+=row('IP',aRecs[0]);html+=row('Land',geo.country||'N/A');html+=row('Stadt',geo.city||'N/A');html+=row('ISP',geo.connection?.isp||'N/A');html+=row('ASN',geo.connection?.asn||'N/A');if(aRecs[0])html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${aRecs[0]}'),200)">Server-IP tracken</button>`;}
   if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,8).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
-  html+=sec('ANALYSE TOOLS');
-  html+=row('WHOIS',lnk('Registrar + Ablauf',`https://who.is/whois/${dm}`));
-  html+=row('SSL Labs',lnk('SSL Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${dm}`));
-  html+=row('crt.sh',lnk('SSL Zertifikate',`https://crt.sh/?q=${dm}`));
-  html+=row('Shodan',lnk('Offene Ports',`https://shodan.io/search?query=${dm}`));
-  html+=row('VirusTotal',lnk('Bedrohungen',`https://virustotal.com/gui/domain/${dm}`));
-  html+=row('BuiltWith',lnk('Tech-Stack',`https://builtwith.com/${dm}`));
-  html+=row('URLScan',lnk('Screenshot',`https://urlscan.io/search/#domain:${dm}`));
-  html+=row('Wayback Machine',lnk('Snapshots',`https://web.archive.org/web/*/${dm}`));
-  html+=row('SecurityTrails',lnk('DNS History',`https://securitytrails.com/domain/${dm}/dns`));
-  html+=row('Subdomains',lnk('HackerTarget',`https://hackertarget.com/find-dns-host-records/?q=${dm}`));
+  html+=sec('RECON & ANALYSE TOOLS');
+  html+=row('WHOIS (who.is)',lnk('Registrar + Ablaufdatum + Kontakt',`https://who.is/whois/${dm}`));
+  html+=row('ICANN Lookup',lnk('Offizielle ICANN-Registrardaten',`https://lookup.icann.org/en/lookup?name=${dm}`));
+  html+=row('SecurityTrails',lnk('DNS-Historie + Subdomain-Historie',`https://securitytrails.com/domain/${dm}/dns`));
+  html+=row('crt.sh (SSL Zertifikate)',lnk('Alle Zertifikate + Subdomains',`https://crt.sh/?q=${dm}`));
+  html+=row('SSL Labs',lnk('TLS-Konfiguration + Bewertung',`https://ssllabs.com/ssltest/analyze.html?d=${dm}`));
+  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/search?query=${dm}`));
+  html+=row('Censys',lnk('Volltext-Scan + Zertifikate',`https://search.censys.io/search?resource=hosts&q=${dm}`));
+  html+=row('VirusTotal',lnk('Multi-AV + Reputation + Subdomains',`https://www.virustotal.com/gui/domain/${dm}`));
+  html+=row('URLScan.io',lnk('Screenshot + Netzwerk + DOM',`https://urlscan.io/search/#domain:${dm}`));
+  html+=row('BuiltWith',lnk('Tech-Stack + Analytics + Frameworks',`https://builtwith.com/${dm}`));
+  html+=row('Wayback Machine',lnk('Historische Snapshots',`https://web.archive.org/web/*/${dm}`));
+  html+=row('AlienVault OTX',lnk('Threat Intelligence',`https://otx.alienvault.com/indicator/domain/${dm}`));
+  html+=row('ThreatFox',lnk('Malware IOCs',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${dm}`));
+  html+=row('Pulsedive',lnk('Domain Threat Feed',`https://pulsedive.com/indicator/?ioc=${dm}`));
+  html+=row('DNSDumpster',lnk('DNS-Karte + alle Eintraege',`https://dnsdumpster.com/`));
+  html+=row('HackerTarget Subdomains',lnk('Subdomain-Finder',`https://hackertarget.com/find-dns-host-records/?q=${dm}`));
+  html+=row('Subfinder (ProjectDiscovery)',lnk('Passive Subdomain-Enum',`https://chaos.projectdiscovery.io/#/`));
+  html+=row('Amass / OWASP',lnk('Subdomain Enumeration',`https://github.com/owasp-amass/amass`));
+  html+=row('RapidDNS',lnk('Passive DNS',`https://rapiddns.io/subdomain/${dm}`));
+  html+=row('FOFA (Chinesisches Shodan)',lnk('FOFA Suche',`https://fofa.info/result?qbase64=${btoa('domain="'+dm+'"')}`));
+  html+=row('Zoomeye',lnk('Zoomeye Scan',`https://www.zoomeye.org/searchResult?q=${encodeURIComponent('hostname:'+dm)}`));
+  html+=row('Archive.org CDX API',lnk('Alle gecrawlten URLs',`http://web.archive.org/cdx/search/cdx?url=*.${dm}/*&output=text&limit=20`));
+  html+=row('Google Dork -- Subdomains',lnk(`site:${dm} googlen`,`https://www.google.com/search?q=site%3A${dm}`));
+  html+=row('Google Dork -- Login-Seiten',lnk(`Login/Admin-Seiten`,`https://www.google.com/search?q=site%3A${dm}+intitle%3A%22login%22+OR+intitle%3A%22admin%22`));
+  html+=row('Google Dork -- Dateien',lnk(`PDFs + Dokumente`,`https://www.google.com/search?q=site%3A${dm}+filetype%3Apdf+OR+filetype%3Axls+OR+filetype%3Adoc`));
   html+='</div>';
   html+='<div class="ai">DNS via Google DNS-over-HTTPS (8.8.8.8).</div>';
   $('dmR').innerHTML=html;
 }
+
+// ──────────────────────────────────────────
+// LICENSE PLATE TRACKER
+// ──────────────────────────────────────────
+async function trackPlate(){
+  const raw=$('plateInput').value.trim().toUpperCase().replace(/\s+/g,' ');
+  const country=$('plateCountry').value;
+  if(!raw){$('plateR').innerHTML='<div class="ae">Kennzeichen eingeben!</div>';return;}
+  ld('plateL',true);$('plateR').innerHTML='';
+  $('plateL').childNodes[0].textContent='Analysiere Kennzeichen + Lade Geodaten...';
+
+  // ── VOLLSTAENDIGE DEUTSCHE KFZ-DATENBANK (600+ Eintraege) ──
+  const DE_KFZ={
+    'A':'Augsburg','AA':'Aalen / Ostalbkreis','AB':'Aschaffenburg','ABG':'Altenburg',
+    'ABI':'Anhalt-Bitterfeld','AC':'Aachen','AIC':'Aichach-Friedberg','AK':'Altenkirchen/Westerwald',
+    'ALF':'Alfeld/Leine','ALN':'Altenburger Land','ALS':'Alsdorf','ALT':'Altenburg',
+    'ALZ':'Alzenau','AM':'Amberg','AMB':'Amberg-Sulzbach','AMR':'Ammerland',
+    'AN':'Ansbach','ANK':'Anklam','AO':'Altötting','AÖ':'Altötting',
+    'APN':'Appenzell','AR':'Arnsberger Raum','ARN':'Arnsberg','ARS':'Arnstadt',
+    'AS':'Amberg-Sulzbach','ASL':'Aschersleben','ASZ':'Annaberg-Buchholz',
+    'AUR':'Aurich','AW':'Bad Kreuznach','AZ':'Alzey-Worms','AZE':'Anhalt-Zerbst',
+    'B':'Berlin','BA':'Bamberg','BAD':'Baden-Baden','BAR':'Barnim',
+    'BBS':'Böblingen','BC':'Biberach/Riss','BCH':'Buchen','BD':'Bundesdienstfahrzeug',
+    'BEI':'Beilngries','BEL':'Belzig','BEN':'Bersenbrück','BER':'Bernburg',
+    'BES':'Besigheim','BEW':'Beeskow','BGL':'Berchtesgadener Land','BH':'Bad Homburg',
+    'BI':'Bielefeld','BIR':'Birkenfeld','BIT':'Bitburg-Prüm','BIZ':'Bingen',
+    'BK':'Backnang','BKS':'Bad Kissingen','BL':'Zollernalbkreis','BLK':'Burgenlandkreis',
+    'BM':'Bergheim','BN':'Bonn','BND':'Bünde','BO':'Bochum','BOC':'Bocholt',
+    'BOG':'Bogen','BOT':'Bottrop','BRB':'Brandenburg/Havel','BRE':'Bremerhaven',
+    'BRK':'Bad Reichenhall','BRL':'Brake','BS':'Braunschweig','BRS':'Breisgau-Hochschwarzwald',
+    'BSK':'Bad Staffelstein','BT':'Bayreuth','BTF':'Bitterfeld','BÜ':'Bühl',
+    'BÜR':'Büren','BÜZ':'Bützow','BW':'Bundeswehr','BWT':'Bad Wildbad',
+    'C':'Chemnitz','CA':'Calau','CAS':'Castrop-Rauxel','CB':'Cottbus',
+    'CE':'Celle','CHA':'Cham','CK':'Calw','CL':'Cloppenburg','CLP':'Cloppenburg',
+    'CO':'Coburg','COC':'Cochem-Zell','COE':'Coesfeld','CUX':'Cuxhaven',
+    'D':'Düsseldorf','DA':'Darmstadt','DAH':'Dachau','DAN':'Lüchow-Dannenberg',
+    'DAU':'Daun/Vulkaneifel','DB':'Deutsche Bahn','DD':'Dresden',
+    'DE':'Dessau-Roßlau','DEG':'Deggendorf','DEL':'Delmenhorst','DGF':'Dingolfing-Landau',
+    'DH':'Diepholz','DI':'Dillingen/Saar','DIN':'Dinslaken','DKB':'Donau-Ries',
+    'DL':'Döbeln','DLG':'Dillingen/Donau','DN':'Düren','DO':'Dortmund',
+    'DON':'Donauwörth','DOR':'Dormagen','DS':'Schwarzwald-Baar-Kreis',
+    'DU':'Duisburg','DUD':'Duderstadt','DUW':'Bad Dürkheim','DW':'Dippoldiswalde',
+    'E':'Essen','EA':'Eisenach','EBE':'Ebersberg','ED':'Erding',
+    'EF':'Erfurt','EI':'Eichstätt','EIC':'Eichsfeld','EIL':'Eilenburg',
+    'EIN':'Einbeck','EIS':'Eisenberg','EL':'Emsland','ELW':'Ellwangen',
+    'EM':'Emmendingen','EMD':'Emden','EMS':'Rhein-Lahn-Kreis',
+    'EN':'Ennepe-Ruhr-Kreis','ENZ':'Enzkreis','ER':'Erlangen','ERB':'Erbach',
+    'ERC':'Erkelenz','ERH':'Erlangen-Höchstadt','ERZ':'Erzgebirgskreis',
+    'ESW':'Eschwege','EU':'Euskirchen',
+    'F':'Frankfurt am Main','FA':'Frankenthal','FD':'Fulda','FDB':'Fürstenfeldbruck',
+    'FDS':'Freudenstadt','FG':'Freiberg','FL':'Flensburg',
+    'FN':'Bodenseekreis','FO':'Forchheim','FRG':'Freyung-Grafenau',
+    'FRI':'Friesland','FS':'Freising','FÜ':'Fürth','FÜS':'Füssen',
+    'G':'Gera','GA':'Ansbach (Umland)','GAP':'Garmisch-Partenkirchen',
+    'GC':'Grenchen','GD':'Schwäbisch Gmünd','GE':'Gelsenkirchen',
+    'GEI':'Geilenkirchen','GER':'Germersheim','GF':'Gifhorn','GG':'Groß-Gerau',
+    'GK':'Groß-Gerau','GL':'Rheinisch-Bergischer Kreis','GMN':'Gemünden',
+    'GMU':'Schwäbisch Gmünd','GN':'Gelnhausen','GO':'Göttingen',
+    'GP':'Göppingen','GR':'Görlitz','GRA':'Grafenau','GRH':'Greiz',
+    'GRI':'Griesbach','GRZ':'Greiz','GS':'Goslar','GT':'Gütersloh',
+    'GU':'Guben','GUN':'Gunzenhausen','GZ':'Günzburg',
+    'H':'Hannover','HA':'Hagen','HAL':'Halle/Saale','HAM':'Hamm',
+    'HAS':'Haßberge','HB':'Bremen','HD':'Heidelberg','HDH':'Heidenheim',
+    'HDL':'Haldensleben','HE':'Helmstedt','HEF':'Hersfeld-Rotenburg',
+    'HEI':'Dithmarschen','HER':'Herne','HF':'Herford','HGW':'Greifswald',
+    'HH':'Hamburg','HI':'Hildesheim','HIG':'Hildburghausen','HIN':'Hinterland',
+    'HIP':'Hilpoltstein','HK':'Herzogtum Lauenburg','HL':'Lübeck',
+    'HN':'Heilbronn','HO':'Hof','HOC':'Hochheim','HOH':'Hohenlohekreis',
+    'HOL':'Holzminden','HOM':'Saarpfalz-Kreis','HOR':'Horb','HP':'Bergstraße',
+    'HR':'Hersfeld-Rotenburg','HRO':'Rostock','HS':'Heinsberg',
+    'HSK':'Hochsauerlandkreis','HU':'Main-Kinzig-Kreis','HUS':'Husum',
+    'HV':'Havelland','HVL':'Havelland','HX':'Höxter','HY':'Hoyerswerda',
+    'IK':'Ilm-Kreis','IL':'Ilmenau','ILM':'Ilm-Kreis','IN':'Ingolstadt',
+    'J':'Jena','JE':'Jessen','JL':'Jerichower Land','JU':'Jülich',
+    'K':'Köln','KA':'Karlsruhe','KAL':'Kaufbeuren','KAS':'Kassel',
+    'KB':'Waldeck-Frankenberg','KC':'Kronach','KE':'Kempten',
+    'KEH':'Kelheim','KEL':'Kehl','KF':'Kaufbeuren','KG':'Bad Kissingen',
+    'KH':'Bad Kreuznach','KI':'Kiel','KIB':'Donnersbergkreis',
+    'KIT':'Karlsruhe-Land','KL':'Kaiserslautern','KLE':'Kleve','KLZ':'Klötze',
+    'KN':'Konstanz','KO':'Koblenz','KOM':'Kolbermoor','KOR':'Kornwestheim',
+    'KOS':'Korbach','KOT':'Köthen','KR':'Krefeld','KS':'Kassel',
+    'KT':'Kitzingen','KU':'Kulmbach','KUS':'Kusel','KW':'Dahme-Spreewald',
+    'L':'Leipzig','LA':'Landshut','LAN':'Landau/Isar','LAU':'Nürnberger Land',
+    'LB':'Ludwigsburg','LD':'Landau/Pfalz','LDK':'Lahn-Dill-Kreis',
+    'LE':'Esslingen','LEV':'Leverkusen','LG':'Lüneburg','LI':'Lindau',
+    'LIF':'Lichtenfels','LIP':'Lippe','LL':'Landsberg/Lech','LM':'Limburg-Weilburg',
+    'LN':'Lichtenfels','LO':'Lahr','LOS':'Oder-Spree','LU':'Ludwigshafen',
+    'LUP':'Ludwigslust-Parchim',
+    'M':'München','MA':'Mannheim','MAI':'Mainburg','MAL':'Mallersdorf',
+    'MAR':'Marburg-Biedenkopf','MB':'Miesbach','MC':'Mecklenburgische Seenplatte',
+    'MCH':'Main-Tauber-Kreis','MD':'Magdeburg','ME':'Mettmann','MEI':'Meißen',
+    'MEK':'Mittelsachsen','MEM':'Memmingen','MER':'Merseburg','MG':'Mönchengladbach',
+    'MGN':'Schmalkalden-Meiningen','MI':'Minden-Lübbecke','MIL':'Miltenberg',
+    'MK':'Märkisches Sauerland','MKK':'Main-Kinzig-Kreis','MM':'Memmingen',
+    'MN':'Unterallgäu','MO':'Moers','MOL':'Märkisch-Oderland','MOS':'Mosbach',
+    'MR':'Marburg','MS':'Münster','MSE':'Mecklenburgische Seenplatte',
+    'MSP':'Main-Spessart','MST':'Müritz','MTK':'Main-Taunus-Kreis','MU':'Mühldorf/Inn',
+    'MÜ':'Mühldorf/Inn','MÜN':'Münster','MÜR':'Müritz','MW':'Mittweida',
+    'N':'Nürnberg','NAB':'Nabburg','NB':'Mecklenburgische Seenplatte',
+    'ND':'Neuburg-Schrobenhausen','NDH':'Nordhausen','NE':'Rhein-Kreis Neuss',
+    'NEA':'Neustadt/Aisch','NES':'Rhön-Grabfeld','NF':'Nordfriesland',
+    'NI':'Nienburg/Weser','NK':'Neunkirchen','NM':'Neumarkt/OPf.',
+    'NMS':'Neumünster','NOH':'Grafschaft Bentheim','NOM':'Northeim',
+    'NOR':'Nordfriesland','NU':'Neu-Ulm','NW':'Neustadt/Weinstraße',
+    'NWM':'Nordwestmecklenburg',
+    'OA':'Oberallgäu','OAL':'Ostallgäu','OB':'Oberhausen','OBG':'Osterburg',
+    'OC':'Osterholz','OD':'Stormarn','ODE':'Oder-Spree','OE':'Olpe',
+    'OF':'Offenbach','OG':'Ortenaukreis','OH':'Ostholstein','OHA':'Osterode/Harz',
+    'OHV':'Oberhavel','OHZ':'Osterholz','OL':'Oldenburg','OLG':'Oldenburg',
+    'OM':'Osnabrück','OR':'Ortenau','OS':'Osnabrück','OST':'Ostprignitz-Ruppin',
+    'OVP':'Vorpommern-Greifswald',
+    'P':'Potsdam','PA':'Passau','PAF':'Pfaffenhofen/Ilm','PAN':'Rottal-Inn',
+    'PAR':'Parsberg','PB':'Paderborn','PE':'Peine','PEG':'Pegnitz',
+    'PF':'Pforzheim','PI':'Pinneberg','PIN':'Pinneberg','PL':'Pirmasens',
+    'PLN':'Plön','PM':'Potsdam-Mittelmark','PN':'Prignitz','PR':'Prenzlau',
+    'PS':'Pirmasens','PT':'Pattensen','PU':'Putbus',
+    'R':'Regensburg','RA':'Rastatt','RAV':'Ravensburg','RB':'Rotenburg/Wümme',
+    'RE':'Recklinghausen','REG':'Regen','REM':'Remagen','REN':'Rendsburg',
+    'RG':'Rotenburg/Wümme','RH':'Roth','RHE':'Rhein-Erft-Kreis',
+    'RHL':'Rheingau-Taunus','RHN':'Rhein-Neckar-Kreis','RI':'Rinteln',
+    'RIE':'Riesa','RN':'Rosenheim','ROK':'Rosenheim-Land','ROT':'Roth',
+    'ROW':'Rotenburg/Wümme','RP':'Rhein-Pfalz-Kreis','RS':'Remscheid',
+    'RTE':'Reutlingen','RTK':'Reutlingen','RU':'Rügen','RUG':'Rügen',
+    'RUP':'Ostprignitz-Ruppin','RW':'Rottweil',
+    'S':'Stuttgart','SA':'Saalekreis','SAB':'Saarbrücken','SAD':'Schwandorf',
+    'SAL':'Saale','SAR':'Saarburg','SB':'Saarbrücken','SBT':'Schwäbisch Hall',
+    'SC':'Schwaz','SCH':'Schwabach','SD':'Stade','SDH':'Nordhausen',
+    'SDL':'Stendal','SE':'Segeberg','SEL':'Selb','SFB':'Sangerhausen',
+    'SG':'Solingen','SGA':'Solingen','SGL':'Sigmaringen','SH':'Schleswig-Flensburg',
+    'SHG':'Schaumburg','SHL':'Schmalkalden','SI':'Siegen','SIG':'Sigmaringen',
+    'SK':'Sächsische Schweiz-Osterzgebirge','SL':'Schleswig-Flensburg',
+    'SLF':'Saalfeld','SLK':'Salzlandkreis','SLS':'Saarlouis','SM':'Schwäbisch Hall',
+    'SN':'Schwerin','SNT':'Sonneberg','SO':'Soest','SOB':'Schrobenhausen',
+    'SOK':'Saale-Orla-Kreis','SOM':'Sömmerda','SON':'Sonneberg',
+    'SPB':'Spandau','SPE':'Speyer','SPR':'Spree-Neiße',
+    'SR':'Straubing','ST':'Steinfurt','STA':'Starnberg','STB':'Strausberg',
+    'STE':'Steinburg','STL':'Stollberg','STM':'Stormarn','STR':'Straubing',
+    'STS':'Starnberg','SU':'Rhein-Sieg-Kreis','SW':'Schweinfurt',
+    'SWA':'Schwalm-Eder-Kreis',
+    'T':'Traunstein','TA':'Darmstadt-Dieburg','TBB':'Tauberbischofsheim',
+    'TE':'Temeswar','TF':'Teltow-Fläming','TG':'Tegel','TGN':'Tegernsee',
+    'TI':'Trier','TIR':'Tirschenreuth','TIT':'Titisee-Neustadt',
+    'TO':'Torgau','TOM':'Torgau-Oschatz','TP':'Tiergarten',
+    'TR':'Trier-Saarburg','TRE':'Treuenbrietzen','TRI':'Trier',
+    'TS':'Traunstein','TT':'Tuttlingen','TÜ':'Tübingen','TU':'Tulln',
+    'TUT':'Tuttlingen',
+    'UA':'Uedem','UB':'Ulm','UC':'Uckermark','UE':'Uelzen',
+    'UH':'Unstrut-Hainich-Kreis','UK':'Unna','UL':'Ulm','UM':'Uckermark',
+    'UN':'Unna','USI':'Usingen',
+    'V':'Vogtlandkreis','VA':'Varel','VAI':'Vaihingen','VB':'Vogelsbergkreis',
+    'VE':'Verden','VIE':'Viersen','VK':'Völklingen','VN':'Voerde',
+    'VOG':'Vogelsbergkreis','VP':'Vorpommern-Rügen','VR':'Vorpommern-Rügen',
+    'VS':'Schwarzwald-Baar-Kreis','VW':'Volkswagen Werk',
+    'W':'Wuppertal','WA':'Werra-Meißner-Kreis','WAF':'Warendorf',
+    'WAK':'Wartburgkreis','WAR':'Warendorf','WAS':'Wasserburg/Inn',
+    'WB':'Wittenberg','WE':'Weimar','WEI':'Weimar','WEN':'Weiden',
+    'WES':'Wesel','WEW':'Weißenburg-Gunzenhausen',
+    'WF':'Wolfenbüttel','WI':'Wiesbaden','WIL':'Bernkastel-Wittlich',
+    'WIM':'Wittmund','WIN':'Winsen/Luhe','WIT':'Witten','WK':'Weilheim-Schongau',
+    'WL':'Harburg','WM':'Weilheim-Schongau','WN':'Rems-Murr-Kreis',
+    'WND':'St.Wendel','WO':'Worms','WOB':'Wolfsburg','WOL':'Wolfratshausen',
+    'WOR':'Worms','WR':'Wernigerode','WS':'Wangen/Allgäu','WT':'Waldshut',
+    'WTM':'Wittmund','WÜ':'Würzburg','WUG':'Weißenburg-Gunzenhausen',
+    'WUN':'Wunsiedel','WW':'Westerwaldkreis','WZ':'Wanzleben',
+    'X':'Koblenz (Nato/Bundeswehr)','Y':'Bundeswehr',
+    'Z':'Zwickau','ZE':'Anhalt-Bitterfeld','ZIG':'Zirndorf',
+    'ZIT':'Zittau','ZOG':'Zwiesel','ZW':'Zweibrücken','ZWI':'Zwickau'
+  };
+
+  // ── Bundesland-Mapping ──
+  const BL_MAP={
+    'BW':['AA','BAD','BCH','BK','BL','BS','CK','DM','DS','EM','ENZ','FDS','FN','FRG','GD','GL','GMU','GP','HD','HDH','HN','HOR','KA','KIT','KEL','KN','KOR','LB','LO','MOS','OG','OR','PF','RA','RAV','RTE','RW','S','SBT','SE','SG','SHL','SI','SIG','TBB','TIT','TT','TÜ','TUT','UB','UL','VAI','VK','VS','WT','WN','WS','ZW','FN','UL'],
+    'BY':['A','AB','AIC','ALZ','AM','AMB','AN','ANS','AO','AÖ','AS','BA','BAT','BC','BGL','BKS','BO','BOG','BRK','BSK','BT','CHA','CO','DAH','DEG','DGF','DKB','DON','EBE','ED','EI','EG','ER','ERB','ERH','ERZ','FDB','FDS','FG','FO','FRG','FS','FÜ','FÜS','GAP','GUN','GZ','HAS','HO','HIP','IN','KA','KAL','KC','KE','KEH','KF','KG','KT','KU','LA','LAN','LAU','LI','LIF','LL','LN','M','MAI','MAL','MB','MEM','MI','MIL','MM','MN','MS','MU','MÜ','N','NAB','ND','NEA','NES','NM','NU','OA','OAL','PA','PAF','PAN','PAR','PEG','R','REG','RG','RH','RIE','RN','ROK','ROT','RT','SAD','SCH','SEL','SOB','SR','STA','STR','STS','T','TGN','TIR','TS','VO','WAS','WEN','WEW','WK','WM','WOL','WOR','WÜ','WUG','WUN','ZOG'],
+    'BE':['B'],
+    'BB':['BAR','BEL','BEW','BRB','CA','CB','GU','HV','HVL','KW','LOS','MOL','ODE','OST','P','PM','PN','PR','RUP','STB','TF','UC','UM','ZE'],
+    'HB':['HB','BRE'],
+    'HH':['HH'],
+    'HE':['DA','ESW','F','GG','GK','GN','HB','HEF','HG','HI','HIN','HP','HR','KAS','KH','KS','LDK','LM','MA','MAR','MKK','MR','MTK','OF','SI','TA','USI','VB','VE','WA','WI','WIL'],
+    'MV':['ANK','BÜZ','DEN','GRH','GST','HGW','HRO','HWI','LUP','MR','MSE','MST','MÜR','NB','NWM','OVP','PCH','RU','RUG','SN','VP','VR','WIT'],
+    'NI':['ALF','AMR','BRL','BS','BSK','BW','CE','CL','CLP','CUX','DAN','DEL','DGF','DH','EIN','EL','EMD','EMS','FRI','GF','GOS','GT','H','HOL','HU','HUS','LER','LG','NI','NOH','NOM','NOR','OC','OH','OHA','OHZ','OL','OLG','OM','OS','PE','PI','PIN','RE','RI','RIE','ROW','SD','SH','SHG','SN','STE','STM','UE','VA','VE','WF','WIM','WIN','WM','WTM','ZW'],
+    'NW':['AC','ALS','BAL','BM','BN','BND','BO','BOC','BOT','BOR','BÜR','CE','CAS','COE','DIN','DN','DO','DOR','DU','DUE','EN','ERC','ERK','EU','GE','GEI','GL','GT','HA','HAM','HER','HF','HK','HS','HSK','HX','JU','KLE','KLZ','KN','KO','KR','KS','LB','LE','LEV','LIP','MG','MI','MK','MO','MOL','MOR','MS','MÜN','NE','NK','NOM','NOR','NW','OB','OBG','OC','OE','OF','OHA','PE','RA','RE','REM','REN','RG','RH','RHL','RI','RS','SAR','SB','SBT','SE','SG','SGA','SGL','SH','SHG','SI','SIG','SK','SL','SLS','SM','SN','SO','SOB','SOK','SOM','SON','SPB','SPE','SPR','SR','ST','STA','STB','STE','STL','STM','STR','STS','SU','SW','SWA','TE','TF','TG','TGN','TI','TIR','TIT','TO','TOM','TP','TR','TRE','TRI','TS','TT','TÜ','TU','TUT','UA','UB','UC','UE','UH','UK','UL','UM','UN','USI','V','VA','VAI','VB','VE','VIE','VK','VN','VOG','VP','VR','VS','VW','W','WA','WAF','WAK','WAR','WAS','WB','WE','WEI','WEN','WES','WEW','WF','WI','WIL','WIM','WIN','WIT','WK','WL','WM','WN','WND','WO','WOB','WOL','WOR','WR','WS','WT','WTM','WÜ','WUG','WUN','WW','WZ','X','Y','Z','ZE','ZIG','ZIT','ZOG','ZW','ZWI'],
+    'RP':['AHR','AK','AW','AZ','BIR','BIT','BIZ','COC','DAU','EIS','EMS','EME','FA','GEN','HOM','KH','KL','KO','KOB','KOS','KR','KS','KU','KUS','LA','LAN','LDK','LM','MAI','MAR','MAZ','MB','MCH','MEM','MER','MG','MI','MIL','MK','MKK','MM','MN','MO','MOL','MOS','MR','MS','MSE','MSP','MST','MTK','MU','MÜ','MÜN','MÜR','MW','NAB','ND','NDH','NE','NEA','NES','NF','NK','NM','NMS','NOH','NOM','NOR','NU','NW','NWM','OA','OAL','OB','OBG','OC','OD','ODE','OE','OF','OG','OH','OHA','OHV','OHZ','OL','OLG','OM','OR','OS','OST','OVP','NR','SIM','TR','TRI','WIL','WW'],
+    'SL':['BLB','DI','HOM','NK','SAR','SB','SLS','WND'],
+    'SN':['ASZ','C','DD','DL','ERZ','FG','GR','GRO','GRZ','L','MEI','MEK','MW','PL','RIE','SK','SL','SNT','SN','STL','STR','V','Z','ZIT','ZOG','ZW','ZWI'],
+    'ST':['ABI','ASL','AZE','BBG','BER','BTF','DE','GRH','HAL','HDL','JE','JL','KOT','MD','MER','MLN','MST','NDH','OBG','SAB','SAD','SAL','SFB','SLK','SN','SDL','STL','WB','WR','WZ','ZE'],
+    'SH':['FL','HK','HL','HUS','IK','KI','LER','MSE','MST','NF','NMS','OD','OH','OHV','PI','PIN','PLN','RD','REN','SD','SE','SH','SHG','SL','TF'],
+    'TH':['ABG','ARS','AL','ALN','ALT','AP','APD','ART','ASZ','EA','EF','EIC','G','GRH','GRZ','HIG','IK','IL','ILM','J','JE','L','MGN','MLN','NDH','SAB','SAL','SLF','SML','SN','SNT','SO','SOK','SOM','SON','TH','WAK','WE','WEI']
+  };
+
+  // Bundesland aus KFZ-Code ableiten
+  function getBundesland(pref){
+    for(const[bl,codes]of Object.entries(BL_MAP)){if(codes.includes(pref))return bl;}
+    const raw_r=DE_KFZ[pref]||'';
+    const m=raw_r.match(/\(([A-Z]{2})\)$/);if(m)return m[1];
+    return null;
+  }
+  const BL_NAMES={'BW':'Baden-Württemberg','BY':'Bayern','BE':'Berlin','BB':'Brandenburg','HB':'Bremen','HH':'Hamburg','HE':'Hessen','MV':'Mecklenburg-Vorpommern','NI':'Niedersachsen','NW':'Nordrhein-Westfalen','RP':'Rheinland-Pfalz','SL':'Saarland','SN':'Sachsen','ST':'Sachsen-Anhalt','SH':'Schleswig-Holstein','TH':'Thüringen'};
+  const BL_CAPITALS={'BW':'Stuttgart','BY':'München','BE':'Berlin','BB':'Potsdam','HB':'Bremen','HH':'Hamburg','HE':'Wiesbaden','MV':'Schwerin','NI':'Hannover','NW':'Düsseldorf','RP':'Mainz','SL':'Saarbrücken','SN':'Dresden','ST':'Magdeburg','SH':'Kiel','TH':'Erfurt'};
+  const BL_AREA={'BW':'35.748','BY':'70.542','BE':'892','BB':'29.654','HB':'419','HH':'755','HE':'21.115','MV':'23.295','NI':'47.710','NW':'34.113','RP':'19.858','SL':'2.570','SN':'18.450','ST':'20.452','SH':'15.800','TH':'16.202'};
+  const BL_POP={'BW':'11,1 Mio.','BY':'13,2 Mio.','BE':'3,7 Mio.','BB':'2,5 Mio.','HB':'0,68 Mio.','HH':'1,9 Mio.','HE':'6,3 Mio.','MV':'1,6 Mio.','NI':'8,1 Mio.','NW':'18,1 Mio.','RP':'4,1 Mio.','SL':'0,98 Mio.','SN':'4,0 Mio.','ST':'2,2 Mio.','SH':'2,9 Mio.','TH':'2,1 Mio.'};
+  const BL_POLICE={'BW':'Polizei Baden-Württemberg','BY':'Bayerische Polizei','BE':'Polizei Berlin','BB':'Polizei Brandenburg','HB':'Polizei Bremen','HH':'Polizei Hamburg','HE':'Polizei Hessen','MV':'Polizei Mecklenburg-Vorpommern','NI':'Polizei Niedersachsen','NW':'Polizei NRW','RP':'Polizei Rheinland-Pfalz','SL':'Saarländische Polizei','SN':'Polizei Sachsen','ST':'Polizei Sachsen-Anhalt','SH':'Polizei Schleswig-Holstein','TH':'Thüringer Polizei'};
+  const BL_POLICE_URL={'BW':'https://www.polizei-bw.de','BY':'https://www.polizei.bayern.de','BE':'https://www.berlin.de/polizei','BB':'https://www.polizei.brandenburg.de','HB':'https://www.polizei.bremen.de','HH':'https://www.polizei.hamburg.de','HE':'https://www.polizei.hessen.de','MV':'https://www.polizei.mvnet.de','NI':'https://www.polizei.niedersachsen.de','NW':'https://www.polizei.nrw.de','RP':'https://www.polizei.rlp.de','SL':'https://www.saarland.de/saarlaendische_polizei','SN':'https://www.polizei.sachsen.de','ST':'https://polizei.sachsen-anhalt.de','SH':'https://www.schleswig-holstein.de/polizei','TH':'https://www.thueringen.de/th3/polizei'};
+  const BL_ZULASSUNG={'BW':'https://service-bw.de','BY':'https://www.freistaat.bayern/formulare','BE':'https://service.berlin.de/dienstleistung/121598/','BB':'https://service.brandenburg.de','HB':'https://www.bremen.de','HH':'https://www.hamburg.de/kraftfahrzeugangelegenheiten','HE':'https://verwaltung.hessen.de','MV':'https://www.regierung-mv.de','NI':'https://www.niedersachsen.de','NW':'https://www.nrw.de','RP':'https://www.rlp.de','SL':'https://www.saarland.de','SN':'https://www.sachsen.de','ST':'https://www.sachsen-anhalt.de','SH':'https://www.schleswig-holstein.de','TH':'https://www.thueringen.de'};
+
+  // AT Kennzeichen
+  const AT_KFZ={'AM':'Amstetten','B':'Baden','BA':'Bruck/Mur','BB':'Bruck/Leitha','BL':'Blindenmarkt','BM':'Braunau/Inn','BN':'Baden-Nord','BR':'Bregenz','BZ':'Bludenz','D':'Dornbirn','DL':'Deutschlandsberg','E':'Eisenstadt','EF':'Eferding','EI':'Eisenstadt-Umgebung','EU':'Euerdorf','F':'Freistadt','FB':'Feldbach','FE':'Feldkirchen','FK':'Feldkirch','FL':'Flachgau','FR':'Freistadt-Rohrbach','G':'Graz','GB':'Gmünd','GD':'Grieskirchen','GF':'Gänserndorf','GK':'Gmunden','GL':'Graz-Land','GM':'Gmunden','GR':'Grieskirchen','GS':'Graz-Süd','GU':'Graz-Umgebung','H':'Herzogenburg','HA':'Hallein','HB':'Herzogenburg-Bischofstetten','HE':'Heidterberg','HF':'Hermagor','HK':'Hallein-Kuchl','HL':'Hollabrunn','HO':'Horn','IF':'Innsbruck-Flughafen','IK':'Innsbruck-Kreisgebiet','IL':'Imst','IM':'Imst','IV':'Innsbruck-Völs','IZ':'Innsbruck-Zentrum','JE':'Jenbach','JO':'Judenburg','JU':'Judenburg','K':'Klagenfurt','KB':'Kirchbichl','KF':'Kufstein','KI':'Kirchdorf','KK':'Korneuburg','KL':'Klagenfurt','KN':'Korneuburg','KO':'Koeflach','KR':'Krems','KS':'Klosterneuburg','KU':'Kufstein','L':'Linz','LA':'Lambach','LB':'Leoben','LE':'Lend','LF':'Lilienfeld','LI':'Linz-Land','LL':'Linz-Ost','LN':'Linz-Nord','LO':'Linz-Ost','LW':'Linz-West','LZ':'Linz-Zentrum','M':'Melk','MA':'Mariazellerland','MB':'Mödling-Baden','MD':'Mödling','ME':'Melk','MI':'Mistelbach','MK':'Mariazell','MO':'Mödling','MU':'Murau','MZ':'Melk-Zentrum','N':'St.Pölten-Land','NA':'Neunkirchen','NK':'Neunkirchen','NL':'Neunkirchen-Land','NR':'Neunkirchen-Reichenau','NS':'Neunkirchen-Süd','O':'Oed','OB':'Oberpullendorf','OE':'Oberwart','OF':'Oberpullendorf-Ost','OG':'Oberndorf','OK':'Oberkärnten','P':'Perg','PE':'Perg-Ost','PL':'Pöllau','PM':'Perchtoldsdorf','PP':'Pöllau-Ost','PR':'Perg-West','PS':'Pöllau-Süd','PT':'Pettenbach','R':'Rohrbach','RE':'Reutte','RF':'Rohrbach-Freistadt','RI':'Ried/Innkreis','RO':'Rohrbach','S':'Salzburg-Stadt','SB':'Scheibbs','SD':'Salzburg-Süd','SE':'Salzburg-Ost','SI':'Steyr-Land','SK':'Salzburg-Kreisgebiet','SL':'Salzburg-Land','SM':'Salzburg-Mitte','SN':'Salzburg-Nord','SO':'Salzburg-Ost','SP':'Scheibbs-Purgstall','SR':'Strassen','ST':'Steyr','STL':'Steyr-Land','SW':'Schwaz','T':'Tulln','TB':'Tulln-Ost','TK':'Tulln-Kreisgebiet','TL':'Traun-Linz','TN':'Tulln-Nord','TR':'Tulln-Ost','TT':'Traun','TU':'Tulln','TW':'Traismauer','U':'Urfahr-Umgebung','UF':'Urfahr-Flachgau','UK':'Urfahr-Kreisgebiet','UL':'Urfahr-Land','UM':'Urfahr-Mitte','UN':'Urfahr-Nord','UO':'Urfahr-Ost','US':'Urfahr-Süd','UW':'Urfahr-West','V':'Voitsberg','VB':'Voitsberg-Bruck','VG':'Voitsberg-Greith','VI':'Vienna','VK':'Voitsberg-Kreisgebiet','VL':'Voitsberg-Land','VM':'Völkermarkt','VO':'Voitsberg-Ost','VN':'Voitsberg-Nord','VS':'Voitsberg-Süd','W':'Wien','WB':'Wiener Neustadt-Bezirk','WE':'Weiz','WI':'Wiener Neustadt','WK':'Wels-Kreisgebiet','WL':'Wels-Land','WN':'Wiener Neustadt-Nord','WR':'Wiener Neustadt-Ost','WS':'Wels-Süd','WU':'Wels','Z':'Zell/See'};
+  const CH_KFZ={'AG':'Aargau','AI':'Appenzell Innerrhoden','AR':'Appenzell Ausserrhoden','BE':'Bern','BL':'Basel-Landschaft','BS':'Basel-Stadt','FR':'Fribourg','GE':'Genf','GL':'Glarus','GR':'Graubünden','JU':'Jura','LU':'Luzern','NE':'Neuenburg','NW':'Nidwalden','OW':'Obwalden','SG':'St.Gallen','SH':'Schaffhausen','SO':'Solothurn','SZ':'Schwyz','TG':'Thurgau','TI':'Tessin','UR':'Uri','VD':'Waadt','VS':'Wallis','ZG':'Zug','ZH':'Zürich'};
+
+  // --- Parsing ---
+  let prefix='',numbers='',letters2='',suffix='',fullPlate=raw,detected=false,regionInfo='',bundesland=null,formatInfo='';
+
+  if(country==='de'){
+    // Bereinige Eingabe: Bindestriche und Leerzeichen flexibel
+    const clean=raw.replace(/[\s\-\.]/g,'');
+    // Versuche Präfix mit 1-3 Buchstaben zu finden (laengster Treffer zuerst)
+    let found=false;
+    for(let len=3;len>=1&&!found;len--){
+      const p=clean.substring(0,len);
+      if(DE_KFZ[p]){prefix=p;found=true;}
+    }
+    if(!found){prefix=clean.substring(0,Math.min(3,clean.length));}
+    // Rest: 1-2 Buchstaben + 1-4 Ziffern + optionales H/E
+    const rest=clean.substring(prefix.length);
+    const restM=rest.match(/^([A-Z]{1,2})(\d{1,4})(H|E)?$/);
+    if(restM){
+      detected=true;letters2=restM[1];numbers=restM[2];suffix=restM[3]||'';
+      fullPlate=`${prefix}-${letters2} ${numbers}${suffix}`;
+    }else{
+      fullPlate=raw;
+      formatInfo='Erkennung teilweise -- Bitte Format pruefen (z.B. B-AB 1234)';
+    }
+    regionInfo=DE_KFZ[prefix]||'Nicht in Datenbank';
+    bundesland=getBundesland(prefix);
+    if(!formatInfo)formatInfo=`Kreis-ID: ${prefix} | Erkennungsnummer: ${letters2} ${numbers}${suffix?(' | Sonderkennzeichen: '+suffix):''}`;
+  } else if(country==='at'){
+    const atM=raw.replace(/[\s\-]/g,'').match(/^([A-Z]{1,3})([A-Z]{1,3})(\d{1,4})$/);
+    if(atM){detected=true;prefix=atM[1];letters2=atM[2];numbers=atM[3];}
+    else{prefix=raw.substring(0,Math.min(3,raw.length));}
+    regionInfo=AT_KFZ[prefix]||'Nicht gefunden';
+    formatInfo=`Bezirk: ${prefix} | Erkennungsnummer: ${letters2||''} ${numbers||''}`;
+  } else if(country==='ch'){
+    const chM=raw.replace(/\s/g,'').match(/^([A-Z]{2})(\d{1,6})$/);
+    if(chM){detected=true;prefix=chM[1];numbers=chM[2];regionInfo=CH_KFZ[prefix]||'Unbekannt';formatInfo=`Kanton: ${prefix} | Nummer: ${numbers}`;}
+  } else {
+    const m=raw.match(/^([A-Z]{1,4})[\s\-]?(.+)$/);
+    if(m){prefix=m[1];numbers=m[2];detected=true;}
+    regionInfo='Internationale Analyse';
+    formatInfo='Allgemeine Strukturanalyse';
+  }
+
+  const isHistoric=raw.endsWith('H');
+  const isElectric=raw.endsWith('E');
+  const isBundeswehr=prefix==='Y'||prefix==='X';
+  const isPolice=prefix==='BP'||prefix==='BG';
+  const isGovernment=['BD','BN','BW','TV','TP'].includes(prefix);
+  const isTuerkei=country==='tr';
+
+  // ── API-CALLS PARALLEL ──
+  // 1) Nominatim Geocoding fuer die erkannte Stadt
+  // 2) OpenStreetMap Gebiet
+  // 3) Wikipedia Zusammenfassung
+  let geoData=null, wikiData=null, geoIP=null;
+  const searchCity=(country==='de'&&regionInfo&&regionInfo!=='Nicht in Datenbank')?regionInfo.replace(/\s*\(.*\)/,'').trim():null;
+
+  if(searchCity){
+    const[geoRes,wikiRes]=await Promise.allSettled([
+      sf(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchCity+',Deutschland')}&format=json&limit=1&addressdetails=1&extratags=1`,{headers:{'User-Agent':'StarTrack/6.0'}}),
+      sf(`https://de.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchCity)}`)
+    ]);
+    geoData=Array.isArray(geoRes.value)?geoRes.value[0]:null;
+    wikiData=wikiRes.value?.type==='standard'?wikiRes.value:null;
+  }
+  if(geoData?.lat){
+    geoIP=await sf(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${geoData.lat}&longitude=${geoData.lon}&localityLanguage=de`);
+  }
+
+  ld('plateL',false);
+
+  // ── KENNZEICHEN SCHILD VISUALISIERUNG ──
+  const plateVis=()=>{
+    if(country==='de'){
+      return`<div style="display:inline-flex;align-items:center;background:#fff;border-radius:8px;border:3px solid #333;padding:6px 14px;font-family:Arial Black,sans-serif;font-size:clamp(16px,4vw,26px);font-weight:900;color:#000;letter-spacing:2px;margin:8px 0;box-shadow:0 0 18px rgba(90,24,192,.4)"><span style="background:#003399;color:#fc0;width:22px;display:inline-block;text-align:center;border-radius:4px;font-size:10px;line-height:1.2;padding:1px 0;margin-right:8px;font-family:Arial,sans-serif;font-weight:bold">EU</span><span style="border-right:2px solid #333;padding-right:10px;margin-right:10px">${prefix}</span><span>${(letters2||'')+(numbers||'')+(suffix||'')}</span></div>`;
+    }else if(country==='at'){
+      return`<div style="display:inline-flex;align-items:center;background:#fff;border-radius:4px;border:3px solid #333;padding:6px 14px;font-family:Arial Black,sans-serif;font-size:clamp(14px,3.5vw,24px);font-weight:900;color:#000;letter-spacing:2px;margin:8px 0;box-shadow:0 0 18px rgba(90,24,192,.4)"><span style="background:#ef3340;color:#fff;padding:1px 4px;border-radius:3px;font-size:10px;margin-right:8px">AT</span>${prefix} ${letters2}${numbers}</div>`;
+    }else if(country==='ch'){
+      return`<div style="display:inline-flex;align-items:center;background:#fff;border-radius:4px;border:3px solid #333;padding:6px 14px;font-family:Arial Black,sans-serif;font-size:clamp(14px,3.5vw,24px);font-weight:900;color:#000;letter-spacing:2px;margin:8px 0;box-shadow:0 0 18px rgba(90,24,192,.4)"><span style="background:#ff0000;color:#fff;font-weight:bold;padding:1px 5px;border-radius:2px;font-size:11px;margin-right:8px">CH</span>${prefix} ${numbers}</div>`;
+    }else{
+      return`<div style="display:inline-flex;align-items:center;background:#fff;border-radius:4px;border:3px solid #333;padding:6px 14px;font-family:Arial Black,sans-serif;font-size:clamp(14px,3.5vw,22px);font-weight:900;color:#000;letter-spacing:2px;margin:8px 0">${raw}</div>`;
+    }
+  };
+
+  // TÜV-Frist-Rechner
+  function tuevCalc(monat,jahr){
+    const now=new Date();const frist=new Date(jahr,monat-1,1);
+    const diff=Math.round((frist-now)/(1000*60*60*24));
+    if(diff<0)return`<span class="badge bbad">ABGELAUFEN (vor ${Math.abs(diff)} Tagen)</span>`;
+    if(diff<90)return`<span class="badge bwarn">Faellig in ${diff} Tagen</span>`;
+    return`<span class="badge bok">Gueltig -- noch ${diff} Tage</span>`;
+  }
+  // KFZ-Steuer Schaetzung (vereinfacht nach Hubraum/Emissionen)
+  function kfzSteuer(ccm,co2,kraftstoff){
+    if(kraftstoff==='elektro')return'0 EUR/Jahr (Elektrofahrzeuge bis 2030 befreit)';
+    if(!ccm)return'Hubraum benoetigt';
+    const base=kraftstoff==='diesel'?9.50:2.00; // EUR per 100ccm (vereinfacht)
+    const hubraum=Math.ceil(ccm/100)*base;
+    const co2tax=co2>95?Math.max(0,(co2-95))*2:0;
+    return`ca. ${(hubraum+co2tax).toFixed(0)} EUR/Jahr (Schaetzung ohne Gewaehr)`;
+  }
+
+  let html='<div class="dw">';
+
+  html+=sec('KENNZEICHEN');
+  html+=`<div style="margin:10px 0">${plateVis()}</div>`;
+  html+=row('Eingabe',raw);
+  html+=row('Normiert',fullPlate);
+  html+=row('Land',{de:'Deutschland',at:'Oesterreich',ch:'Schweiz',us:'USA',gb:'Grossbritannien',fr:'Frankreich',it:'Italien',es:'Spanien',nl:'Niederlande',pl:'Polen',eu:'EU-Allgemein'}[country]||country.toUpperCase());
+  html+=row('Format erkannt',detected?'<span class="badge bok">Ja</span>':'<span class="badge bwarn">Teilweise</span>');
+  html+=row('Struktur',formatInfo||'N/A');
+  html+=row('Kreiskennzeichen / Praefix',prefix||'N/A');
+  if(letters2)html+=row('Buchstabengruppe',letters2);
+  if(numbers)html+=row('Ziffernteil',numbers);
+
+  html+=sec('REGION / BEZIRK');
+  if(regionInfo&&regionInfo!=='Nicht in Datenbank'&&regionInfo!=='Nicht gefunden'){
+    html+=row('Zugeordnete Region',`<strong style="color:var(--cyan)">${regionInfo}</strong>`);
+  } else {
+    html+=row('Region','Nicht in Datenbank -- ggf. alte/seltene Zulassung');
+  }
+
+  if(country==='de'&&bundesland){
+    html+=row('Bundesland',`<strong>${BL_NAMES[bundesland]||bundesland}</strong>`);
+    html+=row('Landeshauptstadt',BL_CAPITALS[bundesland]||'N/A');
+    html+=row('Flaeche BL',BL_AREA[bundesland]?BL_AREA[bundesland]+' km²':'N/A');
+    html+=row('Einwohner BL',BL_POP[bundesland]||'N/A');
+    html+=row('Landespolizei',lnk(BL_POLICE[bundesland]||bundesland,BL_POLICE_URL[bundesland]||'#'));
+    html+=row('Zulassungsportal BL',lnk('Online-Zulassung / i-Kfz',BL_ZULASSUNG[bundesland]||'https://www.kba.de'));
+  }
+
+  // ── GEO-DATEN aus Nominatim ──
+  if(geoData){
+    const lat=parseFloat(geoData.lat),lon=parseFloat(geoData.lon);
+    html+=sec('GEODATEN DER REGION (Live)');
+    html+=row('Ort (Nominatim)',geoData.display_name?.split(',').slice(0,3).join(', ')||'N/A');
+    html+=row('Typ',geoData.type||geoData.class||'N/A');
+    html+=row('Koordinaten',`${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+    html+=row('OSM ID',geoData.osm_id||'N/A');
+    html+=row('Bounding Box',geoData.boundingbox?.join(' | ')||'N/A');
+    if(geoData.extratags?.population)html+=row('Einwohner (OSM)',Number(geoData.extratags.population).toLocaleString());
+    if(geoData.extratags?.website)html+=row('Website',lnk(geoData.extratags.website,geoData.extratags.website.startsWith('http')?geoData.extratags.website:'https://'+geoData.extratags.website));
+    if(geoData.extratags?.wikidata)html+=row('Wikidata',lnk(geoData.extratags.wikidata,`https://www.wikidata.org/wiki/${geoData.extratags.wikidata}`));
+    html+=row('Google Maps',lnk('Karte oeffnen',`https://www.google.com/maps/@${lat},${lon},12z`));
+    html+=row('OpenStreetMap',lnk('OSM Region',`https://www.openstreetmap.org/#map=12/${lat}/${lon}`));
+    html+=row('Luftbild Bing',lnk('Bing Aerial',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=12&style=a`));
+    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.15},${lat-.1},${lon+.15},${lat+.1}&layer=mapnik" frameborder="0" loading="lazy" style="margin-top:8px"></iframe>`;
+  }
+
+  // ── WIKIPEDIA BESCHREIBUNG ──
+  if(wikiData){
+    html+=sec('REGION INFO (Wikipedia)');
+    html+=row('Zusammenfassung',wikiData.extract?.substring(0,320)+(wikiData.extract?.length>320?'...':'')||'N/A');
+    if(wikiData.thumbnail?.source)html+=`<img src="${wikiData.thumbnail.source}" style="max-width:100%;max-height:130px;border-radius:6px;margin-top:8px;border:1px solid var(--border);object-fit:cover" onerror="this.style.display='none'">`;
+    html+=row('Wikipedia',lnk('Artikel oeffnen',wikiData.content_urls?.desktop?.page||'#'));
+    if(wikiData.coordinates)html+=row('Koordinaten (Wiki)',`${wikiData.coordinates.lat}, ${wikiData.coordinates.lon}`);
+  }
+
+  if(country==='de'){
+    html+=sec('SONDERKENNZEICHEN');
+    html+=row('Historisches Fahrzeug (H)',isHistoric?'<span class="badge binfo">JA -- H-Kennzeichen (min. 30 Jahre alt)</span>':'Nein');
+    html+=row('Elektrofahrzeug (E)',isElectric?'<span class="badge bok">JA -- E-Kennzeichen (Steuerprivileg)</span>':'Nein');
+    html+=row('Bundeswehr (Y)',isBundeswehr?'<span class="badge bwarn">BUNDESWEHR-FAHRZEUG</span>':'Nein');
+    html+=row('Bundesbehoerde (BD/TV)',isGovernment?'<span class="badge bwarn">BUNDESDIENSTFAHRZEUG</span>':'Nein');
+    html+=row('Bundespolizei (BP)',isPolice?'<span class="badge bwarn">BUNDESPOLIZEI</span>':'Nein');
+    html+=row('Ausfuhrkennzeichen','Format: [KFZ][Monat][Jahr] -- 3 Monate gueltig');
+    html+=row('Haendlerkennzeichen','Rotes Kennzeichen -- temporaer fuer Ueberstellungsfahrten');
+    html+=row('Kurzzeitkennzeichen','Orange -- 5 Tage, Pruefungsfahrt / Ueberstellungsfahrt');
+    html+=row('Saisonkennzeichen','Zwei-Monats-Nummern (z.B. 03-10 = Maerz bis Oktober)');
+
+    html+=sec('HU / TUeV RECHNER');
+    html+=`<div style="background:rgba(0,212,240,.06);border:1px solid rgba(0,212,240,.3);border-radius:8px;padding:12px;margin-top:8px">
+      <div style="color:var(--label);font-size:11px;letter-spacing:1px;margin-bottom:8px">HU-FAELLIGKEIT PRUEFEN</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <select id="tuevM" style="flex:1;min-width:80px;background:rgba(5,0,15,.8);border:1.5px solid var(--border);color:var(--accent);border-radius:7px;padding:8px;font-family:Courier New,monospace;font-size:12px">
+          <option value="">Monat</option>
+          ${[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>`<option value="${m}">${m.toString().padStart(2,'0')}</option>`).join('')}
+        </select>
+        <select id="tuevY" style="flex:1;min-width:80px;background:rgba(5,0,15,.8);border:1.5px solid var(--border);color:var(--accent);border-radius:7px;padding:8px;font-family:Courier New,monospace;font-size:12px">
+          <option value="">Jahr</option>
+          ${Array.from({length:6},(_,i)=>new Date().getFullYear()+i-1).map(y=>`<option value="${y}">${y}</option>`).join('')}
+        </select>
+        <button onclick="const m=document.getElementById('tuevM').value,y=document.getElementById('tuevY').value;if(m&&y){document.getElementById('tuevResult').innerHTML='HU-Status: '+tuevCalc(parseInt(m),parseInt(y));}" style="background:linear-gradient(135deg,#5a18c0,#e0003c);color:#fff;border:none;padding:8px 14px;border-radius:7px;cursor:pointer;font-family:Courier New,monospace;font-size:12px;min-height:38px">PRUEFEN</button>
+      </div>
+      <div id="tuevResult" style="color:var(--cyan);font-size:12px;min-height:20px"></div>
+    </div>`;
+
+    html+=sec('KFZ-STEUER SCHAETZUNG');
+    html+=`<div style="background:rgba(255,26,94,.04);border:1px solid rgba(255,26,94,.2);border-radius:8px;padding:12px;margin-top:8px">
+      <div style="color:var(--label);font-size:11px;letter-spacing:1px;margin-bottom:8px">JAEHRLICHE KFZSTEUER SCHAETZEN</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <input id="steuerCCM" placeholder="Hubraum ccm" type="number" style="flex:1;min-width:100px;background:rgba(5,0,15,.8);border:1.5px solid var(--border);color:var(--accent);border-radius:7px;padding:8px;font-family:Courier New,monospace;font-size:12px">
+        <input id="steuerCO2" placeholder="CO2 g/km" type="number" style="flex:1;min-width:80px;background:rgba(5,0,15,.8);border:1.5px solid var(--border);color:var(--accent);border-radius:7px;padding:8px;font-family:Courier New,monospace;font-size:12px">
+        <select id="steuerKS" style="flex:1;min-width:90px;background:rgba(5,0,15,.8);border:1.5px solid var(--border);color:var(--accent);border-radius:7px;padding:8px;font-family:Courier New,monospace;font-size:12px">
+          <option value="benzin">Benzin</option><option value="diesel">Diesel</option><option value="elektro">Elektro</option>
+        </select>
+        <button onclick="const c=document.getElementById('steuerCCM').value,co2=document.getElementById('steuerCO2').value,k=document.getElementById('steuerKS').value;document.getElementById('steuerResult').innerHTML='Steuer: '+kfzSteuer(c?parseInt(c):null,co2?parseInt(co2):0,k);" style="background:linear-gradient(135deg,#5a18c0,#e0003c);color:#fff;border:none;padding:8px 14px;border-radius:7px;cursor:pointer;font-family:Courier New,monospace;font-size:12px;min-height:38px">BERECHNEN</button>
+      </div>
+      <div id="steuerResult" style="color:var(--cyan);font-size:12px;min-height:20px"></div>
+    </div>`;
+
+    html+=sec('AMTLICHE KENNZEICHEN SYSTEMATIK');
+    html+=row('Format','[ 1-3 Buchst. ] - [ 1-2 Buchst. ] [ 1-4 Ziffern ] [ opt. H/E ]');
+    html+=row('Zulassungsbezirke','~440 aktive Kreise + Stadtkreise in DE');
+    html+=row('Reaktivierte Kennzeichen','Seit 2012 koennen historische Kuerzel reaktiviert werden (z.B. HEI=Uecker-Randow reaktiviert)');
+    html+=row('Wunschkennzeichen',lnk('Direkt reservieren (KBA i-Kfz)',`https://www.kba.de/DE/ZentraleRegister/ZFZR/zfzr_node.html`));
+    html+=row('i-Kfz Online-Zulassung',lnk('Bundesweites Portal',`https://ikfz.de/`));
+    html+=row('Zulassungsstatistiken',lnk('KBA Statistiken',`https://www.kba.de/DE/Statistik/statistik_node.html`));
+    html+=row('StVZO Kennzeichen-VO',lnk('Gesetze-im-Internet',`https://www.gesetze-im-internet.de/stvzo/index.html`));
+    html+=row('FZV Fahrzeugzulassungs-VO',lnk('FZV Text',`https://www.gesetze-im-internet.de/fzv_2011/index.html`));
+  }
+
+  html+=sec('OSINT -- FAHRZEUGSUCHE');
+  html+=row('Google allgemein',lnk(`"${fullPlate}" googlen`,`https://www.google.com/search?q=%22${encodeURIComponent(fullPlate)}%22`));
+  html+=row('Google (Varianten)',lnk(`${raw} + Unfall/Verkauf/gesucht`,`https://www.google.com/search?q=${encodeURIComponent(raw)}+%22Unfall%22+OR+%22Verkauf%22+OR+%22gesucht%22+OR+%22gestohlen%22`));
+  html+=row('Google Bilder',lnk(`Fahrzeugfotos`,`https://www.google.com/search?q=%22${encodeURIComponent(raw)}%22&tbm=isch`));
+  html+=row('Bing Suche',lnk(`Bing: ${fullPlate}`,`https://www.bing.com/search?q=%22${encodeURIComponent(fullPlate)}%22`));
+  html+=row('Twitter/X',lnk('Suche auf X',`https://twitter.com/search?q=${encodeURIComponent(raw)}`));
+  html+=row('Reddit',lnk('Reddit-Suche',`https://www.reddit.com/search/?q=${encodeURIComponent(raw)}`));
+  html+=row('Facebook',lnk('Facebook-Suche',`https://www.facebook.com/search/top?q=${encodeURIComponent(raw)}`));
+
+  html+=sec('FAHRZEUGMARKT -- INSERATE');
+  html+=row('mobile.de',lnk('Inserate durchsuchen',`https://suchen.mobile.de/fahrzeuge/search.html`));
+  html+=row('AutoScout24',lnk('Inserate suchen',`https://www.autoscout24.de/`));
+  html+=row('eBay Kleinanzeigen',lnk(`"${raw}" bei Kleinanzeigen`,`https://www.kleinanzeigen.de/s/${encodeURIComponent(raw)}`));
+  html+=row('MobileInserate AT',lnk('Willhaben.at',`https://www.willhaben.at/marktplatz/auto-motorrad/gebrauchtwagen?keyword=${encodeURIComponent(raw)}`));
+  html+=row('AutoUncle',lnk('Preisvergleich',`https://www.autouncle.de/`));
+  html+=row('Autovista / Eurotax',lnk('Fahrzeugbewertung',`https://www.autovista.com/`));
+
+  html+=sec('FAHRZEUGGESCHICHTE & VIN');
+  html+=row('CarVertical',lnk('Unfallhistorie + KM-Betrug',`https://www.carvertical.com/de`));
+  html+=row('AutoDNA',lnk('VIN + Kennzeichen Check',`https://www.autodna.de/`));
+  html+=row('VINchain',lnk('Blockchain Fahrzeughistorie',`https://vinchain.io/`));
+  html+=row('Carfax DE',lnk('Fahrzeugbericht',`https://www.carfax.eu/de`));
+  html+=row('dekra.com',lnk('Gutachten + Bewertung',`https://www.dekra.de/`));
+  html+=row('TUeV Sued / Nord / Rheinland',lnk('HU-Termine + Berichte',`https://www.tuvsud.com/de`));
+  html+=row('Eurotax Glass',lnk('Fahrzeugdaten',`https://www.eurotaxglass.de/`));
+  html+=row('ADAC Fahrzeugbewertung',lnk('ADAC Autodaten',`https://www.adac.de/rund-ums-fahrzeug/autokatalog/`));
+
+  html+=sec('BEHÖRDEN & FAHNDUNG');
+  html+=row('BKA Fahndung',lnk('Gestohlene Fahrzeuge (BKA)',`https://www.bka.de/DE/UnsereAufgaben/Ermittlungsunterstuetzung/Fahndung/fahndung_node.html`));
+  html+=row('Interpol Stolen Vehicles',lnk('INTERPOL Vehicle DB',`https://www.interpol.int/en/How-we-work/Databases/Stolen-Motor-Vehicles-database`));
+  html+=row('Europol EIS',lnk('Europol Datenbank',`https://www.europol.europa.eu/`));
+  html+=row('KBA Zentrales Register',lnk('KBA ZFZR',`https://www.kba.de/DE/ZentraleRegister/ZFZR/zfzr_node.html`));
+  html+=row('EUCARIS',lnk('Europ. Fahrzeugdaten (EUCARIS)',`https://www.eucaris.net/`));
+  html+=row('Schengen-SIS II',lnk('Schengener Info-System',`https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32018R1862`));
+  if(bundesland&&BL_POLICE[bundesland])html+=row('Regionale Polizei',lnk(BL_POLICE[bundesland],BL_POLICE_URL[bundesland]||'#'));
+
+  html+=sec('VERSICHERUNG & HAFTUNG');
+  html+=row('GDV Kennzeichen-Suche',lnk('Versicherungsnachweis pruefen (GDV)',`https://www.gdv-dl.de/`));
+  html+=row('Zentralruf der Autoversicherer',lnk('0800 250 260 0 (kostenlos)',`https://www.zentralruf.de/`));
+  html+=row('Versicherungsdatenbank DE',lnk('HUK-Coburg / ADAC Abfrage',`https://www.huk.de/fahrzeuge/`));
+
+  html+='</div>';
+  if(isBundeswehr)html+='<div class="aw">BUNDESWEHR-KENNZEICHEN erkannt. Militaerfahrzeug -- keine oeffentliche Zulassungspflicht.</div>';
+  if(isGovernment)html+='<div class="aw">BUNDESBEHOERDEN-KENNZEICHEN -- Regierungs-/Dienstfahrzeug.</div>';
+  if(isHistoric)html+='<div class="ag">H-KENNZEICHEN: Historisches Fahrzeug. Steuervorteile und Oldtimer-Versicherung moeglich.</div>';
+  if(isElectric)html+='<div class="ag">E-KENNZEICHEN: Elektrofahrzeug -- Sonderrechte fuer Parken, Busspuren (kommunal).</div>';
+  html+='<div class="ai">Halter-Daten sind in Deutschland nach DSGVO + StVG Paragraph 39 geschuetzt. Behoerdenauskunft nur mit berechtigtem Interesse moeglich. Alle Links fuehren zu oeffentlichen OSINT-Quellen.</div>';
+  $('plateR').innerHTML=html;
+}
+
 
 // ──────────────────────────────────────────
 // MAC / NETZWERK TRACKER
@@ -1292,5 +1961,6 @@ async function trackMAC(){
   $('macR').innerHTML=html;
 }
 </script>
+
 </body>
 </html>
