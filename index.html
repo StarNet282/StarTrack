@@ -7,484 +7,293 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>StarTrack v9</title>
+<title>StarTrack v10</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 :root{
-  --bg:#02000a;
-  --panel:rgba(6,0,16,0.96);
-  --border:#6600cc;
-  --border2:#ff0055;
-  --accent:#ff0055;
-  --accent2:#aa00ff;
-  --accent3:#00ffcc;
-  --text:#e8c8ff;
-  --label:#7744aa;
-  --val:#ff2277;
-  --cyan:#00ffcc;
+  --bg:#04000e;
+  --panel:rgba(8,0,20,0.96);
+  --border:#5500bb;
+  --accent:#ff1a5e;
+  --accent2:#9b00ff;
+  --accent3:#00e5cc;
+  --text:#e0c0ff;
+  --label:#8855bb;
+  --val:#ff3377;
+  --cyan:#00e5cc;
   --green:#00ff88;
   --yellow:#ffcc00;
-  --red:#ff1111;
+  --red:#ff2222;
   --tap:48px;
-  --glow1:rgba(255,0,85,.8);
-  --glow2:rgba(170,0,255,.6);
-  --glow3:rgba(0,255,204,.5);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
 body{
-  font-family:'Share Tech Mono','Courier New',monospace;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  padding:14px;
-  overflow-x:hidden;
+  font-family:'Courier New',Courier,monospace;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;padding:14px;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
-
-/* ── LIVE WALLPAPER ── */
 #cvs{position:fixed;inset:0;z-index:0;pointer-events:none;}
-
-.wrap{max-width:1300px;margin:0 auto;position:relative;z-index:1;}
-
-/* ── SCANLINE OVERLAY ── */
-body::after{
-content:’’;position:fixed;inset:0;z-index:2;pointer-events:none;
-background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);
-mix-blend-mode:multiply;
-}
+.wrap{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
 
 /* ── BANNER ── */
-.banner{text-align:center;margin-bottom:22px;position:relative;}
+.banner{text-align:center;margin-bottom:18px;}
 .ban-ascii{
-font-size:clamp(5px,1.4vw,12.5px);
-white-space:pre;display:block;line-height:1.25;
+font-size:clamp(5px,1.5vw,13px);white-space:pre;display:block;line-height:1.3;
 color:var(–accent);
-text-shadow:0 0 8px var(–glow1),0 0 20px var(–glow2),0 0 40px rgba(255,0,85,.3);
-animation:bannerFlicker 8s ease-in-out infinite;
+text-shadow:0 0 10px rgba(255,26,94,.8),0 0 24px rgba(155,0,255,.5);
+animation:asciiGlow 3s ease-in-out infinite alternate;
+}
+@keyframes asciiGlow{
+from{text-shadow:0 0 8px rgba(255,26,94,.7),0 0 20px rgba(155,0,255,.4);}
+to  {text-shadow:0 0 18px rgba(255,26,94,1),0 0 38px rgba(155,0,255,.7),0 0 55px rgba(255,26,94,.25);}
 }
 .ban-sub{
-font-size:clamp(8px,2vw,11px);
-letter-spacing:clamp(3px,2vw,8px);
-margin-top:8px;
-color:var(–accent3);
-text-shadow:0 0 10px var(–glow3),0 0 24px rgba(0,255,204,.3);
-animation:subtitlePulse 4s ease-in-out infinite alternate;
+font-size:clamp(9px,2.2vw,12px);letter-spacing:clamp(3px,2vw,6px);
+margin-top:8px;color:var(–accent3);
+text-shadow:0 0 10px rgba(0,229,204,.6);
+animation:subGlow 4s ease-in-out infinite alternate;
 }
-.ban-line{
-display:block;width:60%;max-width:400px;height:1px;margin:8px auto 0;
-background:linear-gradient(90deg,transparent,var(–accent),var(–accent2),var(–accent3),transparent);
-animation:lineShimmer 3s linear infinite;
-}
-@keyframes bannerFlicker{
-0%,96%,100%{opacity:1;}
-97%{opacity:.7;}
-98%{opacity:1;}
-99%{opacity:.5;}
-}
-@keyframes subtitlePulse{
-from{text-shadow:0 0 8px var(–glow3),0 0 20px rgba(0,255,204,.3);}
-to  {text-shadow:0 0 16px var(–cyan),0 0 32px rgba(0,255,204,.6),0 0 48px rgba(0,255,204,.2);}
-}
-@keyframes lineShimmer{
-0%{background-position:-400px 0;}
-100%{background-position:400px 0;}
+@keyframes subGlow{
+from{opacity:.7;text-shadow:0 0 8px rgba(0,229,204,.4);}
+to  {opacity:1;text-shadow:0 0 16px rgba(0,229,204,.9),0 0 30px rgba(0,229,204,.3);}
 }
 
 /* ── STATUS BAR ── */
 .statusbar{
-display:flex;justify-content:space-between;align-items:center;
+display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
 font-size:clamp(8px,1.8vw,10px);color:var(–label);
-margin-bottom:14px;padding:6px 10px;
-border:1px solid rgba(102,0,204,.3);border-radius:4px;
-background:rgba(6,0,16,.7);letter-spacing:1px;
+margin-bottom:14px;padding:5px 12px;
+border:1px solid rgba(85,0,187,.35);border-radius:6px;
+background:rgba(8,0,20,.6);letter-spacing:1px;
 }
 .sb-dot{
 display:inline-block;width:6px;height:6px;border-radius:50%;
-background:var(–green);box-shadow:0 0 6px var(–green);
-animation:dotBlink 2s ease-in-out infinite;margin-right:5px;
+background:var(–green);box-shadow:0 0 7px var(–green);
+animation:blink 2.2s ease-in-out infinite;margin-right:5px;vertical-align:middle;
 }
-@keyframes dotBlink{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
 
 /* ── MENU ── */
 .menu{
-background:var(–panel);
-border:1px solid var(–border);
-border-radius:4px;
-padding:clamp(16px,4vw,28px);
-margin-bottom:16px;
-box-shadow:
-0 0 0 1px rgba(255,0,85,.15),
-0 0 40px rgba(102,0,204,.4),
-0 0 80px rgba(255,0,85,.1),
-inset 0 0 40px rgba(102,0,204,.06);
-backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-position:relative;
+background:var(–panel);border:1.5px solid var(–border);border-radius:12px;
+padding:clamp(16px,4vw,26px);margin-bottom:14px;
+box-shadow:0 0 50px rgba(85,0,187,.35),inset 0 0 30px rgba(255,26,94,.04);
+backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 }
-/* Corner accents */
-.menu::before,.menu::after{
-content:’’;position:absolute;width:18px;height:18px;
-border-color:var(–accent);border-style:solid;
-}
-.menu::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
-.menu::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
-
 .menu-title{
-text-align:center;margin-bottom:20px;
-font-size:clamp(11px,2.8vw,16px);
-letter-spacing:clamp(4px,3vw,10px);
-color:var(–accent3);
-text-shadow:0 0 12px var(–glow3);
-position:relative;
+text-align:center;color:var(–accent);margin-bottom:20px;
+font-size:clamp(12px,3vw,17px);letter-spacing:clamp(3px,2.5vw,7px);
+text-shadow:0 0 14px var(–accent);
 }
-.menu-title::before,.menu-title::after{
-content:’//’;color:var(–accent);margin:0 12px;opacity:.6;
-}
-
-.menu-grid{display:grid;gap:8px;}
-@media(min-width:540px){.menu-grid{grid-template-columns:1fr 1fr;}}
-@media(min-width:880px){.menu-grid{grid-template-columns:repeat(3,1fr);}}
+.menu-grid{display:grid;gap:9px;}
+@media(min-width:550px){.menu-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:870px){.menu-grid{grid-template-columns:repeat(3,1fr);}}
 
 .mbtn{
-background:rgba(6,0,16,.8);
+background:linear-gradient(135deg,rgba(85,0,187,.14),rgba(255,26,94,.08));
 border:1px solid var(–border);
-color:var(–text);
-padding:clamp(12px,2.5vw,15px) clamp(12px,3vw,16px);
-cursor:pointer;border-radius:3px;
-font-family:‘Share Tech Mono’,‘Courier New’,monospace;
-font-size:clamp(11px,2.2vw,12.5px);
-transition:all .18s;text-align:left;
+padding:clamp(12px,2.8vw,15px) clamp(12px,3vw,17px);
+cursor:pointer;border-radius:8px;
+font-family:‘Courier New’,monospace;
+transition:all .2s;text-align:left;
 position:relative;overflow:hidden;
-min-height:var(–tap);
-display:flex;flex-direction:column;justify-content:center;
+min-height:var(–tap);display:flex;flex-direction:column;justify-content:center;
 -webkit-user-select:none;user-select:none;
-clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
 }
-.mbtn-num{
-font-size:10px;color:var(–accent);letter-spacing:2px;
-margin-bottom:3px;opacity:.8;
-}
-.mbtn-label{
-font-weight:bold;letter-spacing:1.5px;color:var(–accent3);
-font-size:clamp(11px,2.3vw,13px);
-}
-.mbtn-desc{font-size:clamp(9px,1.8vw,10px);color:var(–label);margin-top:2px;line-height:1.3;}
-/* Left accent bar */
+.mbtn-num{font-size:10px;color:var(–accent);letter-spacing:2px;margin-bottom:2px;opacity:.7;}
+.mbtn-label{font-size:clamp(12px,2.5vw,13.5px);font-weight:bold;color:var(–accent);letter-spacing:1px;}
+.mbtn-desc{font-size:clamp(9px,1.9vw,10.5px);color:var(–label);margin-top:3px;line-height:1.35;}
 .mbtn::before{
-content:’’;position:absolute;left:0;top:0;bottom:0;width:2px;
-background:linear-gradient(180deg,var(–accent),var(–accent2));
-opacity:.6;transition:opacity .18s;
+content:’’;position:absolute;top:0;left:-100%;width:100%;height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,26,94,.12),transparent);
+transition:left .35s;
 }
-/* Sweep effect */
-.mbtn::after{
-content:’’;position:absolute;top:0;left:-100%;width:60%;height:100%;
-background:linear-gradient(90deg,transparent,rgba(255,0,85,.08),transparent);
-transition:left .4s;
-}
-.mbtn:hover::after,.mbtn:active::after{left:150%;}
+.mbtn:hover::before,.mbtn:active::before{left:100%;}
 .mbtn:hover,.mbtn:active{
 border-color:var(–accent);
-background:rgba(255,0,85,.07);
-box-shadow:0 0 20px rgba(255,0,85,.25),inset 0 0 20px rgba(255,0,85,.05);
+background:linear-gradient(135deg,rgba(85,0,187,.28),rgba(255,26,94,.18));
+box-shadow:0 0 20px rgba(85,0,187,.45),0 0 32px rgba(255,26,94,.15);
+transform:translateY(-1px);
 }
-.mbtn:hover::before,.mbtn:active::before{opacity:1;}
 .mbtn-cyan{border-color:var(–accent3);}
-.mbtn-cyan .mbtn-label{color:var(–cyan);}
-.mbtn-cyan::before{background:linear-gradient(180deg,var(–cyan),var(–accent3));}
-.mbtn-cyan:hover{border-color:var(–cyan);background:rgba(0,255,204,.06);box-shadow:0 0 20px rgba(0,255,204,.2);}
+.mbtn-cyan .mbtn-label{color:var(–accent3);}
+.mbtn-cyan:hover{border-color:var(–cyan);box-shadow:0 0 18px rgba(0,229,204,.35);}
 
 /* ── PANELS ── */
 .panel{
-background:var(–panel);
-border:1px solid var(–border);
-border-radius:4px;
-padding:clamp(14px,4vw,24px);
-margin-top:14px;
+background:var(–panel);border:1.5px solid var(–border);border-radius:12px;
+padding:clamp(14px,4vw,22px);margin-top:14px;
 display:none;max-height:88vh;overflow-y:auto;overflow-x:hidden;
-box-shadow:
-0 0 0 1px rgba(255,0,85,.1),
-0 0 60px rgba(102,0,204,.5),
-inset 0 0 30px rgba(102,0,204,.04);
-backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+box-shadow:0 0 55px rgba(85,0,187,.45),inset 0 0 25px rgba(255,26,94,.04);
+backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 -webkit-overflow-scrolling:touch;
-scrollbar-width:thin;scrollbar-color:var(–accent) transparent;
-clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+scrollbar-width:thin;scrollbar-color:var(–accent2) transparent;
 }
 .panel::-webkit-scrollbar{width:4px;}
-.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(–accent),var(–accent2));border-radius:0;}
-.panel.active{display:block;animation:panelIn .25s cubic-bezier(.16,1,.3,1);}
-@keyframes panelIn{from{opacity:0;transform:translateY(-8px) scale(.99);}to{opacity:1;transform:translateY(0) scale(1);}}
+.panel::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(–accent2),var(–accent));border-radius:3px;}
+.panel.active{display:block;animation:panelIn .25s ease-out;}
+@keyframes panelIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 
 .ptitle{
-color:var(–accent3);text-align:center;margin-bottom:18px;
-font-size:clamp(12px,3vw,17px);
-border-bottom:1px solid rgba(102,0,204,.5);padding-bottom:12px;
-letter-spacing:clamp(3px,2.5vw,6px);
-text-shadow:0 0 14px var(–glow3);
-position:relative;
+text-align:center;margin-bottom:18px;
+font-size:clamp(13px,3vw,17px);letter-spacing:clamp(2px,2vw,5px);
+color:var(–accent);text-shadow:0 0 14px var(–accent);
+border-bottom:1px solid rgba(85,0,187,.4);padding-bottom:12px;
 }
-.ptitle::before{content:’[ ‘;color:var(–accent);opacity:.7;}
-.ptitle::after{content:’ ]’;color:var(–accent);opacity:.7;}
 
 /* ── INPUT ── */
-.ig{margin-bottom:14px;}
-.ig label{
-display:block;margin-bottom:6px;
-color:var(–accent3);font-size:clamp(9px,2vw,11px);
-letter-spacing:2px;opacity:.8;
-}
-.ig label::before{content:’> ’;color:var(–accent);opacity:.7;}
+.ig{margin-bottom:13px;}
+.ig label{display:block;margin-bottom:6px;color:var(–label);font-size:clamp(9.5px,2.1vw,11px);letter-spacing:1.5px;}
 .ig input,.ig select{
-width:100%;padding:clamp(11px,2.5vw,13px) clamp(12px,3vw,14px);
-background:rgba(2,0,8,.9);
-border:1px solid var(–border);
-color:var(–cyan);border-radius:2px;
-font-family:‘Share Tech Mono’,‘Courier New’,monospace;
-font-size:clamp(12px,2.8vw,14px);
-transition:all .18s;
--webkit-appearance:none;appearance:none;
-caret-color:var(–accent);
+width:100%;padding:clamp(11px,2.6vw,13px) clamp(12px,3vw,14px);
+background:rgba(4,0,12,.85);border:1.5px solid var(–border);
+color:var(–accent);border-radius:8px;
+font-family:‘Courier New’,monospace;font-size:clamp(12px,2.8vw,14px);
+transition:all .18s;-webkit-appearance:none;appearance:none;
 }
 .ig input:focus,.ig select:focus{
 outline:none;border-color:var(–accent);
-box-shadow:0 0 0 1px var(–accent),0 0 20px rgba(255,0,85,.3);
-color:var(–accent);
+box-shadow:0 0 18px rgba(85,0,187,.5),0 0 5px rgba(255,26,94,.2);
 }
-.ig input::placeholder{color:rgba(119,68,170,.5);}
+.ig input::placeholder{color:rgba(136,85,187,.45);}
 
 /* ── BUTTONS ── */
-.brow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:4px;}
+.brow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:4px;}
 .brun{
-background:linear-gradient(135deg,rgba(102,0,204,.4),rgba(255,0,85,.3));
-color:var(–accent);border:1px solid var(–accent);
-padding:clamp(11px,2.5vw,13px) clamp(20px,5vw,32px);
-border-radius:2px;cursor:pointer;
-font-family:‘Share Tech Mono’,‘Courier New’,monospace;
-font-size:clamp(11px,2.5vw,13px);font-weight:bold;
-letter-spacing:2px;transition:all .18s;
-box-shadow:0 0 16px rgba(255,0,85,.3),inset 0 0 16px rgba(255,0,85,.05);
+background:linear-gradient(135deg,#5500bb,#cc0044);
+color:#fff;border:none;
+padding:clamp(11px,2.6vw,13px) clamp(20px,5vw,30px);
+border-radius:8px;cursor:pointer;
+font-family:‘Courier New’,monospace;font-size:clamp(12px,2.6vw,14px);
+font-weight:bold;letter-spacing:1px;transition:all .2s;
+box-shadow:0 0 18px rgba(85,0,187,.45);
 min-height:var(–tap);-webkit-user-select:none;user-select:none;
-clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
-position:relative;overflow:hidden;
 }
-.brun::after{
-content:’’;position:absolute;inset:0;
-background:linear-gradient(90deg,transparent,rgba(255,0,85,.15),transparent);
-transform:translateX(-100%);transition:transform .4s;
-}
-.brun:hover::after,.brun:active::after{transform:translateX(100%);}
 .brun:hover,.brun:active{
-background:linear-gradient(135deg,rgba(255,0,85,.35),rgba(170,0,255,.3));
-box-shadow:0 0 30px rgba(255,0,85,.6),0 0 60px rgba(255,0,85,.2);
-color:#fff;
+transform:scale(1.03);
+box-shadow:0 0 28px rgba(85,0,187,.75),0 0 42px rgba(255,26,94,.4);
 }
 .bback{
-background:rgba(102,0,204,.12);color:var(–label);border:1px solid rgba(102,0,204,.4);
-padding:clamp(11px,2.5vw,13px) clamp(14px,3.5vw,20px);
-border-radius:2px;cursor:pointer;
-font-family:‘Share Tech Mono’,‘Courier New’,monospace;
-font-size:clamp(10px,2.2vw,12px);letter-spacing:1px;
-transition:all .18s;min-height:var(–tap);
--webkit-user-select:none;user-select:none;
+background:rgba(85,0,187,.18);color:var(–text);border:1px solid var(–border);
+padding:clamp(11px,2.6vw,13px) clamp(14px,3.5vw,20px);
+border-radius:8px;cursor:pointer;
+font-family:‘Courier New’,monospace;font-size:clamp(11px,2.4vw,13px);
+transition:all .2s;min-height:var(–tap);-webkit-user-select:none;user-select:none;
 }
-.bback:hover,.bback:active{
-background:rgba(102,0,204,.28);color:var(–text);
-border-color:var(–border);
-}
+.bback:hover,.bback:active{background:rgba(85,0,187,.35);}
 .bmini{
-background:rgba(255,0,85,.12);color:var(–accent);
-border:1px solid rgba(255,0,85,.4);
-padding:8px 16px;border-radius:2px;cursor:pointer;
-font-family:‘Share Tech Mono’,‘Courier New’,monospace;
-font-size:clamp(10px,2vw,11.5px);letter-spacing:1px;
-margin-top:10px;transition:all .18s;display:inline-block;min-height:38px;
+background:linear-gradient(135deg,#5500bb,#cc0044);color:#fff;border:none;
+padding:9px 16px;border-radius:6px;cursor:pointer;
+font-family:‘Courier New’,monospace;font-size:clamp(10px,2.2vw,12px);
+letter-spacing:.5px;margin-top:10px;transition:all .2s;
+display:inline-block;min-height:38px;
 }
-.bmini:hover,.bmini:active{
-background:rgba(255,0,85,.25);box-shadow:0 0 14px rgba(255,0,85,.4);
-}
+.bmini:hover,.bmini:active{transform:scale(1.03);box-shadow:0 0 15px rgba(255,26,94,.5);}
 
 /* ── LOADER ── */
-.loader{text-align:center;color:var(–accent);padding:20px;display:none;font-size:clamp(11px,2.3vw,13px);letter-spacing:2px;}
+.loader{text-align:center;color:var(–accent);padding:20px;display:none;font-size:clamp(11px,2.4vw,13px);letter-spacing:1px;}
 .loader.on{display:block;}
 .loader.on .ld-txt{animation:ldpulse 1s ease-in-out infinite;}
 @keyframes ldpulse{0%,100%{opacity:.4;}50%{opacity:1;}}
-.lbar{height:2px;background:rgba(102,0,204,.15);margin-top:10px;overflow:hidden;position:relative;}
-.lbar::before{content:’’;position:absolute;inset:0;background:rgba(255,0,85,.08);}
-.lbar-f{height:100%;background:linear-gradient(90deg,#6600cc,#ff0055,#00ffcc,#ff0055,#6600cc);background-size:200% 100%;animation:lbMove 1.5s linear infinite;}
-@keyframes lbMove{0%{background-position:0% 0;}100%{background-position:200% 0;}}
+.lbar{height:2px;background:rgba(85,0,187,.15);margin-top:10px;overflow:hidden;}
+.lbar-f{height:100%;background:linear-gradient(90deg,#5500bb,#ff1a5e,#00e5cc);background-size:200%;animation:lbFlow 1.6s linear infinite;}
+@keyframes lbFlow{0%{background-position:0%}100%{background-position:200%}}
 
 /* ── DATA WRAPPER ── */
 .dw{
-background:rgba(2,0,8,.7);
-padding:clamp(12px,3vw,18px);
-border-radius:3px;
-margin-top:14px;
-border:1px solid rgba(102,0,204,.2);
-border-left:2px solid var(–accent2);
-position:relative;
+background:rgba(4,0,10,.55);padding:clamp(12px,3vw,17px);
+border-radius:9px;margin-top:12px;
+border:1px solid rgba(85,0,187,.22);
 }
 
 /* ── SECTION HEADERS ── */
 .sec{
-color:var(–accent);
-font-size:clamp(9.5px,2.2vw,12px);
-margin:22px 0 8px;
-padding:5px 0 5px 10px;
+color:var(–accent);font-size:clamp(10px,2.3vw,12.5px);
+margin:20px 0 8px;padding:6px 10px;
+background:linear-gradient(90deg,rgba(255,26,94,.1),rgba(85,0,187,.06),transparent);
 border-left:3px solid var(–accent);
-background:linear-gradient(90deg,rgba(255,0,85,.08),transparent);
-letter-spacing:3px;
-text-shadow:0 0 8px var(–glow1);
-position:relative;
-}
-.sec::after{
-content:’’;position:absolute;bottom:0;left:0;right:0;height:1px;
-background:linear-gradient(90deg,var(–accent),transparent);
-opacity:.3;
+letter-spacing:2.5px;
+text-shadow:0 0 8px rgba(255,26,94,.6);
 }
 
 /* ── DATA ROWS ── */
 .row{
-padding:5px 0 5px 4px;
-border-bottom:1px solid rgba(102,0,204,.08);
+padding:5px 4px;
+border-bottom:1px solid rgba(85,0,187,.1);
 display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;
-transition:background .15s;
 }
-.row:hover{background:rgba(255,0,85,.03);}
 @media(min-width:500px){.lbl{min-width:200px;}}
-@media(max-width:499px){.lbl{width:100%;font-size:9.5px;opacity:.7;}}
-.lbl{color:var(–label);font-size:clamp(9px,2vw,11.5px);flex-shrink:0;letter-spacing:.5px;}
-.lbl::before{content:’’;display:inline-block;width:4px;height:4px;border-radius:50%;background:var(–accent2);margin-right:6px;opacity:.5;vertical-align:middle;}
-.val{color:var(–val);font-size:clamp(10px,2.2vw,12.5px);word-break:break-all;flex:1;}
-.val a{
-color:var(–accent3);text-decoration:none;
-border-bottom:1px solid rgba(0,255,204,.25);
-transition:all .15s;padding-bottom:1px;
-}
-.val a:hover{color:var(–cyan);border-color:var(–cyan);text-shadow:0 0 8px var(–glow3);}
+@media(max-width:499px){.lbl{width:100%;font-size:10px;opacity:.75;}}
+.lbl{color:var(–label);font-size:clamp(9.5px,2.1vw,12px);flex-shrink:0;letter-spacing:.3px;}
+.val{color:var(–val);font-size:clamp(10.5px,2.3vw,12.5px);word-break:break-all;flex:1;}
+.val a{color:var(–accent2);text-decoration:none;border-bottom:1px dashed rgba(155,0,255,.35);}
+.val a:hover{color:var(–cyan);border-color:var(–cyan);}
 
-/* ── STATS GRID ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px;margin:12px 0;}
+/* ── STAT BOXES ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px;margin:11px 0;}
 @media(max-width:380px){.stats{grid-template-columns:repeat(2,1fr);}}
 .stat{
-background:rgba(2,0,8,.8);
-padding:10px 8px;
-border-radius:2px;
-border:1px solid rgba(102,0,204,.2);
-border-top:2px solid var(–accent);
+background:rgba(4,0,10,.6);padding:10px 8px;border-radius:7px;
+border:1px solid rgba(85,0,187,.25);border-top:2px solid var(–accent);
 text-align:center;
-position:relative;overflow:hidden;
-transition:all .18s;
 }
-.stat::before{
-content:’’;position:absolute;inset:0;
-background:linear-gradient(135deg,rgba(255,0,85,.04),transparent);
-}
-.stat:hover{border-color:var(–accent);box-shadow:0 0 12px rgba(255,0,85,.2);}
-.slab{color:var(–label);font-size:clamp(7.5px,1.6vw,9px);margin-bottom:4px;letter-spacing:1.5px;text-transform:uppercase;}
-.sval{color:var(–accent);font-size:clamp(12px,2.8vw,15px);font-weight:bold;text-shadow:0 0 8px var(–glow1);}
+.slab{color:var(–label);font-size:clamp(8px,1.7vw,10px);margin-bottom:4px;letter-spacing:1.5px;}
+.sval{color:var(–accent);font-size:clamp(13px,2.9vw,16px);font-weight:bold;text-shadow:0 0 7px rgba(255,26,94,.5);}
 
 /* ── BADGES ── */
-.badge{
-display:inline-block;padding:1px 7px;border-radius:2px;
-font-size:9.5px;font-weight:bold;margin-left:4px;vertical-align:middle;
-letter-spacing:1px;
-}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:bold;margin-left:4px;vertical-align:middle;letter-spacing:.5px;}
 .bok  {background:rgba(0,255,136,.08);color:var(–green);border:1px solid rgba(0,255,136,.4);}
 .bwarn{background:rgba(255,204,0,.08);color:var(–yellow);border:1px solid rgba(255,204,0,.4);}
-.bbad {background:rgba(255,17,17,.1);color:var(–red);border:1px solid rgba(255,17,17,.5);}
-.binfo{background:rgba(0,255,204,.08);color:var(–cyan);border:1px solid rgba(0,255,204,.35);}
-
-/* ── OSINT LINK GRID ── */
-.osint-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-gap:6px;margin-top:8px;
-}
-@media(max-width:480px){.osint-grid{grid-template-columns:1fr;}}
-.osint-item{
-background:rgba(2,0,8,.85);
-border:1px solid rgba(102,0,204,.25);
-border-left:2px solid var(–accent2);
-border-radius:2px;
-padding:8px 10px;
-display:flex;flex-direction:column;gap:2px;
-transition:all .15s;
-position:relative;overflow:hidden;
-}
-.osint-item::after{
-content:’’;position:absolute;top:0;right:0;width:0;height:0;
-border-style:solid;border-width:0 8px 8px 0;
-border-color:transparent rgba(255,0,85,.3) transparent transparent;
-}
-.osint-item:hover{
-border-color:var(–accent);
-background:rgba(255,0,85,.06);
-box-shadow:0 0 12px rgba(255,0,85,.15);
-}
-.osint-name{color:var(–accent3);font-size:10px;letter-spacing:1px;}
-.osint-link a{color:var(–label);font-size:9.5px;text-decoration:none;transition:color .15s;}
-.osint-item:hover .osint-link a{color:var(–cyan);}
-.osint-cat{
-color:var(–accent);font-size:10px;letter-spacing:3px;
-margin:16px 0 6px;padding:4px 8px;
-background:rgba(255,0,85,.06);
-border-left:2px solid var(–accent);
-text-shadow:0 0 6px var(–glow1);
-}
+.bbad {background:rgba(255,34,34,.1);color:var(–red);border:1px solid rgba(255,34,34,.5);}
+.binfo{background:rgba(0,229,204,.08);color:var(–cyan);border:1px solid rgba(0,229,204,.35);}
 
 /* ── PLATFORM GRID ── */
-.platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px;margin-top:6px;}
+.platgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;margin-top:7px;}
 @media(max-width:440px){.platgrid{grid-template-columns:1fr 1fr;}}
 .plat{
-background:rgba(2,0,8,.8);border:1px solid rgba(102,0,204,.2);
-border-radius:2px;padding:7px 10px;
-display:flex;align-items:center;gap:8px;
-transition:all .15s;cursor:pointer;
+background:rgba(4,0,10,.6);border:1px solid rgba(85,0,187,.22);
+border-radius:6px;padding:7px 10px;display:flex;align-items:center;gap:8px;transition:all .16s;
 }
-.plat:hover,.plat:active{border-color:var(–accent3);background:rgba(0,255,204,.04);}
-.pname{color:var(–label);min-width:90px;font-size:clamp(9px,2vw,11px);}
-.plink a{color:rgba(102,0,204,.8);font-size:clamp(8.5px,1.8vw,10.5px);text-decoration:none;}
+.plat:hover,.plat:active{border-color:var(–accent);background:rgba(255,26,94,.05);}
+.pname{color:var(–label);min-width:90px;font-size:clamp(9.5px,2.1vw,11px);}
+.plink a{color:var(–accent2);font-size:clamp(9px,1.9vw,11px);text-decoration:none;}
 .plat:hover .plink a{color:var(–cyan);}
 
 /* ── ALERTS ── */
-.aw,.ai,.ae,.ag{
-padding:10px 14px;border-radius:2px;margin-top:10px;
-font-size:clamp(9.5px,2vw,11.5px);letter-spacing:.5px;
-position:relative;padding-left:22px;
-}
-.aw::before,.ai::before,.ae::before,.ag::before{
-content:’!’;position:absolute;left:8px;top:10px;font-weight:bold;
-}
-.aw{color:var(–yellow);background:rgba(255,204,0,.06);border:1px solid rgba(255,204,0,.35);}
-.aw::before{color:var(–yellow);}
-.ai{color:var(–cyan);background:rgba(0,255,204,.06);border:1px solid rgba(0,255,204,.3);}
-.ai::before{content:‘i’;color:var(–cyan);}
-.ae{color:var(–red);background:rgba(255,17,17,.08);border:1px solid rgba(255,17,17,.4);}
-.ag{color:var(–green);background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.3);}
-.ag::before{content:‘OK’;color:var(–green);font-size:8px;top:11px;}
+.aw{color:var(–yellow);padding:10px 14px;background:rgba(255,204,0,.06);border:1px solid rgba(255,204,0,.4);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
+.ai{color:var(–cyan);padding:10px 14px;background:rgba(0,229,204,.06);border:1px solid rgba(0,229,204,.35);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
+.ae{color:var(–red);padding:10px 14px;background:rgba(255,34,34,.09);border:1px solid rgba(255,34,34,.45);border-radius:7px;margin-top:10px;}
+.ag{color:var(–green);padding:10px 14px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.35);border-radius:7px;margin-top:10px;font-size:clamp(9.5px,2.1vw,12px);}
 
 /* ── MAP ── */
-.map-frame{width:100%;height:clamp(150px,30vw,200px);border:1px solid var(–border);border-radius:2px;margin-top:10px;filter:hue-rotate(180deg) saturate(0.7) brightness(0.85);}
+.map-frame{width:100%;height:clamp(150px,32vw,210px);border:1px solid var(–border);border-radius:7px;margin-top:10px;}
 
 /* ── AVATAR ── */
-.ava{width:clamp(58px,14vw,84px);height:clamp(58px,14vw,84px);border-radius:2px;border:1px solid var(–accent2);display:block;margin:8px 0;box-shadow:0 0 20px rgba(170,0,255,.5),0 0 1px var(–accent2);}
+.ava{width:clamp(58px,14vw,84px);height:clamp(58px,14vw,84px);border-radius:8px;border:2px solid var(–accent2);display:block;margin:8px 0;box-shadow:0 0 18px rgba(155,0,255,.5);}
 
 /* ── FOOTER ── */
 .footer{
-margin-top:28px;padding:clamp(12px,3vw,16px);
-background:rgba(2,0,8,.8);
-border:1px solid rgba(255,0,85,.15);border-radius:2px;
-text-align:center;font-size:clamp(9px,1.8vw,10.5px);
-color:rgba(255,255,255,.28);line-height:1.8;
-border-top:2px solid rgba(255,0,85,.3);
+margin-top:26px;padding:clamp(13px,3.5vw,17px);
+background:rgba(255,26,94,.04);border:1px solid rgba(255,26,94,.18);border-radius:10px;
+text-align:center;font-size:clamp(9px,1.9vw,11px);color:rgba(255,255,255,.35);line-height:1.75;
 }
 .footer strong{color:var(–accent);}
-.ftitle{color:var(–accent);font-size:clamp(9px,2vw,11px);font-weight:bold;margin-bottom:7px;letter-spacing:4px;}
+.ftitle{color:var(–accent);font-size:clamp(9.5px,2vw,11.5px);font-weight:bold;margin-bottom:6px;letter-spacing:3px;}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(–accent2);border-radius:0;}
+/* ── THREAT CARD ── */
+.threat-box{
+background:rgba(4,0,10,.7);border-radius:8px;
+border:1px solid rgba(85,0,187,.25);
+padding:10px 12px;margin:4px 0;
+display:flex;align-items:center;justify-content:space-between;
+flex-wrap:wrap;gap:6px;transition:border-color .16s;
+}
+.threat-box:hover{border-color:var(–accent);}
+.threat-name{color:var(–label);font-size:clamp(9.5px,2.1vw,12px);flex:1;min-width:120px;}
+.threat-val{color:var(–cyan);font-size:clamp(10px,2.2vw,12.5px);text-align:right;flex-shrink:0;}
+.threat-val a{color:var(–accent2);text-decoration:none;border-bottom:1px dashed rgba(155,0,255,.35);}
+.threat-val a:hover{color:var(–cyan);}
 
 @media(max-width:600px){body{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));}}
 </style>
@@ -504,8 +313,7 @@ border-top:2px solid rgba(255,0,85,.3);
   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
 /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  </span>
-<span class="ban-sub">M A X I M U M  I N T E L  v 9 . 0</span>
-<span class="ban-line"></span>
+<span class="ban-sub">M A X I M U M  I N T E L  v 1 0 . 0</span>
 </div>
 
 <div class="statusbar">
@@ -521,47 +329,47 @@ border-top:2px solid rgba(255,0,85,.3);
   <div class="menu-grid">
     <button class="mbtn" onclick="show('ip')">
       <span class="mbtn-num">// 01</span>
-      <span class="mbtn-label">IP TRACKER</span>
-      <span class="mbtn-desc">Geo + ASN + Threat Intel + 14 OSINT Tools</span>
+      <span class="mbtn-label">[ IP TRACKER ]</span>
+      <span class="mbtn-desc">Geo + ASN + Live Threat Intel + 15 OSINT</span>
     </button>
     <button class="mbtn" onclick="show('myip')">
       <span class="mbtn-num">// 02</span>
-      <span class="mbtn-label">MEINE IP</span>
+      <span class="mbtn-label">[ MEINE IP ]</span>
       <span class="mbtn-desc">Browser + Canvas FP + WebGL + Netzwerk</span>
     </button>
     <button class="mbtn" onclick="show('username')">
       <span class="mbtn-num">// 03</span>
-      <span class="mbtn-label">USERNAME</span>
+      <span class="mbtn-label">[ USERNAME ]</span>
       <span class="mbtn-desc">GitHub Live + 100+ Plattformen + Dorks</span>
     </button>
     <button class="mbtn" onclick="show('phone')">
       <span class="mbtn-num">// 04</span>
-      <span class="mbtn-label">TELEFON</span>
+      <span class="mbtn-label">[ TELEFON ]</span>
       <span class="mbtn-desc">Carrier + Prefix + 16 Reverse Tools</span>
     </button>
     <button class="mbtn" onclick="show('email')">
       <span class="mbtn-num">// 05</span>
-      <span class="mbtn-label">E-MAIL</span>
+      <span class="mbtn-label">[ E-MAIL ]</span>
       <span class="mbtn-desc">DNS + MX + SPF/DMARC + Breach + Dorks</span>
     </button>
     <button class="mbtn" onclick="show('discord')">
       <span class="mbtn-num">// 06</span>
-      <span class="mbtn-label">DISCORD</span>
+      <span class="mbtn-label">[ DISCORD ]</span>
       <span class="mbtn-desc">Snowflake + Badges + Lanyard Live</span>
     </button>
     <button class="mbtn" onclick="show('domain')">
       <span class="mbtn-num">// 07</span>
-      <span class="mbtn-label">DOMAIN</span>
-      <span class="mbtn-desc">DNS + SSL + FOFA + 20 Recon Tools</span>
+      <span class="mbtn-label">[ DOMAIN ]</span>
+      <span class="mbtn-desc">DNS + SSL + 20 Recon Tools + Dorks</span>
     </button>
     <button class="mbtn mbtn-cyan" onclick="show('plate')">
       <span class="mbtn-num">// 08</span>
-      <span class="mbtn-label">LICENSE PLATE</span>
+      <span class="mbtn-label">[ LICENSE PLATE ]</span>
       <span class="mbtn-desc">KFZ + Region + Geo + TUeV + OSINT</span>
     </button>
     <button class="mbtn" onclick="show('mac')">
       <span class="mbtn-num">// 09</span>
-      <span class="mbtn-label">MAC / NETZWERK</span>
+      <span class="mbtn-label">[ MAC / NETZWERK ]</span>
       <span class="mbtn-desc">OUI + Hersteller + Host + Shodan</span>
     </button>
   </div>
@@ -927,169 +735,221 @@ async function trackIP(pre){
   if(!ip){$('ipR').innerHTML='<div class="ae">Bitte IP eingeben!</div>';return;}
   if(pre)$('ipInput').value=pre;
   ld('ipL',true);$('ipR').innerHTML='';
+  $('ipL').querySelector('.ld-txt').textContent='Analysiere IP + Live Threat Intel...';
 
-  // GUTE APIs: ipwho.is (zuverlaessig, kein Limit), ip-api.com (beste Threat-Daten, HTTPS via proxy), freeipapi.com (backup)
-  // ENTFERNT: ipapi.co (agressives Rate-Limit), geojs.io (kaum Daten), iplocation.net (unzuverlaessig)
-  const[r1,r2,r3]=await Promise.allSettled([
-    sf(`https://ipwho.is/${ip}`),
-    sf(`https://freeipapi.com/api/json/${ip}`),
-    sf(`https://ipapi.co/${ip}/json/`)  // als dritter Fallback, wenige Felder genutzt
+  // ── PHASE 1: Basis-Geo parallel ──
+  const[r1,r2]=await Promise.allSettled([
+    sf('https://ipwho.is/'+ip),
+    sf('https://freeipapi.com/api/json/'+ip)
   ]);
-  const d1=r1.value,d2=r2.value,d3=r3.value;
-
+  const d1=r1.value,d2=r2.value;
   if(d1?.success===false&&!d2?.ipVersion){
-    ld('ipL',false);$('ipR').innerHTML='<div class="ae">Ungueltige oder nicht oeffentliche IP-Adresse!</div>';return;
+    ld('ipL',false);
+    $('ipR').innerHTML='<div class="ae">Ungueltige oder private IP. Oeffentliche IPv4/IPv6 eingeben.</div>';
+    return;
   }
-
   const lat=parseFloat(d1?.latitude||d2?.latitude||0);
   const lon=parseFloat(d1?.longitude||d2?.longitude||0);
   const isV6=ip.includes(':');
   const isPrivIP=isPrivate(ip);
 
-  // Reverse Geocoding + ASN parallel - nur wenn echte Koordinaten
-  let osm=null,rdap=null,spamRes=null,ptrRes=null;
-  const revIP=!isV6&&!isPrivIP?ip.split('.').reverse().join('.'):null;
+  // ── PHASE 2: OSM Reverse Geocoding + DNS parallel ──
+  $('ipL').querySelector('.ld-txt').textContent='Geocoding + DNS Lookup...';
+  const revIP=(!isV6&&!isPrivIP)?ip.split('.').reverse().join('.'):null;
+  let osm=null,spamHits=[],ptrRecord='N/A';
 
-  await Promise.allSettled([
-    lat&&lon&&!isV6?(async()=>{
-      osm=await sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16&addressdetails=1`,{headers:{'User-Agent':'StarTrack/8.0'}});
-    })():Promise.resolve(),
-    revIP?(async()=>{
-      spamRes=await sf(`https://dns.google/resolve?name=${revIP}.zen.spamhaus.org&type=A`);
-      ptrRes=await sf(`https://dns.google/resolve?name=${revIP}.in-addr.arpa&type=PTR`);
-    })():Promise.resolve(),
-  ]);
+  const phase2=[];
+  if(lat&&lon&&!isV6&&!isPrivIP)
+    phase2.push(sf('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=16&addressdetails=1',{headers:{'User-Agent':'StarTrack/10'}}).then(r=>{osm=r;}));
+  if(revIP){
+    // Spamhaus ZEN + CBL + SBL + XBL
+    const lists=['zen.spamhaus.org','cbl.abuseat.org','b.barracudacentral.org','dnsbl.sorbs.net'];
+    lists.forEach(l=>phase2.push(
+      sf('https://dns.google/resolve?name='+revIP+'.'+l+'&type=A')
+        .then(r=>{if(r?.Answer?.length)spamHits.push(l);})
+    ));
+    phase2.push(sf('https://dns.google/resolve?name='+revIP+'.in-addr.arpa&type=PTR').then(r=>{
+      if(r?.Answer?.[0])ptrRecord=r.Answer[0].data;
+    }));
+  }
+  await Promise.allSettled(phase2);
 
-  const onSpam=spamRes?.Answer?.length>0;
-  const ptrRecord=ptrRes?.Answer?.[0]?.data||d1?.connection?.domain||'N/A';
-  const isHosting=d1?.connection?.type==='hosting'||false;
-  const isMobile=d1?.connection?.type==='cellular'||false;
+  // ── PHASE 3: ThreatFox + URLhaus live ──
+  $('ipL').querySelector('.ld-txt').textContent='Threat Intelligence APIs...';
+  let threatfoxHits=0,urlhausActive=false,abuseScore=null;
+  const phase3=[];
+
+  // ThreatFox API (abuse.ch) - kostenlos, kein Key
+  phase3.push(
+    fetch('https://threatfox-api.abuse.ch/api/v1/',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({query:'search_ioc',search_term:ip})
+    }).then(r=>r.json()).then(d=>{
+      if(d?.query_status==='ok'&&d?.data?.length)threatfoxHits=d.data.length;
+    }).catch(()=>{})
+  );
+  // URLhaus API - kostenlos
+  phase3.push(
+    fetch('https://urlhaus-api.abuse.ch/v1/host/',{
+      method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'host='+encodeURIComponent(ip)
+    }).then(r=>r.json()).then(d=>{
+      if(d?.query_status==='is_host')urlhausActive=d.urls_count>0;
+    }).catch(()=>{})
+  );
+  await Promise.allSettled(phase3);
 
   ld('ipL',false);
 
+  // ── Auswertung ──
   const isp=d1?.connection?.isp||d2?.ipRegistryName||'N/A';
   const org=d1?.connection?.org||'N/A';
-  const asn=d1?.connection?.asn||d2?.ipRegistryName||'N/A';
+  const asn=d1?.connection?.asn||'';
   const country=d1?.country||d2?.countryName||'N/A';
-  const countryCode=d1?.country_code||d2?.countryCode||'N/A';
+  const cc=d1?.country_code||d2?.countryCode||'N/A';
   const city=d1?.city||d2?.cityName||'N/A';
   const region=d1?.region||d2?.regionName||'N/A';
   const postal=d1?.postal||d2?.zipCode||'N/A';
   const tz=d1?.timezone?.id||d2?.timeZone||'N/A';
+  const isHosting=d1?.connection?.type==='hosting';
+  const isMobile=d1?.connection?.type==='cellular';
+  const onSpam=spamHits.length>0;
+  const isThreat=threatfoxHits>0||urlhausActive||onSpam;
 
-  // IP-Klasse bestimmen
-  const oct=parseInt(ip.split('.')[0]);
-  const ipClass=oct<128?'A (0-127)':oct<192?'B (128-191)':oct<224?'C (192-223)':oct<240?'D/Multicast (224-239)':'E/Reserved (240-255)';
+  // IP-Klasse
+  const oct=parseInt(ip.split('.')[0])||0;
+  const ipClass=isV6?'IPv6':oct<128?'Klasse A':oct<192?'Klasse B':oct<224?'Klasse C':oct<240?'Klasse D (Multicast)':'Klasse E (Reserved)';
 
+  // ── Threat-Score berechnen ──
+  let score=0;
+  if(onSpam)score+=3;if(threatfoxHits>0)score+=3;if(urlhausActive)score+=2;
+  if(isHosting)score+=1;
+  const scoreLabel=score===0?'<span class="badge bok">SAUBER</span>':score<=2?'<span class="badge bwarn">VERDAECHTIG</span>':'<span class="badge bbad">BEDROHLICH</span>';
+
+  // ── HTML aufbauen ──
   let html=stats(
-    ['Version',isV6?'IPv6':'('+'IPv4'+')'],
-    ['Land',countryCode],
-    ['ISP',isp.substring(0,14)],
-    ['Spamhaus',onSpam?'LISTED':'Clean'],
-    ['Hosting',isHosting?'Ja':'Nein'],
-    ['Koordinaten',lat?lat.toFixed(2)+','+lon.toFixed(2):'N/A']
+    ['Version',isV6?'IPv6':'IPv4'],
+    ['Land',cc],
+    ['Stadt',city.substring(0,10)||'N/A'],
+    ['ISP',isp.substring(0,12)||'N/A'],
+    ['Blacklists',spamHits.length+'/4'],
+    ['Threat Score',score+'/9']
   );
   html+='<div class="dw">';
 
-  html+=sec('BASIS');
-  html+=row('IP-Adresse',`<strong>${ip}</strong>`+(isPrivIP?' <span class="badge binfo">PRIVAT</span>':isHosting?' <span class="badge bwarn">HOSTING/DC</span>':' <span class="badge bok">RESIDENTIAL</span>'));
-  html+=row('IP-Version',isV6?'IPv6 (128-bit, 8 Hextets)':'IPv4 (32-bit, 4 Oktette)');
-  html+=row('IP-Klasse',isV6?'N/A (IPv6)':ipClass);
-  html+=row('Privat / Oeffentlich',isPrivIP?'<span class="badge binfo">Privates Netz (LAN/Loopback)</span>':'Oeffentlich routbar');
+  // THREAT SCORE CARD
+  html+=sec('LIVE THREAT ANALYSE');
+  html+=`<div style="background:rgba(4,0,10,.8);border:1px solid ${isThreat?'rgba(255,34,34,.5)':'rgba(0,255,136,.35)'};border-radius:8px;padding:12px 14px;margin:6px 0">`;
+  html+=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">`;
+  html+=`<div style="font-size:clamp(22px,5vw,32px);font-weight:bold;color:${score===0?'var(--green)':score<=2?'var(--yellow)':'var(--red)'};">${score}<span style="font-size:12px;color:var(--label)">/9</span></div>`;
+  html+=`<div><div style="color:var(--text);font-size:13px;letter-spacing:1px">THREAT SCORE ${scoreLabel}</div>`;
+  html+=`<div style="color:var(--label);font-size:10px;margin-top:3px">${isThreat?'Bedrohungen gefunden — Details unten':'Keine bekannten Bedrohungen'}</div></div></div></div>`;
+
+  html+=row('Spamhaus ZEN',onSpam?`<span class="badge bbad">GELISTET</span>`:'<span class="badge bok">Sauber</span>');
+  if(spamHits.length>0)spamHits.forEach(l=>html+=row('  Blacklist',`<span class="badge bbad">${l}</span>`));
+  html+=row('ThreatFox IOCs',threatfoxHits>0?`<span class="badge bbad">${threatfoxHits} IOC(s) gefunden</span>`:'<span class="badge bok">Keine IOCs</span>');
+  html+=row('URLhaus Malware',urlhausActive?'<span class="badge bbad">Aktive Malware-URLs</span>':'<span class="badge bok">Keine aktiven URLs</span>');
+  html+=row('Hosting / DC',isHosting?'<span class="badge bwarn">Ja</span>':'Nein');
+  html+=row('Mobilfunk',isMobile?'<span class="badge binfo">Ja</span>':'Nein');
   html+=row('PTR / rDNS',ptrRecord);
-  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET (Spam/Malware)</span>':'<span class="badge bok">Sauber</span>');
+  html+=row('Spamhaus ZEN (DNS)',spamHits.includes('zen.spamhaus.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+  html+=row('CBL Botnet',spamHits.includes('cbl.abuseat.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+  html+=row('Barracuda BRBL',spamHits.includes('b.barracudacentral.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+  html+=row('SORBS DNSBL',spamHits.includes('dnsbl.sorbs.net')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+
+  html+=sec('BASIS');
+  html+=row('IP-Adresse',`<strong style="color:var(--cyan)">${ip}</strong>`+(isPrivIP?' <span class="badge binfo">PRIVAT</span>':isHosting?' <span class="badge bwarn">HOSTING</span>':' <span class="badge bok">RESIDENTIAL</span>'));
+  html+=row('Version / Klasse',`${isV6?'IPv6 (128-bit)':'IPv4 (32-bit)'} &mdash; ${ipClass}`);
+  html+=row('Privat / Oeffentlich',isPrivIP?'<span class="badge binfo">Privates Netz</span>':'Oeffentlich routbar');
+  html+=row('PTR / rDNS',ptrRecord);
+  html+=row('Verbindungstyp',d1?.connection?.type||'N/A');
 
   html+=sec('STANDORT');
-  html+=row('Land',`${country} (${countryCode})`);
+  html+=row('Land',`${country} (${cc})`);
   html+=row('Kontinent',d1?.continent||'N/A');
-  html+=row('Region / Bundesstaat',region);
+  html+=row('Region',region);
   html+=row('Stadt',city);
-  html+=row('PLZ / Postleitzahl',postal);
+  html+=row('PLZ',postal);
   html+=row('EU-Mitglied',d1?.is_eu?'Ja':'Nein');
   html+=row('Hauptstadt',d1?.capital||'N/A');
   html+=row('Vorwahl',d1?.calling_code?`+${d1.calling_code}`:'N/A');
   html+=row('Waehrung',d1?.currency?.name?`${d1.currency.name} (${d1.currency.code})`:'N/A');
+  html+=row('Zeitzone',tz);
+  html+=row('Aktuelle Zeit',d1?.timezone?.current_time||'N/A');
+  html+=row('UTC Offset',d1?.timezone?.offset||'N/A');
+  html+=row('Sommerzeit',d1?.timezone?.is_dst?'Aktiv':'Inaktiv');
+  html+=row('Tageszeit',sunStatus(lat,lon));
 
   if(osm?.address){
     const a=osm.address;
     const full=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village||a.municipality),a.state,a.country].filter(Boolean).join(', ');
-    html+=sec('REVERSE GEOCODING (OpenStreetMap)');
+    html+=sec('REVERSE GEOCODING (OpenStreetMap Live)');
     if(full)html+=row('Naechste Adresse',`<strong>${full}</strong>`);
-    html+=row('Strasse / Weg',a.road||a.pedestrian||a.path||a.residential||'N/A');
-    html+=row('Stadtteil',a.suburb||a.neighbourhood||a.quarter||'N/A');
+    if(a.road||a.pedestrian)html+=row('Strasse',a.road||a.pedestrian);
+    if(a.suburb||a.neighbourhood)html+=row('Stadtteil',a.suburb||a.neighbourhood);
     html+=row('Gemeinde',a.municipality||a.village||a.town||'N/A');
     html+=row('Stadt',a.city||a.town||a.village||'N/A');
-    html+=row('Landkreis',a.county||a.state_district||'N/A');
+    if(a.county)html+=row('Landkreis',a.county);
     html+=row('PLZ',a.postcode||'N/A');
-    html+=row('Bundesland / Region',a.state||'N/A');
+    html+=row('Bundesland',a.state||'N/A');
     html+=row('Land',a.country||'N/A');
-    html+=row('OSM ID',osm.osm_id||'N/A');
-    html+=row('OSM Typ',osm.type||osm.class||'N/A');
   }
 
   html+=sec('GPS & KARTEN');
-  html+=row('Koordinaten (Dezimal)',lat&&lon?`${lat}, ${lon}`:'N/A');
-  html+=row('Koordinaten (DMS)',lat&&lon?dms(lat,lon):'N/A');
-  html+=row('Tageszeit am Standort',sunStatus(lat,lon));
-  html+=row('Zeitzone',tz);
-  html+=row('Aktuelle Zeit dort',d1?.timezone?.current_time||'N/A');
-  html+=row('UTC-Offset',d1?.timezone?.offset||'N/A');
-  html+=row('Sommerzeit aktiv',d1?.timezone?.is_dst?'Ja':'Nein');
+  html+=row('Koordinaten',lat&&lon?`${lat.toFixed(5)}, ${lon.toFixed(5)}`:'N/A');
+  html+=row('DMS',lat&&lon?dms(lat,lon):'N/A');
   if(lat&&lon){
-    html+=row('Google Maps',lnk('Marker setzen',`https://www.google.com/maps/place/${lat},${lon}`));
-    html+=row('Google Street View',lnk('Strassenpanorama',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0`));
-    html+=row('Google Earth 3D',lnk('Satellitenansicht',`https://earth.google.com/web/@${lat},${lon},0a,1200d,35y`));
-    html+=row('OpenStreetMap',lnk('OSM Karte',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`));
-    html+=row('Bing Luftbild',lnk('Bing Aerial',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=15&style=a`));
-    html+=row('Wikimapia',lnk('Ortsinfos',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=14`));
-    html+=row('Mapillary (Strassenfoto)',lnk('Strassenfotos',`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=14`));
+    html+=row('Google Maps',lnk('Karte + Marker',`https://www.google.com/maps/place/${lat},${lon}`));
+    html+=row('Google Street View',lnk('Strassenpanorama',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}`));
+    html+=row('Google Earth',lnk('3D Satellit',`https://earth.google.com/web/@${lat},${lon},0a,1200d,35y`));
+    html+=row('OpenStreetMap',lnk('OSM',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`));
+    html+=row('Bing Luftbild',lnk('Aerial View',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=15&style=a`));
+    html+=row('Mapillary',lnk('Strassenfotos crowdsourced',`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=14`));
+    html+=row('Wikimapia',lnk('Ortsinfos von Community',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=14`));
     html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.008},${lat-.006},${lon+.008},${lat+.006}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
   }
 
   html+=sec('NETZWERK & ASN');
-  html+=row('ISP / Provider',isp);
+  html+=row('ISP',isp);
   html+=row('Organisation',org);
   html+=row('AS-Nummer',asn?`AS${asn}`:'N/A');
-  html+=row('Netzwerk CIDR',d3?.network||'N/A');
-  html+=row('Verbindungstyp',d1?.connection?.type||'N/A');
+  html+=row('CIDR',d1?.connection?.cidr||d2?.ipVersion===4?ip.replace(/\.\d+$/,'.0/24'):'N/A');
   html+=row('Domain',d1?.connection?.domain||'N/A');
-  // BGP/ASN Deep-Dive
-  html+=row('BGP-Routenanalyse',lnk('Hurricane Electric BGP',`https://bgp.he.net/ip/${ip}`));
-  html+=row('ASN Details',asn?lnk(`AS${asn} bei RIPEstat`,`https://stat.ripe.net/widget/routing-status#w.resource=AS${asn}`):'N/A');
-  html+=row('RIPE NCC Datenbank',lnk('RIPE Whois',`https://apps.db.ripe.net/db-web-ui/query?searchtext=${ip}`));
-  html+=row('ARIN RDAP',lnk('Registrierungsinfos',`https://search.arin.net/rdap/?query=${ip}`));
-  html+=row('APNIC Lookup',lnk('APNIC Whois',`https://wq.apnic.net/query?searchtext=${ip}`));
-  html+=row('Robtex Netzgraph',lnk('Routing + DNS',`https://www.robtex.com/ip-lookup/${ip}`));
-  html+=row('PeeringDB',asn?lnk('Peering-Infos',`https://www.peeringdb.com/asn/${asn}`):'N/A');
+  html+=row('RIPE Whois',lnk('Netzwerkregistrierung',`https://apps.db.ripe.net/db-web-ui/query?searchtext=${ip}`));
+  html+=row('ARIN RDAP',lnk('Registrar + Kontakt',`https://search.arin.net/rdap/?query=${ip}`));
+  html+=row('Hurricane Electric BGP',lnk('BGP Routen + Peering',`https://bgp.he.net/ip/${ip}`));
+  html+=row('RIPEstat',asn?lnk(`AS${asn} Routing`,`https://stat.ripe.net/widget/routing-status#w.resource=AS${asn}`):'N/A');
+  html+=row('Robtex',lnk('DNS + Routing Graph',`https://www.robtex.com/ip-lookup/${ip}`));
+  html+=row('PeeringDB',asn?lnk('Peering Infos',`https://www.peeringdb.com/asn/${asn}`):'N/A');
+  html+=row('APNIC Whois',lnk('APNIC Datenbank',`https://wq.apnic.net/query?searchtext=${ip}`));
 
-  html+=sec('BEDROHUNGSANALYSE');
-  html+=row('Spamhaus ZEN',onSpam?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
-  html+=row('Hosting / Rechenzentrum',isHosting?'<span class="badge bwarn">Ja (DC/Cloud)</span>':'Nein');
-  html+=row('Mobilfunk-IP',isMobile?'<span class="badge binfo">Ja</span>':'Nein');
-  // Top-Tier Threat Intelligence
+  html+=sec('THREAT INTELLIGENCE TOOLS');
   html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/host/${ip}`));
-  html+=row('Censys',lnk('Full-Text Scan + Zertifikate',`https://search.censys.io/hosts/${ip}`));
-  html+=row('GreyNoise',lnk('Internet-Scanning Aktivitaet',`https://viz.greynoise.io/ip/${ip}`));
-  html+=row('AbuseIPDB',lnk('Missbrauchsmeldungen + Score',`https://www.abuseipdb.com/check/${ip}`));
-  html+=row('VirusTotal',lnk('Multi-AV Reputation',`https://www.virustotal.com/gui/ip-address/${ip}`));
+  html+=row('Censys',lnk('TLS + Services + Zertifikate',`https://search.censys.io/hosts/${ip}`));
+  html+=row('GreyNoise',lnk('Internet Scanner Aktivitaet',`https://viz.greynoise.io/ip/${ip}`));
+  html+=row('AbuseIPDB',lnk('Community Abuse Reports',`https://www.abuseipdb.com/check/${ip}`));
+  html+=row('VirusTotal',lnk('70+ AV Scanner + Community',`https://www.virustotal.com/gui/ip-address/${ip}`));
   html+=row('ThreatFox (Abuse.ch)',lnk('Malware IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
-  html+=row('MalwareBazaar',lnk('Malware-Samples von IP',`https://bazaar.abuse.ch/browse.php?search=tag%3A${ip}`));
-  html+=row('URLhaus',lnk('Malware-URLs von IP',`https://urlhaus.abuse.ch/browse.php?search=${ip}`));
-  html+=row('CIRCL Passive DNS',lnk('Passive DNS Historie',`https://www.circl.lu/services/passive-dns/#${ip}`));
-  html+=row('Pulsedive',lnk('Threat Intelligence Feed',`https://pulsedive.com/indicator/?ioc=${ip}`));
-  html+=row('AlienVault OTX',lnk('Open Threat Exchange',`https://otx.alienvault.com/indicator/ip/${ip}`));
-  html+=row('IBM X-Force Exchange',lnk('X-Force Reputation',`https://exchange.xforce.ibmcloud.com/ip/${ip}`));
-  html+=row('Spamhaus Check',lnk('Spamhaus Lookup',`https://check.spamhaus.org/listed/?searchterm=${ip}`));
-  html+=row('MXToolbox Blacklist',lnk('25+ Blacklists pruefen',`https://mxtoolbox.com/blacklists.aspx`));
-  html+=row('IPQualityScore',lnk('Fraud + Proxy Detection',`https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/lookup/${ip}`));
-  html+=row('Fraudguard.io',lnk('Risk Score',`https://fraudguard.io/?ip=${ip}`));
-  html+=row('Project Honey Pot',lnk('Spam/Bot-Aktivitaet',`https://www.projecthoneypot.org/ip_${ip}`));
-  html+=row('Talos Intelligence',lnk('Cisco Talos Reputation',`https://talosintelligence.com/reputation_center/lookup?search=${ip}`));
-  html+=row('FortiGuard (Fortinet)',lnk('IP Reputation',`https://www.fortiguard.com/iprep?data=${ip}`));
+  html+=row('URLhaus (Abuse.ch)',lnk('Malware Distribution URLs',`https://urlhaus.abuse.ch/browse.php?search=${ip}`));
+  html+=row('MalwareBazaar',lnk('Malware Samples nach IP',`https://bazaar.abuse.ch/browse.php?search=tag%3A${ip}`));
+  html+=row('AlienVault OTX',lnk('Open Threat Exchange IOCs',`https://otx.alienvault.com/indicator/ip/${ip}`));
+  html+=row('Cisco Talos',lnk('Reputations-Score + Verlauf',`https://talosintelligence.com/reputation_center/lookup?search=${ip}`));
+  html+=row('IBM X-Force',lnk('Threat Kategorie + Score',`https://exchange.xforce.ibmcloud.com/ip/${ip}`));
+  html+=row('Pulsedive',lnk('Threat Feed + Risikobewertung',`https://pulsedive.com/indicator/?ioc=${ip}`));
+  html+=row('CIRCL Passive DNS',lnk('Historische DNS-Aufloesungen',`https://www.circl.lu/services/passive-dns/#${ip}`));
+  html+=row('Project Honey Pot',lnk('Spam + Harvester + Scanner',`https://www.projecthoneypot.org/ip_${ip}`));
+  html+=row('IPQualityScore',lnk('Proxy + VPN + Fraud Score',`https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/lookup/${ip}`));
+  html+=row('Spamhaus Check',lnk('Direkter Blacklist Check',`https://check.spamhaus.org/listed/?searchterm=${ip}`));
+  html+=row('MXToolbox Super Tool',lnk('25+ Blacklists + Header',`https://mxtoolbox.com/SuperTool.aspx?action=blacklist:${ip}`));
+  html+=row('FortiGuard',lnk('IP Reputation Fortinet',`https://www.fortiguard.com/iprep?data=${ip}`));
+  html+=row('Zoomeye',lnk('Chinas Shodan',`https://www.zoomeye.org/searchResult?q=${encodeURIComponent('ip:'+ip)}`));
+
   html+='</div>';
-  if(onSpam)html+='<div class="aw">IP auf Spamhaus ZEN gelistet -- aktiv genutzter Spam/Malware-Verteiler!</div>';
-  if(isPrivIP)html+='<div class="ai">Private IP-Adresse -- keine oeffentliche Geolokalisierung moeglich.</div>';
-  else html+='<div class="ai">Geolokalisierung basiert auf ISP-Registrierungsort. Genauigkeit: 50m (Ballungsraum) bis 200km (laendlich).</div>';
+  if(isThreat)html+=`<div class="aw">WARNUNG: IP als Bedrohung eingestuft (Score ${score}/9). Blacklists: ${spamHits.join(', ')||'keine'}</div>`;
+  if(threatfoxHits>0)html+=`<div class="aw">ThreatFox: ${threatfoxHits} aktive Malware-IOC(s) fuer diese IP gefunden!</div>`;
+  if(urlhausActive)html+='<div class="aw">URLhaus: Diese IP verteilt aktiv Malware-URLs!</div>';
+  if(isPrivIP)html+='<div class="ai">Private IP -- keine oeffentliche Geolokalisierung oder Threat-Analyse moeglich.</div>';
+  else html+='<div class="ai">Geolokalisierung basiert auf ISP-Registrierungsort. Genauigkeit: 50m (Stadt) bis 200km (laendlich).</div>';
   $('ipR').innerHTML=html;
 }
 
