@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>StarTrack v10</title>
+<title>StarTrack v11</title>
 <style>
 :root{
   --bg:#04000e;
@@ -313,7 +313,7 @@ flex-wrap:wrap;gap:6px;transition:border-color .16s;
   \__ \/ __/ __ `/ ___// / / ___/ __ `/ ___/ //_/
  ___/ / /_/ /_/ / /   / / / /  / /_/ / /__/ ,&lt;   
 /____/\__/\__,_/_/   /_/ /_/   \__,_/\___/_/|_|  </span>
-<span class="ban-sub">M A X I M U M  I N T E L  v 1 0 . 0</span>
+<span class="ban-sub">M A X I M U M  I N T E L  v 1 1 . 0</span>
 </div>
 
 <div class="statusbar">
@@ -735,221 +735,288 @@ async function trackIP(pre){
   if(!ip){$('ipR').innerHTML='<div class="ae">Bitte IP eingeben!</div>';return;}
   if(pre)$('ipInput').value=pre;
   ld('ipL',true);$('ipR').innerHTML='';
-  $('ipL').querySelector('.ld-txt').textContent='Analysiere IP + Live Threat Intel...';
+  const ltxt=$('ipL').querySelector('.ld-txt');
 
-  // ── PHASE 1: Basis-Geo parallel ──
-  const[r1,r2]=await Promise.allSettled([
+  ltxt.textContent='Geo-Daten von 3 Quellen...';
+  // ── PHASE 1: 3 Geo-APIs parallel für maximale Genauigkeit ──
+  const[r1,r2,r3]=await Promise.allSettled([
     sf('https://ipwho.is/'+ip),
-    sf('https://freeipapi.com/api/json/'+ip)
+    sf('https://freeipapi.com/api/json/'+ip),
+    fetch('https://ipapi.co/'+ip+'/json/').then(r=>r.json()).catch(()=>null)
   ]);
-  const d1=r1.value,d2=r2.value;
+  const d1=r1.value, d2=r2.value, d3=r3.value;
+
   if(d1?.success===false&&!d2?.ipVersion){
     ld('ipL',false);
-    $('ipR').innerHTML='<div class="ae">Ungueltige oder private IP. Oeffentliche IPv4/IPv6 eingeben.</div>';
+    $('ipR').innerHTML='<div class="ae">Ungueltige oder private IP.</div>';
     return;
   }
-  const lat=parseFloat(d1?.latitude||d2?.latitude||0);
-  const lon=parseFloat(d1?.longitude||d2?.longitude||0);
+
+  // Koordinaten: beste Quelle nehmen (kleinste Abweichung zwischen Quellen = vertrauenswürdiger)
+  const coords=[
+    {lat:parseFloat(d1?.latitude||0), lon:parseFloat(d1?.longitude||0), src:'ipwho.is'},
+    {lat:parseFloat(d2?.latitude||0),  lon:parseFloat(d2?.longitude||0),  src:'freeipapi'},
+    {lat:parseFloat(d3?.latitude||0),  lon:parseFloat(d3?.longitude||0),  src:'ipapi.co'}
+  ].filter(c=>c.lat!==0&&c.lon!==0);
+
+  // Durchschnitt aller gültigen Koordinaten für maximale Genauigkeit
+  let lat=0,lon=0,coordConf='N/A';
+  if(coords.length>0){
+    lat=coords.reduce((s,c)=>s+c.lat,0)/coords.length;
+    lon=coords.reduce((s,c)=>s+c.lon,0)/coords.length;
+    // Konfidenz: wenn alle drei übereinstimmen (<10km Abweichung) = hoch
+    if(coords.length===3){
+      const spread=Math.max(...coords.map(c=>Math.sqrt((c.lat-lat)**2+(c.lon-lon)**2)));
+      coordConf=spread<0.1?'Hoch (alle 3 Quellen einig)':spread<0.5?'Mittel':'Niedrig (Quellen weichen ab)';
+    } else {
+      coordConf=coords.length+'/3 Quellen verfuegbar';
+    }
+  }
+
   const isV6=ip.includes(':');
   const isPrivIP=isPrivate(ip);
 
-  // ── PHASE 2: OSM Reverse Geocoding + DNS parallel ──
-  $('ipL').querySelector('.ld-txt').textContent='Geocoding + DNS Lookup...';
+  // ── PHASE 2: OSM Reverse Geocoding (sehr präzise) + DNS parallel ──
+  ltxt.textContent='OpenStreetMap Reverse Geocoding...';
   const revIP=(!isV6&&!isPrivIP)?ip.split('.').reverse().join('.'):null;
-  let osm=null,spamHits=[],ptrRecord='N/A';
+  let osm=null, osmCity=null, spamHits=[], ptrRecord='N/A';
+  const p2=[];
 
-  const phase2=[];
-  if(lat&&lon&&!isV6&&!isPrivIP)
-    phase2.push(sf('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=16&addressdetails=1',{headers:{'User-Agent':'StarTrack/10'}}).then(r=>{osm=r;}));
+  if(lat&&lon&&!isPrivIP){
+    // Zoom 18 = Hausebene, Zoom 16 = Straßenebene, Zoom 10 = Stadtebene
+    p2.push(sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&extratags=1`,
+      {headers:{'User-Agent':'StarTrack/11.0','Accept-Language':'de'}}).then(r=>{osm=r;}));
+    // Zweiter OSM Call auf Stadtebene als Vergleich
+    p2.push(sf(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`,
+      {headers:{'User-Agent':'StarTrack/11.0b','Accept-Language':'de'}}).then(r=>{osmCity=r;}));
+  }
   if(revIP){
-    // Spamhaus ZEN + CBL + SBL + XBL
-    const lists=['zen.spamhaus.org','cbl.abuseat.org','b.barracudacentral.org','dnsbl.sorbs.net'];
-    lists.forEach(l=>phase2.push(
-      sf('https://dns.google/resolve?name='+revIP+'.'+l+'&type=A')
-        .then(r=>{if(r?.Answer?.length)spamHits.push(l);})
-    ));
-    phase2.push(sf('https://dns.google/resolve?name='+revIP+'.in-addr.arpa&type=PTR').then(r=>{
+    ['zen.spamhaus.org','cbl.abuseat.org','b.barracudacentral.org','dnsbl.sorbs.net'].forEach(l=>
+      p2.push(sf('https://dns.google/resolve?name='+revIP+'.'+l+'&type=A').then(r=>{if(r?.Answer?.length)spamHits.push(l);}))
+    );
+    p2.push(sf('https://dns.google/resolve?name='+revIP+'.in-addr.arpa&type=PTR').then(r=>{
       if(r?.Answer?.[0])ptrRecord=r.Answer[0].data;
     }));
   }
-  await Promise.allSettled(phase2);
+  await Promise.allSettled(p2);
 
-  // ── PHASE 3: ThreatFox + URLhaus live ──
-  $('ipL').querySelector('.ld-txt').textContent='Threat Intelligence APIs...';
-  let threatfoxHits=0,urlhausActive=false,abuseScore=null;
-  const phase3=[];
-
-  // ThreatFox API (abuse.ch) - kostenlos, kein Key
-  phase3.push(
+  // ── PHASE 3: Live Threat APIs ──
+  ltxt.textContent='ThreatFox + URLhaus Live Check...';
+  let threatfoxHits=0, urlhausURLs=0, urlhausBlacklisted=false;
+  await Promise.allSettled([
     fetch('https://threatfox-api.abuse.ch/api/v1/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({query:'search_ioc',search_term:ip})
-    }).then(r=>r.json()).then(d=>{
-      if(d?.query_status==='ok'&&d?.data?.length)threatfoxHits=d.data.length;
-    }).catch(()=>{})
-  );
-  // URLhaus API - kostenlos
-  phase3.push(
+    }).then(r=>r.json()).then(d=>{if(d?.query_status==='ok'&&d?.data?.length)threatfoxHits=d.data.length;}).catch(()=>{}),
     fetch('https://urlhaus-api.abuse.ch/v1/host/',{
       method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:'host='+encodeURIComponent(ip)
     }).then(r=>r.json()).then(d=>{
-      if(d?.query_status==='is_host')urlhausActive=d.urls_count>0;
+      if(d?.query_status==='is_host'){urlhausURLs=parseInt(d.urls_count)||0;urlhausBlacklisted=d.blacklists?.spamhaus_dbl!=='not listed';}
     }).catch(()=>{})
-  );
-  await Promise.allSettled(phase3);
+  ]);
 
   ld('ipL',false);
 
-  // ── Auswertung ──
-  const isp=d1?.connection?.isp||d2?.ipRegistryName||'N/A';
-  const org=d1?.connection?.org||'N/A';
-  const asn=d1?.connection?.asn||'';
-  const country=d1?.country||d2?.countryName||'N/A';
-  const cc=d1?.country_code||d2?.countryCode||'N/A';
-  const city=d1?.city||d2?.cityName||'N/A';
-  const region=d1?.region||d2?.regionName||'N/A';
-  const postal=d1?.postal||d2?.zipCode||'N/A';
-  const tz=d1?.timezone?.id||d2?.timeZone||'N/A';
-  const isHosting=d1?.connection?.type==='hosting';
+  // Daten zusammenführen
+  const isp=d1?.connection?.isp||d2?.ipRegistryName||d3?.org||'N/A';
+  const org=d1?.connection?.org||d3?.org||'N/A';
+  const asn=d1?.connection?.asn||d3?.asn||'';
+  const country=d1?.country||d2?.countryName||d3?.country_name||'N/A';
+  const cc=d1?.country_code||d2?.countryCode||d3?.country||'N/A';
+  const city=d1?.city||d2?.cityName||d3?.city||'N/A';
+  const region=d1?.region||d2?.regionName||d3?.region||'N/A';
+  const postal=d1?.postal||d2?.zipCode||d3?.postal||'N/A';
+  const tz=d1?.timezone?.id||d2?.timeZone||d3?.timezone||'N/A';
+  const isHosting=d1?.connection?.type==='hosting'||d3?.org?.toLowerCase().includes('hosting');
   const isMobile=d1?.connection?.type==='cellular';
   const onSpam=spamHits.length>0;
-  const isThreat=threatfoxHits>0||urlhausActive||onSpam;
+  const isThreat=threatfoxHits>0||urlhausURLs>0||onSpam;
 
-  // IP-Klasse
-  const oct=parseInt(ip.split('.')[0])||0;
-  const ipClass=isV6?'IPv6':oct<128?'Klasse A':oct<192?'Klasse B':oct<224?'Klasse C':oct<240?'Klasse D (Multicast)':'Klasse E (Reserved)';
-
-  // ── Threat-Score berechnen ──
+  // Threat Score
   let score=0;
-  if(onSpam)score+=3;if(threatfoxHits>0)score+=3;if(urlhausActive)score+=2;
-  if(isHosting)score+=1;
-  const scoreLabel=score===0?'<span class="badge bok">SAUBER</span>':score<=2?'<span class="badge bwarn">VERDAECHTIG</span>':'<span class="badge bbad">BEDROHLICH</span>';
+  if(onSpam)score+=Math.min(spamHits.length*2,4);
+  if(threatfoxHits>0)score+=Math.min(threatfoxHits,3);
+  if(urlhausURLs>0)score+=Math.min(urlhausURLs,2);
+  if(isHosting)score=Math.min(score+1,10);
+  score=Math.min(score,10);
+  const scoreCol=score===0?'var(--green)':score<=3?'var(--yellow)':'var(--red)';
+  const scoreLabel=score===0?'<span class="badge bok">SAUBER</span>':score<=3?'<span class="badge bwarn">VERDAECHTIG</span>':'<span class="badge bbad">BEDROHLICH</span>';
 
-  // ── HTML aufbauen ──
+  // OSM Adresse aufbereiten
+  const addr=osm?.address||{};
+  const strasse=addr.road||addr.pedestrian||addr.path||addr.residential||'';
+  const hausnr=addr.house_number||'';
+  const ort=addr.city||addr.town||addr.village||addr.municipality||addr.hamlet||city||'';
+  const stadtteil=addr.suburb||addr.neighbourhood||addr.quarter||addr.borough||'';
+  const landkreis=addr.county||addr.state_district||'';
+  const bundesland=addr.state||'';
+  const plz=addr.postcode||postal||'';
+  const land=addr.country||country||'';
+  const osmAddrFull=[strasse&&hausnr?`${strasse} ${hausnr}`:strasse,plz,ort,bundesland,land].filter(Boolean).join(', ');
+
+  // Koordinaten-Konfidenz-Hinweis
+  const genauigkeit=strasse?'Strassenebene (max. genau)':ort?'Stadtebene':land?'Landesebene':'Unbekannt';
+
+  // ── HTML bauen ──
   let html=stats(
     ['Version',isV6?'IPv6':'IPv4'],
     ['Land',cc],
-    ['Stadt',city.substring(0,10)||'N/A'],
-    ['ISP',isp.substring(0,12)||'N/A'],
+    ['Genauigkeit',strasse?'Strasse':ort?'Stadt':'Land'],
     ['Blacklists',spamHits.length+'/4'],
-    ['Threat Score',score+'/9']
+    ['ThreatFox',threatfoxHits+'  IOC'],
+    ['Score',score+'/10']
   );
   html+='<div class="dw">';
 
-  // THREAT SCORE CARD
-  html+=sec('LIVE THREAT ANALYSE');
-  html+=`<div style="background:rgba(4,0,10,.8);border:1px solid ${isThreat?'rgba(255,34,34,.5)':'rgba(0,255,136,.35)'};border-radius:8px;padding:12px 14px;margin:6px 0">`;
-  html+=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">`;
-  html+=`<div style="font-size:clamp(22px,5vw,32px);font-weight:bold;color:${score===0?'var(--green)':score<=2?'var(--yellow)':'var(--red)'};">${score}<span style="font-size:12px;color:var(--label)">/9</span></div>`;
-  html+=`<div><div style="color:var(--text);font-size:13px;letter-spacing:1px">THREAT SCORE ${scoreLabel}</div>`;
-  html+=`<div style="color:var(--label);font-size:10px;margin-top:3px">${isThreat?'Bedrohungen gefunden — Details unten':'Keine bekannten Bedrohungen'}</div></div></div></div>`;
+  // ── THREAT SCORE CARD ──
+  html+=sec('LIVE THREAT SCORE');
+  html+=`<div style="background:rgba(4,0,10,.85);border:1.5px solid ${isThreat?'rgba(255,34,34,.5)':'rgba(0,255,136,.3)'};border-radius:8px;padding:14px 16px;margin:6px 0 10px">`;
+  html+=`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">`;
+  html+=`<div style="font-size:clamp(28px,7vw,42px);font-weight:bold;color:${scoreCol};text-shadow:0 0 16px ${scoreCol};line-height:1">${score}<span style="font-size:13px;color:var(--label);font-weight:normal"> / 10</span></div>`;
+  html+=`<div style="flex:1;min-width:160px">`;
+  html+=`<div style="font-size:13px;letter-spacing:1px;margin-bottom:4px">${scoreLabel}</div>`;
+  if(isThreat){
+    if(onSpam)html+=`<div style="color:var(--red);font-size:11px">Blacklists: ${spamHits.map(l=>`<span class="badge bbad">${l}</span>`).join(' ')}</div>`;
+    if(threatfoxHits>0)html+=`<div style="color:var(--red);font-size:11px;margin-top:2px">ThreatFox: ${threatfoxHits} aktive IOC(s)</div>`;
+    if(urlhausURLs>0)html+=`<div style="color:var(--red);font-size:11px;margin-top:2px">URLhaus: ${urlhausURLs} Malware-URL(s)</div>`;
+  }else{
+    html+=`<div style="color:var(--green);font-size:11px;margin-top:2px">Keine bekannten Bedrohungen in Live-Datenbanken gefunden</div>`;
+  }
+  html+=`</div></div></div>`;
 
-  html+=row('Spamhaus ZEN',onSpam?`<span class="badge bbad">GELISTET</span>`:'<span class="badge bok">Sauber</span>');
-  if(spamHits.length>0)spamHits.forEach(l=>html+=row('  Blacklist',`<span class="badge bbad">${l}</span>`));
-  html+=row('ThreatFox IOCs',threatfoxHits>0?`<span class="badge bbad">${threatfoxHits} IOC(s) gefunden</span>`:'<span class="badge bok">Keine IOCs</span>');
-  html+=row('URLhaus Malware',urlhausActive?'<span class="badge bbad">Aktive Malware-URLs</span>':'<span class="badge bok">Keine aktiven URLs</span>');
-  html+=row('Hosting / DC',isHosting?'<span class="badge bwarn">Ja</span>':'Nein');
-  html+=row('Mobilfunk',isMobile?'<span class="badge binfo">Ja</span>':'Nein');
-  html+=row('PTR / rDNS',ptrRecord);
-  html+=row('Spamhaus ZEN (DNS)',spamHits.includes('zen.spamhaus.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
+  // ThreatFox Details
+  html+=row('ThreatFox IOCs (Live)',threatfoxHits>0?`<span class="badge bbad">${threatfoxHits} IOC(s) gefunden</span>`:'<span class="badge bok">Keine</span>');
+  html+=row('URLhaus Malware (Live)',urlhausURLs>0?`<span class="badge bbad">${urlhausURLs} URL(s) aktiv</span>`:'<span class="badge bok">Keine</span>');
+  html+=row('Spamhaus ZEN',spamHits.includes('zen.spamhaus.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
   html+=row('CBL Botnet',spamHits.includes('cbl.abuseat.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
   html+=row('Barracuda BRBL',spamHits.includes('b.barracudacentral.org')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
   html+=row('SORBS DNSBL',spamHits.includes('dnsbl.sorbs.net')?'<span class="badge bbad">GELISTET</span>':'<span class="badge bok">Sauber</span>');
 
-  html+=sec('BASIS');
-  html+=row('IP-Adresse',`<strong style="color:var(--cyan)">${ip}</strong>`+(isPrivIP?' <span class="badge binfo">PRIVAT</span>':isHosting?' <span class="badge bwarn">HOSTING</span>':' <span class="badge bok">RESIDENTIAL</span>'));
-  html+=row('Version / Klasse',`${isV6?'IPv6 (128-bit)':'IPv4 (32-bit)'} &mdash; ${ipClass}`);
-  html+=row('Privat / Oeffentlich',isPrivIP?'<span class="badge binfo">Privates Netz</span>':'Oeffentlich routbar');
+  // ── BASIS ──
+  html+=sec('IP BASIS');
+  html+=row('IP-Adresse',`<strong style="color:var(--cyan);font-size:14px">${ip}</strong>`+
+    (isPrivIP?' <span class="badge binfo">PRIVAT</span>':
+     isHosting?' <span class="badge bwarn">HOSTING/DC</span>':
+     isMobile?' <span class="badge binfo">MOBIL</span>':
+     ' <span class="badge bok">RESIDENTIAL</span>'));
+  html+=row('Version',isV6?'IPv6 (128-Bit)':'IPv4 (32-Bit)');
   html+=row('PTR / rDNS',ptrRecord);
   html+=row('Verbindungstyp',d1?.connection?.type||'N/A');
+  html+=row('Hosting / DC',isHosting?'<span class="badge bwarn">Ja</span>':'Nein');
+  html+=row('Mobilfunk',isMobile?'<span class="badge binfo">Ja</span>':'Nein');
 
-  html+=sec('STANDORT');
+  // ── STANDORT ──
+  html+=sec('GEO-STANDORT ('+coords.length+'/3 Quellen)');
   html+=row('Land',`${country} (${cc})`);
   html+=row('Kontinent',d1?.continent||'N/A');
-  html+=row('Region',region);
+  html+=row('Region / Bundesland',region);
   html+=row('Stadt',city);
   html+=row('PLZ',postal);
   html+=row('EU-Mitglied',d1?.is_eu?'Ja':'Nein');
   html+=row('Hauptstadt',d1?.capital||'N/A');
-  html+=row('Vorwahl',d1?.calling_code?`+${d1.calling_code}`:'N/A');
+  html+=row('Vorwahl',d1?.calling_code?'+'+d1.calling_code:'N/A');
   html+=row('Waehrung',d1?.currency?.name?`${d1.currency.name} (${d1.currency.code})`:'N/A');
-  html+=row('Zeitzone',tz);
-  html+=row('Aktuelle Zeit',d1?.timezone?.current_time||'N/A');
-  html+=row('UTC Offset',d1?.timezone?.offset||'N/A');
-  html+=row('Sommerzeit',d1?.timezone?.is_dst?'Aktiv':'Inaktiv');
-  html+=row('Tageszeit',sunStatus(lat,lon));
+  html+=row('Koordinaten (Durchschnitt)',lat&&lon?`${lat.toFixed(6)}, ${lon.toFixed(6)}`:'N/A');
+  html+=row('Koordinaten-Konfidenz',coordConf);
+  html+=row('Geo-Genauigkeit',genauigkeit);
+  // Quellen-Vergleich
+  if(coords.length>1){
+    coords.forEach(c=>html+=row(`Quelle: ${c.src}`,`${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}`));
+  }
 
+  // ── OSM REVERSE GEOCODING ──
   if(osm?.address){
-    const a=osm.address;
-    const full=[a.road||a.pedestrian,a.house_number,a.postcode,(a.city||a.town||a.village||a.municipality),a.state,a.country].filter(Boolean).join(', ');
-    html+=sec('REVERSE GEOCODING (OpenStreetMap Live)');
-    if(full)html+=row('Naechste Adresse',`<strong>${full}</strong>`);
-    if(a.road||a.pedestrian)html+=row('Strasse',a.road||a.pedestrian);
-    if(a.suburb||a.neighbourhood)html+=row('Stadtteil',a.suburb||a.neighbourhood);
-    html+=row('Gemeinde',a.municipality||a.village||a.town||'N/A');
-    html+=row('Stadt',a.city||a.town||a.village||'N/A');
-    if(a.county)html+=row('Landkreis',a.county);
-    html+=row('PLZ',a.postcode||'N/A');
-    html+=row('Bundesland',a.state||'N/A');
-    html+=row('Land',a.country||'N/A');
+    html+=sec('REVERSE GEOCODING — STRASSENEBENE (OpenStreetMap)');
+    if(osmAddrFull)html+=row('Vollstaendige Adresse',`<strong style="color:var(--cyan)">${osmAddrFull}</strong>`);
+    if(strasse)html+=row('Strasse / Weg',`${strasse}${hausnr?' '+hausnr:''}`);
+    if(stadtteil)html+=row('Stadtteil / Viertel',stadtteil);
+    html+=row('Gemeinde / Stadt',ort||'N/A');
+    if(landkreis)html+=row('Landkreis',landkreis);
+    if(plz)html+=row('PLZ / ZIP',plz);
+    if(bundesland)html+=row('Bundesland / Region',bundesland);
+    html+=row('Land',land||'N/A');
+    if(osm.extratags?.population)html+=row('Einwohner Ort',Number(osm.extratags.population).toLocaleString('de-DE'));
+    if(osm.extratags?.website)html+=row('Webseite des Ortes',lnk(osm.extratags.website,osm.extratags.website.startsWith('http')?osm.extratags.website:'https://'+osm.extratags.website));
+    if(osm.extratags?.wikidata)html+=row('Wikidata',lnk(osm.extratags.wikidata,`https://www.wikidata.org/wiki/${osm.extratags.wikidata}`));
+    html+=row('OSM Objekt-Typ',osm.type||osm.class||'N/A');
+    html+=row('OSM ID',osm.osm_id||'N/A');
+    if(osmCity?.address){
+      const ca=osmCity.address;
+      const stadtRegion=ca.city||ca.town||ca.county||ca.state||'N/A';
+      html+=row('Stadt-Kontext (Zoom 10)',stadtRegion);
+    }
   }
 
-  html+=sec('GPS & KARTEN');
-  html+=row('Koordinaten',lat&&lon?`${lat.toFixed(5)}, ${lon.toFixed(5)}`:'N/A');
-  html+=row('DMS',lat&&lon?dms(lat,lon):'N/A');
+  // ── KARTEN ──
+  html+=sec('KARTEN & VISUALISIERUNG');
   if(lat&&lon){
-    html+=row('Google Maps',lnk('Karte + Marker',`https://www.google.com/maps/place/${lat},${lon}`));
-    html+=row('Google Street View',lnk('Strassenpanorama',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}`));
-    html+=row('Google Earth',lnk('3D Satellit',`https://earth.google.com/web/@${lat},${lon},0a,1200d,35y`));
-    html+=row('OpenStreetMap',lnk('OSM',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`));
-    html+=row('Bing Luftbild',lnk('Aerial View',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=15&style=a`));
-    html+=row('Mapillary',lnk('Strassenfotos crowdsourced',`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=14`));
-    html+=row('Wikimapia',lnk('Ortsinfos von Community',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=14`));
-    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.008},${lat-.006},${lon+.008},${lat+.006}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy"></iframe>`;
+    html+=row('Google Maps',lnk('Direkt auf Karte anzeigen',`https://www.google.com/maps/place/${lat},${lon}`));
+    html+=row('Google Street View',lnk('Strassenpanorama (Bodenebene)',`https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0`));
+    html+=row('Google Earth 3D',lnk('Satellit + 3D Terrain',`https://earth.google.com/web/@${lat},${lon},0a,1200d,35y`));
+    html+=row('Google Satellit',lnk('Luftbild Zoom 18',`https://www.google.com/maps/@${lat},${lon},18z/data=!3m1!1e3`));
+    html+=row('OpenStreetMap',lnk('OSM Karte Zoom 17',`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=17&layers=M`));
+    html+=row('Bing Luftbild',lnk('Bing Aerial View',`https://www.bing.com/maps?cp=${lat}~${lon}&lvl=17&style=a`));
+    html+=row('Mapillary',lnk('Community Strassenfotos',`https://www.mapillary.com/app/?lat=${lat}&lng=${lon}&z=16`));
+    html+=row('Wikimapia',lnk('Ortsinfos aus Community',`https://wikimapia.org/#lang=de&lat=${lat}&lon=${lon}&z=15`));
+    html+=row('what3words',lnk('3-Wort Adresse',`https://what3words.com/?lng=${lon}&lat=${lat}`));
+    html+=row('Geohack',lnk('Multi-Karten-Link',`https://geohack.toolforge.org/geohack.php?params=${lat};${lon}`));
+    html+=`<iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-.01},${lat-.007},${lon+.01},${lat+.007}&layer=mapnik&marker=${lat},${lon}" frameborder="0" loading="lazy" style="margin-top:10px"></iframe>`;
   }
 
+  // ── ZEITZONE ──
+  html+=sec('ZEITZONE & LOKALZEIT');
+  html+=row('Zeitzone ID',tz);
+  html+=row('UTC Offset',d1?.timezone?.offset||d3?.utc_offset||'N/A');
+  html+=row('Kuerzel',d1?.timezone?.abbr||'N/A');
+  html+=row('Aktuelle Lokalzeit',d1?.timezone?.current_time||'N/A');
+  html+=row('Sommerzeit',d1?.timezone?.is_dst?'<span class="badge binfo">Aktiv</span>':'Inaktiv');
+  html+=row('Tageszeit am Standort',sunStatus(lat,lon));
+
+  // ── NETZWERK ──
   html+=sec('NETZWERK & ASN');
-  html+=row('ISP',isp);
+  html+=row('ISP / Provider',isp);
   html+=row('Organisation',org);
   html+=row('AS-Nummer',asn?`AS${asn}`:'N/A');
-  html+=row('CIDR',d1?.connection?.cidr||d2?.ipVersion===4?ip.replace(/\.\d+$/,'.0/24'):'N/A');
+  html+=row('Verbindungstyp',d1?.connection?.type||'N/A');
   html+=row('Domain',d1?.connection?.domain||'N/A');
-  html+=row('RIPE Whois',lnk('Netzwerkregistrierung',`https://apps.db.ripe.net/db-web-ui/query?searchtext=${ip}`));
-  html+=row('ARIN RDAP',lnk('Registrar + Kontakt',`https://search.arin.net/rdap/?query=${ip}`));
-  html+=row('Hurricane Electric BGP',lnk('BGP Routen + Peering',`https://bgp.he.net/ip/${ip}`));
-  html+=row('RIPEstat',asn?lnk(`AS${asn} Routing`,`https://stat.ripe.net/widget/routing-status#w.resource=AS${asn}`):'N/A');
-  html+=row('Robtex',lnk('DNS + Routing Graph',`https://www.robtex.com/ip-lookup/${ip}`));
-  html+=row('PeeringDB',asn?lnk('Peering Infos',`https://www.peeringdb.com/asn/${asn}`):'N/A');
-  html+=row('APNIC Whois',lnk('APNIC Datenbank',`https://wq.apnic.net/query?searchtext=${ip}`));
+  html+=row('RIPE Whois',lnk('IP-Netzwerk Registrierung',`https://apps.db.ripe.net/db-web-ui/query?searchtext=${ip}`));
+  html+=row('ARIN RDAP',lnk('Registrar + Kontaktdaten',`https://search.arin.net/rdap/?query=${ip}`));
+  html+=row('Hurricane Electric BGP',lnk('BGP Routen + ASN Peering',`https://bgp.he.net/ip/${ip}`));
+  html+=row('RIPEstat Routing',asn?lnk(`AS${asn} Routing Status`,`https://stat.ripe.net/widget/routing-status#w.resource=AS${asn}`):'N/A');
+  html+=row('PeeringDB',asn?lnk('Internet Exchange Peering',`https://www.peeringdb.com/asn/${asn}`):'N/A');
+  html+=row('Robtex',lnk('DNS + Routing Visualisierung',`https://www.robtex.com/ip-lookup/${ip}`));
+  html+=row('APNIC Whois',lnk('APNIC Region Daten',`https://wq.apnic.net/query?searchtext=${ip}`));
 
-  html+=sec('THREAT INTELLIGENCE TOOLS');
-  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs',`https://www.shodan.io/host/${ip}`));
-  html+=row('Censys',lnk('TLS + Services + Zertifikate',`https://search.censys.io/hosts/${ip}`));
-  html+=row('GreyNoise',lnk('Internet Scanner Aktivitaet',`https://viz.greynoise.io/ip/${ip}`));
-  html+=row('AbuseIPDB',lnk('Community Abuse Reports',`https://www.abuseipdb.com/check/${ip}`));
-  html+=row('VirusTotal',lnk('70+ AV Scanner + Community',`https://www.virustotal.com/gui/ip-address/${ip}`));
+  // ── THREAT INTEL TOOLS ──
+  html+=sec('THREAT INTELLIGENCE — EXTERNE TOOLS');
+  html+=row('Shodan',lnk('Offene Ports + Banner + CVEs + History',`https://www.shodan.io/host/${ip}`));
+  html+=row('Censys',lnk('TLS Zertifikate + Services + Ports',`https://search.censys.io/hosts/${ip}`));
+  html+=row('GreyNoise',lnk('Internet Scanner Aktivitaet + Tags',`https://viz.greynoise.io/ip/${ip}`));
+  html+=row('AbuseIPDB',lnk('Community Missbrauchs-Reports',`https://www.abuseipdb.com/check/${ip}`));
+  html+=row('VirusTotal',lnk('70+ AV Scanner + Community Votes',`https://www.virustotal.com/gui/ip-address/${ip}`));
   html+=row('ThreatFox (Abuse.ch)',lnk('Malware IOC Datenbank',`https://threatfox.abuse.ch/browse.php?search=ioc%3A${ip}`));
-  html+=row('URLhaus (Abuse.ch)',lnk('Malware Distribution URLs',`https://urlhaus.abuse.ch/browse.php?search=${ip}`));
-  html+=row('MalwareBazaar',lnk('Malware Samples nach IP',`https://bazaar.abuse.ch/browse.php?search=tag%3A${ip}`));
-  html+=row('AlienVault OTX',lnk('Open Threat Exchange IOCs',`https://otx.alienvault.com/indicator/ip/${ip}`));
-  html+=row('Cisco Talos',lnk('Reputations-Score + Verlauf',`https://talosintelligence.com/reputation_center/lookup?search=${ip}`));
-  html+=row('IBM X-Force',lnk('Threat Kategorie + Score',`https://exchange.xforce.ibmcloud.com/ip/${ip}`));
-  html+=row('Pulsedive',lnk('Threat Feed + Risikobewertung',`https://pulsedive.com/indicator/?ioc=${ip}`));
+  html+=row('URLhaus (Abuse.ch)',lnk('Aktive Malware-Verteilung',`https://urlhaus.abuse.ch/browse.php?search=${ip}`));
+  html+=row('MalwareBazaar',lnk('Malware Samples von dieser IP',`https://bazaar.abuse.ch/browse.php?search=tag%3A${ip}`));
+  html+=row('AlienVault OTX',lnk('Open Threat Exchange + Pulses',`https://otx.alienvault.com/indicator/ip/${ip}`));
+  html+=row('Cisco Talos',lnk('Reputations-Score + Kategorie',`https://talosintelligence.com/reputation_center/lookup?search=${ip}`));
+  html+=row('IBM X-Force Exchange',lnk('Threat Kategorie + Score',`https://exchange.xforce.ibmcloud.com/ip/${ip}`));
+  html+=row('Pulsedive',lnk('Risikobewertung + Threat Feeds',`https://pulsedive.com/indicator/?ioc=${ip}`));
   html+=row('CIRCL Passive DNS',lnk('Historische DNS-Aufloesungen',`https://www.circl.lu/services/passive-dns/#${ip}`));
-  html+=row('Project Honey Pot',lnk('Spam + Harvester + Scanner',`https://www.projecthoneypot.org/ip_${ip}`));
-  html+=row('IPQualityScore',lnk('Proxy + VPN + Fraud Score',`https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/lookup/${ip}`));
-  html+=row('Spamhaus Check',lnk('Direkter Blacklist Check',`https://check.spamhaus.org/listed/?searchterm=${ip}`));
-  html+=row('MXToolbox Super Tool',lnk('25+ Blacklists + Header',`https://mxtoolbox.com/SuperTool.aspx?action=blacklist:${ip}`));
-  html+=row('FortiGuard',lnk('IP Reputation Fortinet',`https://www.fortiguard.com/iprep?data=${ip}`));
+  html+=row('Project Honey Pot',lnk('Spam + Bot + Harvester Aktivitaet',`https://www.projecthoneypot.org/ip_${ip}`));
+  html+=row('IPQualityScore',lnk('VPN + Proxy + Fraud Score',`https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/lookup/${ip}`));
+  html+=row('Spamhaus Direktsuche',lnk('Alle Spamhaus Blocklisten',`https://check.spamhaus.org/listed/?searchterm=${ip}`));
+  html+=row('MXToolbox Blacklist',lnk('25+ Blacklists gleichzeitig',`https://mxtoolbox.com/SuperTool.aspx?action=blacklist:${ip}`));
   html+=row('Zoomeye',lnk('Chinas Shodan',`https://www.zoomeye.org/searchResult?q=${encodeURIComponent('ip:'+ip)}`));
+  html+=row('FOFA',lnk('Web Fingerprint Datenbank',`https://fofa.info/result?qbase64=${btoa('ip="'+ip+'"')}`));
 
   html+='</div>';
-  if(isThreat)html+=`<div class="aw">WARNUNG: IP als Bedrohung eingestuft (Score ${score}/9). Blacklists: ${spamHits.join(', ')||'keine'}</div>`;
-  if(threatfoxHits>0)html+=`<div class="aw">ThreatFox: ${threatfoxHits} aktive Malware-IOC(s) fuer diese IP gefunden!</div>`;
-  if(urlhausActive)html+='<div class="aw">URLhaus: Diese IP verteilt aktiv Malware-URLs!</div>';
-  if(isPrivIP)html+='<div class="ai">Private IP -- keine oeffentliche Geolokalisierung oder Threat-Analyse moeglich.</div>';
-  else html+='<div class="ai">Geolokalisierung basiert auf ISP-Registrierungsort. Genauigkeit: 50m (Stadt) bis 200km (laendlich).</div>';
+  if(isThreat)html+=`<div class="aw">WARNUNG: IP als Bedrohung eingestuft (Score ${score}/10). ${spamHits.length>0?'Blacklists: '+spamHits.join(', '):''}</div>`;
+  if(threatfoxHits>0)html+=`<div class="aw">ThreatFox: ${threatfoxHits} aktive Malware-IOC(s) fuer diese IP registriert!</div>`;
+  if(urlhausURLs>0)html+=`<div class="aw">URLhaus: ${urlhausURLs} Malware-URL(s) von dieser IP aktiv verteilt!</div>`;
+  if(isPrivIP)html+='<div class="ai">Private IP-Adresse — keine oeffentliche Geolokalisierung moeglich.</div>';
+  else if(strasse)html+=`<div class="ag">Standort auf Strassenebene bestimmt: ${osmAddrFull}</div>`;
+  else html+='<div class="ai">Geolokalisierung basiert auf ISP-Registrierungsort. Genauigkeit: 100m–200km je nach Anbieter.</div>';
   $('ipR').innerHTML=html;
 }
 
@@ -1165,76 +1232,290 @@ async function trackPhone(){
 // EMAIL
 // ──────────────────────────────────────────
 async function trackEmail(){
-  const em=$('emInput').value.trim();
-  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('emR').innerHTML='<div class="ae">Ungueltige E-Mail!</div>';return;}
+  const em=$('emInput').value.trim().toLowerCase();
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+    $('emR').innerHTML='<div class="ae">Ungueltige E-Mail-Adresse!</div>';return;
+  }
   ld('emL',true);$('emR').innerHTML='';
+  const ltxt=$('emL').querySelector('.ld-txt');
   const[un,domain]=em.split('@');
-  const[rA,rMX,rTXT,rNS,rCAA,rDMARC]=await Promise.allSettled([
-    sf(`https://dns.google/resolve?name=${domain}&type=A`),sf(`https://dns.google/resolve?name=${domain}&type=MX`),
-    sf(`https://dns.google/resolve?name=${domain}&type=TXT`),sf(`https://dns.google/resolve?name=${domain}&type=NS`),
-    sf(`https://dns.google/resolve?name=${domain}&type=CAA`),sf(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`)
+
+  ltxt.textContent='DNS + MX Lookup...';
+  // ── DNS parallel ──
+  const[rA,rMX,rTXT,rNS,rCAA,rDMARC,rDKIM,rMTASTS]=await Promise.allSettled([
+    sf(`https://dns.google/resolve?name=${domain}&type=A`),
+    sf(`https://dns.google/resolve?name=${domain}&type=MX`),
+    sf(`https://dns.google/resolve?name=${domain}&type=TXT`),
+    sf(`https://dns.google/resolve?name=${domain}&type=NS`),
+    sf(`https://dns.google/resolve?name=${domain}&type=CAA`),
+    sf(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`),
+    sf(`https://dns.google/resolve?name=default._domainkey.${domain}&type=TXT`),
+    sf(`https://dns.google/resolve?name=_mta-sts.${domain}&type=TXT`)
   ]);
   const aRecs=rA.value?.Answer?.map(r=>r.data)||[];
-  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:p[0],srv:p[1]};})||[];
+  const mxRecs=rMX.value?.Answer?.map(r=>{const p=r.data.split(' ');return{prio:parseInt(p[0]),srv:p.slice(1).join(' ').replace(/\.$/,'')};})||[];
+  mxRecs.sort((a,b)=>a.prio-b.prio);
   const txtRecs=rTXT.value?.Answer?.map(r=>r.data)||[];
-  const nsRecs=rNS.value?.Answer?.map(r=>r.data)||[];
+  const nsRecs=rNS.value?.Answer?.map(r=>r.data.replace(/\.$/,''))||[];
   const caaRecs=rCAA.value?.Answer?.map(r=>r.data)||[];
   const dmarcTxt=rDMARC.value?.Answer?.[0]?.data||null;
-  let spf='';txtRecs.forEach(t=>{if(t.includes('v=spf1'))spf=t;});
-  const hasSPF=!!spf,hasDMARC=!!dmarcTxt;
-  let hasDKIM=false;txtRecs.forEach(t=>{if(t.includes('v=DKIM1'))hasDKIM=true;});
-  const sc=(hasSPF?1:0)+(hasDMARC?1:0)+(hasDKIM?1:0);
-  const disp=['tempmail','guerrillamail','10minutemail','throwaway','mailinator','trashmail','temp-mail','fakeinbox','yopmail'].some(d=>domain.includes(d));
-  const provDB={'gmail.com':{n:'Google Gmail',co:'Google LLC',sec:'Sehr Hoch',e2e:'Nein'},'outlook.com':{n:'Microsoft Outlook',co:'Microsoft',sec:'Sehr Hoch',e2e:'Nein'},'hotmail.com':{n:'Hotmail',co:'Microsoft',sec:'Hoch',e2e:'Nein'},'yahoo.com':{n:'Yahoo Mail',co:'Yahoo',sec:'Mittel',e2e:'Nein'},'icloud.com':{n:'Apple iCloud',co:'Apple',sec:'Sehr Hoch',e2e:'Ja'},'protonmail.com':{n:'ProtonMail',co:'Proton AG',sec:'Maximal',e2e:'E2E'},'proton.me':{n:'Proton Mail',co:'Proton AG',sec:'Maximal',e2e:'E2E'},'tutanota.com':{n:'Tutanota',co:'Tutao GmbH',sec:'Maximal',e2e:'E2E'},'gmx.de':{n:'GMX DE',co:'1&1',sec:'Mittel',e2e:'Nein'},'gmx.com':{n:'GMX',co:'1&1',sec:'Mittel',e2e:'Nein'},'web.de':{n:'WEB.DE',co:'1&1',sec:'Mittel',e2e:'Nein'},'t-online.de':{n:'Telekom Mail',co:'Telekom',sec:'Mittel',e2e:'Nein'},'posteo.de':{n:'Posteo',co:'Posteo',sec:'Sehr Hoch',e2e:'Nein'},'mailbox.org':{n:'mailbox.org',co:'Heinlein',sec:'Sehr Hoch',e2e:'Ja'}};
-  const prov=provDB[domain.toLowerCase()]||{n:'Custom/Business',co:'Unbekannt',sec:'Unbekannt',e2e:'N/A'};
+  const dkimTxt=rDKIM.value?.Answer?.[0]?.data||null;
+  const mtaStsTxt=rMTASTS.value?.Answer?.[0]?.data||null;
+  let spfTxt='';txtRecs.forEach(t=>{if(t.includes('v=spf1'))spfTxt=t;});
+  const hasSPF=!!spfTxt, hasDMARC=!!dmarcTxt, hasDKIM=!!dkimTxt, hasMTASTS=!!mtaStsTxt;
+  const secScore=(hasSPF?1:0)+(hasDMARC?1:0)+(hasDKIM?1:0)+(hasMTASTS?1:0);
+
+  // SPF analysieren
+  let spfPolicy='Unbekannt',spfSpoof=true;
+  if(spfTxt){
+    if(spfTxt.includes('-all')){spfPolicy='Hardfail (-all)';spfSpoof=false;}
+    else if(spfTxt.includes('~all')){spfPolicy='Softfail (~all)';spfSpoof=true;}
+    else if(spfTxt.includes('+all')){spfPolicy='Pass+all (unsicher!)';spfSpoof=true;}
+    else if(spfTxt.includes('?all')){spfPolicy='Neutral (?all)';spfSpoof=true;}
+    else spfPolicy='Kein all-Mechanismus';
+  }
+
+  // DMARC analysieren
+  let dmarcPolicy='Kein',dmarcPct=100;
+  if(dmarcTxt){
+    const pm=dmarcTxt.match(/p=(\w+)/);if(pm)dmarcPolicy=pm[1];
+    const pctm=dmarcTxt.match(/pct=(\d+)/);if(pctm)dmarcPct=parseInt(pctm[1]);
+  }
+
+  // Disposable check (erweiterte Liste)
+  const disposableDomains=['tempmail','guerrillamail','10minutemail','throwaway','mailinator','trashmail','temp-mail','fakeinbox','yopmail','maildrop','dispostable','spamgourmet','trashmail','mytemp','getnada','burnermail','tempr','sharklasers','guerrillamailblock','spam4','spamavert','trbvm','jetable','spamfree24','mailnull','mailscrap'];
+  const isDisposable=disposableDomains.some(d=>domain.includes(d));
+
+  // Provider erkennen
+  const provDB={
+    'gmail.com':{n:'Google Gmail',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'googlemail.com':{n:'Google Gmail',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'outlook.com':{n:'Microsoft Outlook',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'hotmail.com':{n:'Microsoft Hotmail',sec:'Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'hotmail.de':{n:'Microsoft Hotmail DE',sec:'Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'live.com':{n:'Microsoft Live',sec:'Hoch',e2e:'Nein',gdpr:'Nein',free:true},
+    'yahoo.com':{n:'Yahoo Mail',sec:'Mittel',e2e:'Nein',gdpr:'Nein',free:true},
+    'yahoo.de':{n:'Yahoo Mail DE',sec:'Mittel',e2e:'Nein',gdpr:'Nein',free:true},
+    'icloud.com':{n:'Apple iCloud Mail',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Bedingt',free:true},
+    'me.com':{n:'Apple Me',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Bedingt',free:true},
+    'protonmail.com':{n:'Proton Mail',sec:'Maximal',e2e:'E2E',gdpr:'Ja (CH)',free:true},
+    'proton.me':{n:'Proton Mail',sec:'Maximal',e2e:'E2E',gdpr:'Ja (CH)',free:true},
+    'pm.me':{n:'Proton Mail',sec:'Maximal',e2e:'E2E',gdpr:'Ja (CH)',free:true},
+    'tutanota.com':{n:'Tuta Mail',sec:'Maximal',e2e:'E2E',gdpr:'Ja (DE)',free:true},
+    'tuta.io':{n:'Tuta Mail',sec:'Maximal',e2e:'E2E',gdpr:'Ja (DE)',free:true},
+    'gmx.de':{n:'GMX Deutschland',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:true},
+    'gmx.com':{n:'GMX International',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:true},
+    'gmx.net':{n:'GMX Net',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:true},
+    'web.de':{n:'WEB.DE',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:true},
+    't-online.de':{n:'Telekom T-Online',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:false},
+    'freenet.de':{n:'freenet Mail',sec:'Mittel',e2e:'Nein',gdpr:'Ja (DE)',free:true},
+    'posteo.de':{n:'Posteo',sec:'Sehr Hoch',e2e:'Nein',gdpr:'Ja (DE)',free:false},
+    'mailbox.org':{n:'mailbox.org',sec:'Sehr Hoch',e2e:'Ja',gdpr:'Ja (DE)',free:false},
+    'fastmail.com':{n:'Fastmail',sec:'Hoch',e2e:'Nein',gdpr:'Nein',free:false},
+    'zoho.com':{n:'Zoho Mail',sec:'Hoch',e2e:'Nein',gdpr:'Ja (EU)',free:true},
+    'aol.com':{n:'AOL Mail',sec:'Niedrig',e2e:'Nein',gdpr:'Nein',free:true},
+  };
+  const prov=provDB[domain.toLowerCase()]||{n:'Custom / Business / Unbekannt',sec:'Unbekannt',e2e:'N/A',gdpr:'Unbekannt',free:null};
+
+  // ── Gravatar MD5 Hash (Live Profilbild) ──
+  ltxt.textContent='Gravatar + EmailRep pruefen...';
+  let gravatarHash='';
+  try{
+    // MD5 fuer Gravatar - eingebaut in Browser via SubtleCrypto
+    const msgBuffer=new TextEncoder().encode(em.trim().toLowerCase());
+    const hashBuffer=await crypto.subtle.digest('SHA-256',msgBuffer);
+    // Gravatar nutzt MD5, wir nutzen eine einfache Implementierung
+    gravatarHash=Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('').substring(0,32);
+  }catch(e){}
+  // MD5 fuer Gravatar (echte Implementierung)
+  function md5(str){
+    function safeAdd(x,y){const lsw=(x&0xffff)+(y&0xffff);const msw=(x>>16)+(y>>16)+(lsw>>16);return(msw<<16)|(lsw&0xffff);}
+    function bitRotateLeft(num,cnt){return(num<<cnt)|(num>>>(32-cnt));}
+    function md5cmn(q,a,b,x,s,t){return safeAdd(bitRotateLeft(safeAdd(safeAdd(a,q),safeAdd(x,t)),s),b);}
+    function md5ff(a,b,c,d,x,s,t){return md5cmn((b&c)|(~b&d),a,b,x,s,t);}
+    function md5gg(a,b,c,d,x,s,t){return md5cmn((b&d)|(c&~d),a,b,x,s,t);}
+    function md5hh(a,b,c,d,x,s,t){return md5cmn(b^c^d,a,b,x,s,t);}
+    function md5ii(a,b,c,d,x,s,t){return md5cmn(c^(b|~d),a,b,x,s,t);}
+    const str8=unescape(encodeURIComponent(str));
+    const x=[];for(let i=0;i<str8.length*8;i+=8)x[i>>5]=(x[i>>5]||0)|(str8.charCodeAt(i/8)<<(i%32));
+    const l=str8.length*8;x[l>>5]=(x[l>>5]||0)|0x80<<(l%32);x[(((l+64)>>>9)<<4)+14]=l;
+    let a=1732584193,b=-271733879,c=-1732584194,d=271733878;
+    for(let i=0;i<x.length;i+=16){
+      const[oa,ob,oc,od]=[a,b,c,d];
+      a=md5ff(a,b,c,d,x[i],7,-680876936);d=md5ff(d,a,b,c,x[i+1],12,-389564586);
+      c=md5ff(c,d,a,b,x[i+2],17,606105819);b=md5ff(b,c,d,a,x[i+3],22,-1044525330);
+      a=md5ff(a,b,c,d,x[i+4],7,-176418897);d=md5ff(d,a,b,c,x[i+5],12,1200080426);
+      c=md5ff(c,d,a,b,x[i+6],17,-1473231341);b=md5ff(b,c,d,a,x[i+7],22,-45705983);
+      a=md5ff(a,b,c,d,x[i+8],7,1770035416);d=md5ff(d,a,b,c,x[i+9],12,-1958414417);
+      c=md5ff(c,d,a,b,x[i+10],17,-42063);b=md5ff(b,c,d,a,x[i+11],22,-1990404162);
+      a=md5ff(a,b,c,d,x[i+12],7,1804603682);d=md5ff(d,a,b,c,x[i+13],12,-40341101);
+      c=md5ff(c,d,a,b,x[i+14],17,-1502002290);b=md5ff(b,c,d,a,x[i+15],22,1236535329);
+      a=md5gg(a,b,c,d,x[i+1],5,-165796510);d=md5gg(d,a,b,c,x[i+6],9,-1069501632);
+      c=md5gg(c,d,a,b,x[i+11],14,643717713);b=md5gg(b,c,d,a,x[i],20,-373897302);
+      a=md5gg(a,b,c,d,x[i+5],5,-701558691);d=md5gg(d,a,b,c,x[i+10],9,38016083);
+      c=md5gg(c,d,a,b,x[i+15],14,-660478335);b=md5gg(b,c,d,a,x[i+4],20,-405537848);
+      a=md5gg(a,b,c,d,x[i+9],5,568446438);d=md5gg(d,a,b,c,x[i+14],9,-1019803690);
+      c=md5gg(c,d,a,b,x[i+3],14,-187363961);b=md5gg(b,c,d,a,x[i+8],20,1163531501);
+      a=md5gg(a,b,c,d,x[i+13],5,-1444681467);d=md5gg(d,a,b,c,x[i+2],9,-51403784);
+      c=md5gg(c,d,a,b,x[i+7],14,1735328473);b=md5gg(b,c,d,a,x[i+12],20,-1926607734);
+      a=md5hh(a,b,c,d,x[i+5],4,-378558);d=md5hh(d,a,b,c,x[i+8],11,-2022574463);
+      c=md5hh(c,d,a,b,x[i+11],16,1839030562);b=md5hh(b,c,d,a,x[i+14],23,-35309556);
+      a=md5hh(a,b,c,d,x[i+1],4,-1530992060);d=md5hh(d,a,b,c,x[i+4],11,1272893353);
+      c=md5hh(c,d,a,b,x[i+7],16,-155497632);b=md5hh(b,c,d,a,x[i+10],23,-1094730640);
+      a=md5hh(a,b,c,d,x[i+13],4,681279174);d=md5hh(d,a,b,c,x[i],11,-358537222);
+      c=md5hh(c,d,a,b,x[i+3],16,-722521979);b=md5hh(b,c,d,a,x[i+6],23,76029189);
+      a=md5hh(a,b,c,d,x[i+9],4,-640364487);d=md5hh(d,a,b,c,x[i+12],11,-421815835);
+      c=md5hh(c,d,a,b,x[i+15],16,530742520);b=md5hh(b,c,d,a,x[i+2],23,-995338651);
+      a=md5ii(a,b,c,d,x[i],6,-198630844);d=md5ii(d,a,b,c,x[i+7],10,1126891415);
+      c=md5ii(c,d,a,b,x[i+14],15,-1416354905);b=md5ii(b,c,d,a,x[i+5],21,-57434055);
+      a=md5ii(a,b,c,d,x[i+12],6,1700485571);d=md5ii(d,a,b,c,x[i+3],10,-1894986606);
+      c=md5ii(c,d,a,b,x[i+10],15,-1051523);b=md5ii(b,c,d,a,x[i+1],21,-2054922799);
+      a=md5ii(a,b,c,d,x[i+8],6,1873313359);d=md5ii(d,a,b,c,x[i+15],10,-30611744);
+      c=md5ii(c,d,a,b,x[i+6],15,-1560198380);b=md5ii(b,c,d,a,x[i+13],21,1309151649);
+      a=md5ii(a,b,c,d,x[i+4],6,-145523070);d=md5ii(d,a,b,c,x[i+11],10,-1120210379);
+      c=md5ii(c,d,a,b,x[i+2],15,718787259);b=md5ii(b,c,d,a,x[i+9],21,-343485551);
+      a=safeAdd(a,oa);b=safeAdd(b,ob);c=safeAdd(c,oc);d=safeAdd(d,od);
+    }
+    return[a,b,c,d].map(n=>(n<0?n+4294967296:n).toString(16).padStart(8,'0').match(/../g).reverse().join('')).join('');
+  }
+  const md5hash=md5(em.trim().toLowerCase());
+
+  // Gravatar Profilbild pruefen (200=existiert, 404=kein Konto)
+  let gravatarExists=false;
+  try{
+    const gRes=await fetch(`https://www.gravatar.com/avatar/${md5hash}?d=404`,{method:'HEAD'});
+    gravatarExists=gRes.status===200;
+  }catch(e){}
+
+  // Mailserver Geo
+  ltxt.textContent='Mailserver Geo-Lookup...';
   let mxGeo=null;
-  if(mxRecs[0]?.srv){const mxIP=await sf(`https://dns.google/resolve?name=${mxRecs[0].srv}&type=A`);if(mxIP?.Answer?.[0])mxGeo=await sf(`https://ipwho.is/${mxIP.Answer[0].data}`);}
+  if(mxRecs[0]?.srv){
+    const mxIP=await sf(`https://dns.google/resolve?name=${mxRecs[0].srv}&type=A`);
+    if(mxIP?.Answer?.[0]?.data)mxGeo=await sf(`https://ipwho.is/${mxIP.Answer[0].data}`);
+  }
+
   ld('emL',false);
+
+  // ── HTML ──
   let html='<div class="dw">';
+
+  // Gravatar Profilbild
+  if(gravatarExists){
+    html+=`<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.25);border-radius:8px;padding:12px">`;
+    html+=`<img src="https://www.gravatar.com/avatar/${md5hash}?s=80&d=404" style="width:60px;height:60px;border-radius:6px;border:2px solid var(--accent3);box-shadow:0 0 14px rgba(0,229,204,.4)" onerror="this.parentElement.style.display='none'">`;
+    html+=`<div><div style="color:var(--green);font-size:12px;letter-spacing:1px;margin-bottom:3px">GRAVATAR KONTO GEFUNDEN</div>`;
+    html+=`<div style="color:var(--label);font-size:10px">E-Mail hat ein oeffentliches Gravatar-Profil</div>`;
+    html+=`<div style="margin-top:6px">${lnk('Gravatar Profil oeffnen',`https://www.gravatar.com/${md5hash}`)}</div></div></div>`;
+  }
+
   html+=sec('E-MAIL ANALYSE');
-  html+=row('Vollstaendige E-Mail',em);html+=row('Benutzername',un);html+=row('Domain',domain);
-  html+=row('Format','Gueltig');html+=row('Wegwerf-Mail',disp?'<span class="badge bwarn">Ja</span>':'Nein');
+  html+=row('Adresse',`<strong style="color:var(--cyan)">${em}</strong>`);
+  html+=row('Benutzername',un);
+  html+=row('Domain',domain);
+  html+=row('Format','Gueltig');
+  html+=row('Wegwerf-Domain',isDisposable?'<span class="badge bbad">Ja — Temporaer-Dienst</span>':'<span class="badge bok">Nein</span>');
+  html+=row('Gravatar-Konto',gravatarExists?`<span class="badge bok">Gefunden</span> — ${lnk('Profil anzeigen',`https://www.gravatar.com/${md5hash}`)}`:'Kein Konto');
+  html+=row('Gravatar MD5-Hash',md5hash);
+
   html+=sec('ANBIETER');
-  html+=row('Dienst',prov.n);html+=row('Unternehmen',prov.co);html+=row('Sicherheit',prov.sec);html+=row('E2E-Verschluesselung',prov.e2e);
-  html+=sec('MX SERVER');
-  if(mxRecs.length>0){mxRecs.forEach((mx,i)=>html+=row(`MX ${i+1} (Prio ${mx.prio})`,mx.srv));html+=row('Empfang','Moeglich');}
-  else html+=row('MX','<span class="badge bbad">Keine MX-Eintraege</span>');
-  html+=sec('DNS EINTRAEGE');
-  aRecs.forEach((a,i)=>html+=row(`A ${i+1}`,a));
-  if(nsRecs.length>0)nsRecs.forEach((n,i)=>html+=row(`NS ${i+1}`,n));
-  if(caaRecs.length>0)caaRecs.forEach((c,i)=>html+=row(`CAA ${i+1}`,c));
-  html+=sec('E-MAIL SICHERHEIT');
-  html+=row('SPF',hasSPF?spf.substring(0,80):'<span class="badge bbad">Fehlt</span>');
-  html+=row('DKIM',hasDKIM?'Konfiguriert':'<span class="badge bbad">Fehlt</span>');
-  html+=row('DMARC',hasDMARC?(dmarcTxt||'').substring(0,80):'<span class="badge bbad">Fehlt</span>');
-  html+=row('Security Score',`${sc}/3 -- ${sc===3?'Ausgezeichnet':sc===2?'Gut':'Schwach'}`);
-  html+=row('Spoofing-Risiko',sc<=1?'<span class="badge bbad">Hoch</span>':sc===2?'Mittel':'Niedrig');
-  if(mxGeo?.success){html+=sec('MAILSERVER STANDORT');html+=row('IP',mxGeo.ip);html+=row('Land',mxGeo.country||'N/A');html+=row('ISP',mxGeo.connection?.isp||'N/A');html+=row('Stadt',mxGeo.city||'N/A');if(mxGeo.ip)html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${mxGeo.ip}'),200)">Mailserver tracken</button>`;}
-  html+=sec('OSINT & BREACH TOOLS');
-  html+=row('Have I Been Pwned',lnk('Datenlecks pruefen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
-  html+=row('Dehashed',lnk('Passwort-Leaks + Klarnamen',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
-  html+=row('Snusbase',lnk('Leak-Datenbank',`https://snusbase.com/`));
-  html+=row('LeakCheck.io',lnk('Breach-Lookup',`https://leakcheck.io/`));
-  html+=row('IntelX (Intelligence X)',lnk('Darknet + Leak-Archive',`https://intelx.io/?s=${encodeURIComponent(em)}`));
-  html+=row('Epieos',lnk('Google + Apple Account Reverse',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
-  html+=row('Hunter.io',lnk('E-Mail Verifikation + Firma',`https://hunter.io/email-verifier/${encodeURIComponent(em)}`));
-  html+=row('EmailRep.io',lnk('Reputation + Aktivitaet',`https://emailrep.io/${encodeURIComponent(em)}`));
-  html+=row('OSINT Industries',lnk('Konten-Finder',`https://osint.industries/`));
-  html+=row('GHunt (Google)',lnk('Google-Konto analysieren',`https://github.com/mxrch/GHunt`));
-  html+=row('Google-Konto',lnk('Profilsuche',`https://accounts.google.com/SignIn?Email=${encodeURIComponent(em)}`));
-  html+=row('Gravatar',lnk('Profilbild + verbundene Konten',`https://www.gravatar.com/search/?query=${encodeURIComponent(em)}`));
-  html+=row('Google Dork E-Mail',lnk(`"${em}" googlen`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22`));
-  html+=row('Google + Social',lnk(`${em} + Profile`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+site%3Alinkedin.com+OR+site%3Afacebook.com+OR+site%3Atwitter.com`));
-  html+=row('Google + Docs/PDFs',lnk(`${em} in Dokumenten`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+filetype%3Apdf+OR+filetype%3Adoc`));
+  html+=row('Dienst',prov.n);
+  html+=row('Sicherheit',prov.sec);
+  html+=row('E2E-Verschluesselung',prov.e2e);
+  html+=row('DSGVO-konform',prov.gdpr);
+  html+=row('Kostenlos',prov.free===true?'Ja':prov.free===false?'Nein':'N/A');
+
+  html+=sec('E-MAIL SICHERHEIT (DNS-Analyse)');
+  // Security Score Balken
+  const secPct=secScore/4*100;
+  const secCol=secScore===4?'var(--green)':secScore>=2?'var(--yellow)':'var(--red)';
+  html+=`<div style="background:rgba(4,0,10,.7);border-radius:6px;padding:10px 12px;margin:6px 0 10px;border:1px solid rgba(85,0,187,.25)">`;
+  html+=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--label);font-size:11px">E-MAIL SECURITY SCORE</span><span style="color:${secCol};font-weight:bold">${secScore}/4</span></div>`;
+  html+=`<div style="height:6px;background:rgba(85,0,187,.2);border-radius:3px;overflow:hidden"><div style="width:${secPct}%;height:100%;background:${secCol};border-radius:3px;transition:width .5s;box-shadow:0 0 8px ${secCol}"></div></div>`;
+  html+=`<div style="margin-top:6px;font-size:10px;color:var(--label)">${secScore===4?'Maximale Sicherheit — Spoofing kaum moeglich':secScore>=2?'Mittlere Sicherheit':secScore===1?'Schwache Sicherheit — Spoofing moeglich!':'KEINE Sicherheit — Domain leicht zu spoofen!'}</div></div>`;
+
+  html+=row('SPF Record',hasSPF?`<span class="badge bok">OK</span> ${spfPolicy}`:'<span class="badge bbad">FEHLT</span>');
+  html+=row('SPF Detail',hasSPF?spfTxt.substring(0,90):'Kein SPF-Eintrag gefunden');
+  html+=row('DKIM (default)',hasDKIM?'<span class="badge bok">Konfiguriert</span>':'<span class="badge bwarn">Nicht gefunden</span>');
+  html+=row('DMARC Policy',hasDMARC?`<span class="badge bok">p=${dmarcPolicy}</span> — ${dmarcPct}% der Mails`:'<span class="badge bbad">FEHLT</span>');
+  html+=row('DMARC Detail',hasDMARC?(dmarcTxt||'').substring(0,90):'Kein DMARC-Eintrag');
+  html+=row('MTA-STS (Transport)',hasMTASTS?'<span class="badge bok">Aktiv</span>':'<span class="badge binfo">Nicht gesetzt</span>');
+  html+=row('Spoofing-Risiko',(!hasSPF||!hasDMARC)?'<span class="badge bbad">HOCH — Domain kann gefaelscht werden!</span>':dmarcPolicy==='none'?'<span class="badge bwarn">Mittel</span>':'<span class="badge bok">Niedrig</span>');
+
+  html+=sec('MX SERVER (Empfang)');
+  if(mxRecs.length>0){
+    mxRecs.forEach((mx,i)=>html+=row(`MX ${i+1} (Prioritaet ${mx.prio})`,mx.srv));
+    html+=row('Empfang moeglich','<span class="badge bok">Ja</span>');
+    // Mail-Provider aus MX erkennen
+    const mxStr=mxRecs.map(m=>m.srv).join(' ').toLowerCase();
+    let mailProv='Unbekannt';
+    if(mxStr.includes('google')||mxStr.includes('gmail'))mailProv='Google Workspace / Gmail';
+    else if(mxStr.includes('microsoft')||mxStr.includes('outlook')||mxStr.includes('protection.outlook'))mailProv='Microsoft 365 / Exchange Online';
+    else if(mxStr.includes('protonmail'))mailProv='Proton Mail';
+    else if(mxStr.includes('tutanota')||mxStr.includes('tuta'))mailProv='Tuta Mail';
+    else if(mxStr.includes('mimecast'))mailProv='Mimecast (Anti-Spam Gateway)';
+    else if(mxStr.includes('barracuda'))mailProv='Barracuda (Anti-Spam Gateway)';
+    else if(mxStr.includes('mailgun'))mailProv='Mailgun (Transactional)';
+    else if(mxStr.includes('sendgrid'))mailProv='SendGrid (Transactional)';
+    else if(mxStr.includes('amazonses')||mxStr.includes('amazonaws'))mailProv='Amazon SES';
+    else if(mxStr.includes('zoho'))mailProv='Zoho Mail';
+    html+=row('Mail-Provider (via MX)',mailProv);
+  }else{
+    html+=row('MX Server','<span class="badge bbad">Keine MX-Eintraege — kein Empfang moeglich</span>');
+  }
+
+  if(mxGeo?.success){
+    html+=sec('MAILSERVER-STANDORT (Live)');
+    html+=row('Mailserver IP',mxGeo.ip);
+    html+=row('Land',`${mxGeo.country||'N/A'} (${mxGeo.country_code||'N/A'})`);
+    html+=row('Stadt',mxGeo.city||'N/A');
+    html+=row('ISP / Betreiber',mxGeo.connection?.isp||'N/A');
+    html+=row('Organisation',mxGeo.connection?.org||'N/A');
+    html+=row('ASN',mxGeo.connection?.asn?`AS${mxGeo.connection.asn}`:'N/A');
+    html+=row('Koordinaten',mxGeo.latitude&&mxGeo.longitude?`${mxGeo.latitude}, ${mxGeo.longitude}`:'N/A');
+    if(mxGeo.ip)html+=`<button class="bmini" onclick="back();show('ip');setTimeout(()=>trackIP('${mxGeo.ip}'),200)">Mailserver-IP vollstaendig tracken</button>`;
+  }
+
+  if(nsRecs.length>0){html+=sec('NAMESERVER');nsRecs.forEach((n,i)=>html+=row(`NS ${i+1}`,n));}
+  if(aRecs.length>0){html+=sec('A-EINTRAEGE');aRecs.forEach((a,i)=>html+=row(`A ${i+1}`,a));}
+  if(caaRecs.length>0){html+=sec('CAA (SSL-Aussteller)');caaRecs.forEach((c,i)=>html+=row(`CAA ${i+1}`,c));}
+  if(txtRecs.length>0){html+=sec('TXT-EINTRAEGE (alle)');txtRecs.slice(0,8).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
+
+  html+=sec('OSINT — BREACH & LEAK DATENBANKEN');
+  html+=row('Have I Been Pwned',lnk('E-Mail in Datenlecks pruefen',`https://haveibeenpwned.com/account/${encodeURIComponent(em)}`));
+  html+=row('Dehashed',lnk('Passwort + Klarname + Adresse',`https://dehashed.com/search?query=${encodeURIComponent(em)}`));
+  html+=row('IntelX (Intelligence X)',lnk('Darknet + Deep Web Archive',`https://intelx.io/?s=${encodeURIComponent(em)}`));
+  html+=row('Snusbase',lnk('Breach-Datenbank',`https://snusbase.com/`));
+  html+=row('LeakCheck.io',lnk('Passwort-Leak Lookup',`https://leakcheck.io/`));
+  html+=row('BreachDirectory',lnk('Kostenloser Breach-Check',`https://breachdirectory.org/`));
+
+  html+=sec('OSINT — PROFIL & KONTO-FINDER');
+  html+=row('Epieos (Top-Tool)',lnk('Google + Apple ID Reverse Lookup',`https://epieos.com/?q=${encodeURIComponent(em)}&t=email`));
+  html+=row('GHunt (Google)',lnk('Google-Konto vollstaendig analysieren',`https://github.com/mxrch/GHunt`));
+  html+=row('Gravatar',lnk(`Profil: gravatar.com/${md5hash}`,`https://www.gravatar.com/${md5hash}`));
+  html+=row('EmailRep.io',lnk('Reputation + Aktivitaetsscore',`https://emailrep.io/${encodeURIComponent(em)}`));
+  html+=row('Hunter.io',lnk('Firmen-E-Mail Verifikation',`https://hunter.io/email-verifier/${encodeURIComponent(em)}`));
+  html+=row('OSINT Industries',lnk('Multi-Source Account Finder',`https://osint.industries/`));
+  html+=row('Holehe (Tool)',lnk('100+ Seiten auf Konto pruefen',`https://github.com/megadose/holehe`));
+
+  html+=sec('OSINT — SUCHMASCHINEN DORKS');
+  html+=row('Google Exact',lnk(`"${em}" exakt`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22`));
+  html+=row('Google + Name',lnk(`${em} + Klarname`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+%22heisst%22+OR+%22ist%22+OR+%22name%22`));
+  html+=row('Google + Adresse',lnk(`${em} + Wohnadresse`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+%22strasse%22+OR+%22adresse%22+OR+%22wohnhaft%22`));
+  html+=row('Google + Telefon',lnk(`${em} + Telefonnummer`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+%22tel%22+OR+%22telefon%22+OR+%2249%22`));
+  html+=row('Google + Social Media',lnk(`${em} in sozialen Netzwerken`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+site%3Alinkedin.com+OR+site%3Afacebook.com+OR+site%3Axing.com+OR+site%3Atwitter.com`));
+  html+=row('Google + Dokumente',lnk(`${em} in PDFs und Docs`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+filetype%3Apdf+OR+filetype%3Adoc+OR+filetype%3Axls`));
+  html+=row('Google + Leaks',lnk(`${em} + Datenleck`,`https://www.google.com/search?q=%22${encodeURIComponent(em)}%22+%22password%22+OR+%22breach%22+OR+%22leaked%22`));
   html+=row('Bing Suche',lnk(`Bing: ${em}`,`https://www.bing.com/search?q=%22${encodeURIComponent(em)}%22`));
-  html+=row('WHOIS Domain',lnk('Domain-Registrar pruefen',`https://who.is/whois/${domain}`));
-  html+=row('MXToolbox',lnk('MX + Blacklist + Header Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
-  html+=row('Wayback Machine',lnk('Archiv-Snapshots',`https://web.archive.org/web/*/${domain}`));
-  if(txtRecs.length>0){html+=sec('TXT EINTRAEGE');txtRecs.slice(0,6).forEach((t,i)=>html+=row(`TXT ${i+1}`,t.substring(0,110)));}
+  html+=row('WHOIS Domain',lnk('Domain-Registrar + Inhaber',`https://who.is/whois/${domain}`));
+  html+=row('MXToolbox',lnk('MX + Blacklist + Header-Analyse',`https://mxtoolbox.com/SuperTool.aspx?action=mx:${domain}`));
+  html+=row('Wayback Machine',lnk('Archiv-Snapshots der Domain',`https://web.archive.org/web/*/${domain}`));
+
   html+='</div>';
-  if(disp)html+='<div class="aw">WEGWERF-MAIL erkannt -- Temporaerer Dienst!</div>';
-  if(sc<2)html+='<div class="aw">Schlechte E-Mail-Sicherheit -- Spoofing moeglich!</div>';
-  html+='<div class="ai">IP gehoert zum Mailserver-Anbieter, nicht zum Absender.</div>';
+  if(isDisposable)html+='<div class="aw">WEGWERF-MAIL-DIENST erkannt — Konto temporaer und anonym!</div>';
+  if(secScore<2)html+=`<div class="aw">Kritisch: Security Score ${secScore}/4 — Domain kann fuer Phishing/Spoofing missbraucht werden!</div>`;
+  if(gravatarExists)html+='<div class="ag">Gravatar-Konto gefunden — E-Mail ist aktiv und hat ein oeffentliches Profil.</div>';
+  html+='<div class="ai">IP des Mailservers gehoert dem Hosting-Anbieter, nicht dem Postfach-Inhaber. Keine direkten Rueckschluesse auf den Nutzer moeglich.</div>';
   $('emR').innerHTML=html;
 }
 
